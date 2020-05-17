@@ -6,24 +6,22 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-netmiko = "*"
 jinja2 = "*"
 pyyaml = "*"
-napalm = "*"
-nornir = "*"
 textfsm = "*"
 pytest = "*"
 setuptools = "*"
 simplejson = "*"
-pprint = "*"
 black = "*"
 yamllint = "*"
-paramiko = "*"
 requests = "*"
 pylint = "*"
 lxml = "*"
 ntc-templates = "*"
 cryptography = "*"
+nornir = "==2.4.0"
+napalm = "*"
+pprint = "*"
 
 [requires]
 python_version = "3.8"
