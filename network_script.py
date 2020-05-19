@@ -1,13 +1,21 @@
 import datetime
 from nornir import InitNornir
-from nornir.plugins.functions.text import print_result
-from nornir.plugins.tasks.networking import netmiko_send_command
+from nornir.core.filter import F
+from nornir.plugins.functions.text import print_result, print_title
+from nornir.plugins.tasks.networking import napalm_get
+from nornir.plugins.tasks.networking  import napalm_ping
+from nornir.plugins.tasks.networking  import napalm_cli
 
 
 def main():
     nr = InitNornir(config_file="config.yml", dry_run=True)
-    results = nr.run(task=netmiko_send_command, command_string="ping 10.0.0.1", use_timing=False)
-    print_result(results)
+    cisco = nr.filter(F(groups__contains='cisco_group'))
+    junos = nr.filter(F(groups__contains='junos_group'))
+    commands = [f"ping 192.168.122.{last_octet}" for last_octet in range(1, 10)]
+    results1 = cisco.run(task=napalm_cli, commands=commands)
+    results2 = junos.run(task=napalm_ping, dest="192.168.122.1")
+    print_result(results1)
+    print_result(results2)
 
 
 if __name__ == "__main__":

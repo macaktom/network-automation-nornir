@@ -1756,3 +1756,704 @@ Traceback (most recent call last):
     raise NetMikoTimeoutException(msg)
 netmiko.ssh_exception.NetMikoTimeoutException: Connection to device timed-out: linux 10.0.0.7:22
 
+2020-05-19 18:40:45,337 -  nornir.core -     INFO -        run() - Running task 'netmiko_send_command' with args {'command_string': 'ping 192.168.122.1', 'use_timing': False} on 7 hosts
+2020-05-19 18:40:45,354 - nornir.core.task -    ERROR -      start() - Host 'Client2': task 'netmiko_send_command' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 884, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/client.py", line 368, in connect
+    raise NoValidConnectionsError(errors)
+paramiko.ssh_exception.NoValidConnectionsError: [Errno None] Unable to connect to port 22 on 192.168.122.7
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/netmiko_send_command.py", line 26, in netmiko_send_command
+    net_connect = task.host.get_connection("netmiko", task.nornir.config)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 294, in get_connection
+    self.open_connection(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 345, in open_connection
+    self.connections[connection].open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/connections/netmiko.py", line 58, in open
+    self.connection = ConnectHandler(**parameters)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/ssh_dispatcher.py", line 246, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 317, in __init__
+    self._open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 322, in _open
+    self.establish_connection()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 890, in establish_connection
+    raise NetMikoTimeoutException(msg)
+netmiko.ssh_exception.NetMikoTimeoutException: Connection to device timed-out: linux 192.168.122.7:22
+
+2020-05-19 18:40:45,356 - nornir.core.task -    ERROR -      start() - Host 'Client1': task 'netmiko_send_command' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 884, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/client.py", line 368, in connect
+    raise NoValidConnectionsError(errors)
+paramiko.ssh_exception.NoValidConnectionsError: [Errno None] Unable to connect to port 22 on 192.168.122.6
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/netmiko_send_command.py", line 26, in netmiko_send_command
+    net_connect = task.host.get_connection("netmiko", task.nornir.config)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 294, in get_connection
+    self.open_connection(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 345, in open_connection
+    self.connections[connection].open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/connections/netmiko.py", line 58, in open
+    self.connection = ConnectHandler(**parameters)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/ssh_dispatcher.py", line 246, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 317, in __init__
+    self._open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 322, in _open
+    self.establish_connection()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 890, in establish_connection
+    raise NetMikoTimeoutException(msg)
+netmiko.ssh_exception.NetMikoTimeoutException: Connection to device timed-out: linux 192.168.122.6:22
+
+2020-05-19 18:42:29,366 -  nornir.core -     INFO -        run() - Running task 'netmiko_send_command' with args {'command_string': 'ping 192.168.122.1', 'use_timing': False} on 4 hosts
+2020-05-19 18:43:09,238 -  nornir.core -     INFO -        run() - Running task 'netmiko_send_command' with args {'command_string': 'ping 192.168.122.1', 'use_timing': False} on 5 hosts
+2020-05-19 19:29:36,001 -  nornir.core -     INFO -        run() - Running task 'netmiko_send_command' with args {'command_string': 'ping 192.168.122.1', 'use_timing': False} on 5 hosts
+2020-05-19 19:30:02,784 -  nornir.core -     INFO -        run() - Running task 'netmiko_send_command' with args {'command_string': 'ping 192.168.122.1', 'use_timing': False} on 5 hosts
+2020-05-19 19:31:48,190 - nornir.core.task -    ERROR -      start() - Host 'R2': task 'netmiko_send_command' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/netmiko_send_command.py", line 32, in netmiko_send_command
+    result = net_connect.send_command(command_string, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 1335, in send_command
+    raise IOError(
+OSError: Search pattern never detected in send_command_expect: root>
+
+2020-05-19 19:32:53,356 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['facts', 'interfaces']} on 5 hosts
+2020-05-19 19:32:53,376 - nornir.core.task -    ERROR -      start() - Host 'R2': task 'napalm_get' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_get.py", line 49, in napalm_get
+    device = task.host.get_connection("napalm", task.nornir.config)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 294, in get_connection
+    self.open_connection(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 345, in open_connection
+    self.connections[connection].open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/connections/napalm.py", line 49, in open
+    network_driver = get_network_driver(platform)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/__init__.py", line 103, in get_network_driver
+    raise ModuleImportError(
+napalm.base.exceptions.ModuleImportError: Cannot import "juniper_junos". Is the library installed?
+
+2020-05-19 19:32:58,548 - nornir.core.task -    ERROR -      start() - Host 'SW3': task 'napalm_get' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_get.py", line 49, in napalm_get
+    device = task.host.get_connection("napalm", task.nornir.config)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 294, in get_connection
+    self.open_connection(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 345, in open_connection
+    self.connections[connection].open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/connections/napalm.py", line 51, in open
+    connection.open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 168, in open
+    self.device = self._netmiko_open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/base.py", line 102, in _netmiko_open
+    self._netmiko_device.enable()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/cisco_base_connection.py", line 21, in enable
+    return super(CiscoBaseConnection, self).enable(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 1470, in enable
+    raise ValueError(msg)
+ValueError: Failed to enter enable mode. Please ensure you pass the 'secret' argument to ConnectHandler.
+
+2020-05-19 19:32:58,558 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'napalm_get' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_get.py", line 49, in napalm_get
+    device = task.host.get_connection("napalm", task.nornir.config)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 294, in get_connection
+    self.open_connection(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 345, in open_connection
+    self.connections[connection].open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/connections/napalm.py", line 51, in open
+    connection.open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 168, in open
+    self.device = self._netmiko_open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/base.py", line 102, in _netmiko_open
+    self._netmiko_device.enable()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/cisco_base_connection.py", line 21, in enable
+    return super(CiscoBaseConnection, self).enable(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 1470, in enable
+    raise ValueError(msg)
+ValueError: Failed to enter enable mode. Please ensure you pass the 'secret' argument to ConnectHandler.
+
+2020-05-19 19:32:58,681 - nornir.core.task -    ERROR -      start() - Host 'R1': task 'napalm_get' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_get.py", line 49, in napalm_get
+    device = task.host.get_connection("napalm", task.nornir.config)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 294, in get_connection
+    self.open_connection(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 345, in open_connection
+    self.connections[connection].open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/connections/napalm.py", line 51, in open
+    connection.open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 168, in open
+    self.device = self._netmiko_open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/base.py", line 102, in _netmiko_open
+    self._netmiko_device.enable()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/cisco_base_connection.py", line 21, in enable
+    return super(CiscoBaseConnection, self).enable(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 1470, in enable
+    raise ValueError(msg)
+ValueError: Failed to enter enable mode. Please ensure you pass the 'secret' argument to ConnectHandler.
+
+2020-05-19 19:32:58,713 - nornir.core.task -    ERROR -      start() - Host 'SW2': task 'napalm_get' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_get.py", line 49, in napalm_get
+    device = task.host.get_connection("napalm", task.nornir.config)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 294, in get_connection
+    self.open_connection(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 345, in open_connection
+    self.connections[connection].open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/connections/napalm.py", line 51, in open
+    connection.open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 168, in open
+    self.device = self._netmiko_open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/base.py", line 102, in _netmiko_open
+    self._netmiko_device.enable()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/cisco_base_connection.py", line 21, in enable
+    return super(CiscoBaseConnection, self).enable(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 1470, in enable
+    raise ValueError(msg)
+ValueError: Failed to enter enable mode. Please ensure you pass the 'secret' argument to ConnectHandler.
+
+2020-05-19 19:42:30,115 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['facts', 'interfaces']} on 5 hosts
+2020-05-19 19:42:30,132 - nornir.core.task -    ERROR -      start() - Host 'R2': task 'napalm_get' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_get.py", line 49, in napalm_get
+    device = task.host.get_connection("napalm", task.nornir.config)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 294, in get_connection
+    self.open_connection(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 345, in open_connection
+    self.connections[connection].open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/connections/napalm.py", line 49, in open
+    network_driver = get_network_driver(platform)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/__init__.py", line 103, in get_network_driver
+    raise ModuleImportError(
+napalm.base.exceptions.ModuleImportError: Cannot import "juniper_junos". Is the library installed?
+
+2020-05-19 19:42:32,923 - nornir.core.task -    ERROR -      start() - Host 'R1': task 'napalm_get' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 884, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/client.py", line 435, in connect
+    self._auth(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/client.py", line 764, in _auth
+    raise saved_exception
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/client.py", line 751, in _auth
+    self._transport.auth_password(username, password)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/transport.py", line 1509, in auth_password
+    return self.auth_handler.wait_for_response(my_event)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/auth_handler.py", line 250, in wait_for_response
+    raise e
+paramiko.ssh_exception.AuthenticationException: Authentication failed.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_get.py", line 49, in napalm_get
+    device = task.host.get_connection("napalm", task.nornir.config)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 294, in get_connection
+    self.open_connection(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 345, in open_connection
+    self.connections[connection].open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/connections/napalm.py", line 51, in open
+    connection.open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 168, in open
+    self.device = self._netmiko_open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/base.py", line 90, in _netmiko_open
+    self._netmiko_device = ConnectHandler(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/ssh_dispatcher.py", line 246, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 317, in __init__
+    self._open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 322, in _open
+    self.establish_connection()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 897, in establish_connection
+    raise NetMikoAuthenticationException(msg)
+netmiko.ssh_exception.NetMikoAuthenticationException: Authentication failure: unable to connect cisco_ios 192.168.122.2:22
+Authentication failed.
+
+2020-05-19 19:44:29,724 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['interfaces']} on 5 hosts
+2020-05-19 19:44:29,740 - nornir.core.task -    ERROR -      start() - Host 'R2': task 'napalm_get' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_get.py", line 49, in napalm_get
+    device = task.host.get_connection("napalm", task.nornir.config)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 294, in get_connection
+    self.open_connection(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 345, in open_connection
+    self.connections[connection].open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/connections/napalm.py", line 49, in open
+    network_driver = get_network_driver(platform)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/__init__.py", line 103, in get_network_driver
+    raise ModuleImportError(
+napalm.base.exceptions.ModuleImportError: Cannot import "juniper_junos". Is the library installed?
+
+2020-05-19 19:44:32,558 - nornir.core.task -    ERROR -      start() - Host 'R1': task 'napalm_get' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 884, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/client.py", line 435, in connect
+    self._auth(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/client.py", line 764, in _auth
+    raise saved_exception
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/client.py", line 751, in _auth
+    self._transport.auth_password(username, password)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/transport.py", line 1509, in auth_password
+    return self.auth_handler.wait_for_response(my_event)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/auth_handler.py", line 250, in wait_for_response
+    raise e
+paramiko.ssh_exception.AuthenticationException: Authentication failed.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_get.py", line 49, in napalm_get
+    device = task.host.get_connection("napalm", task.nornir.config)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 294, in get_connection
+    self.open_connection(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 345, in open_connection
+    self.connections[connection].open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/connections/napalm.py", line 51, in open
+    connection.open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 168, in open
+    self.device = self._netmiko_open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/base.py", line 90, in _netmiko_open
+    self._netmiko_device = ConnectHandler(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/ssh_dispatcher.py", line 246, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 317, in __init__
+    self._open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 322, in _open
+    self.establish_connection()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 897, in establish_connection
+    raise NetMikoAuthenticationException(msg)
+netmiko.ssh_exception.NetMikoAuthenticationException: Authentication failure: unable to connect cisco_ios 192.168.122.2:22
+Authentication failed.
+
+2020-05-19 19:45:56,009 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['facts', 'interfaces']} on 5 hosts
+2020-05-19 19:45:56,023 - nornir.core.task -    ERROR -      start() - Host 'R2': task 'napalm_get' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_get.py", line 49, in napalm_get
+    device = task.host.get_connection("napalm", task.nornir.config)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 294, in get_connection
+    self.open_connection(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 345, in open_connection
+    self.connections[connection].open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/connections/napalm.py", line 49, in open
+    network_driver = get_network_driver(platform)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/__init__.py", line 103, in get_network_driver
+    raise ModuleImportError(
+napalm.base.exceptions.ModuleImportError: Cannot import "juniper_junos". Is the library installed?
+
+2020-05-19 19:46:53,655 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['facts', 'interfaces']} on 5 hosts
+2020-05-19 19:55:02,365 -  nornir.core -     INFO -        run() - Running task 'netmiko_send_command' with args {'command_string': 'ping 192.168.122.1'} on 5 hosts
+2020-05-19 19:56:47,410 - nornir.core.task -    ERROR -      start() - Host 'R2': task 'netmiko_send_command' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/netmiko_send_command.py", line 32, in netmiko_send_command
+    result = net_connect.send_command(command_string, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 1335, in send_command
+    raise IOError(
+OSError: Search pattern never detected in send_command_expect: juniper>
+
+2020-05-19 19:58:55,778 -  nornir.core -     INFO -        run() - Running task 'netmiko_send_command' with args {'command_string': 'ping 192.168.122.1'} on 5 hosts
+2020-05-19 20:00:40,952 - nornir.core.task -    ERROR -      start() - Host 'R2': task 'netmiko_send_command' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/netmiko_send_command.py", line 32, in netmiko_send_command
+    result = net_connect.send_command(command_string, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 1335, in send_command
+    raise IOError(
+OSError: Search pattern never detected in send_command_expect: juniper>
+
+2020-05-19 20:02:10,513 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': '192.168.122.1'} on 5 hosts
+2020-05-19 20:02:10,532 - nornir.core.task -    ERROR -      start() - Host 'R2': task 'napalm_ping' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_ping.py", line 45, in napalm_ping
+    device = task.host.get_connection("napalm", task.nornir.config)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 294, in get_connection
+    self.open_connection(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 345, in open_connection
+    self.connections[connection].open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/connections/napalm.py", line 49, in open
+    network_driver = get_network_driver(platform)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/__init__.py", line 103, in get_network_driver
+    raise ModuleImportError(
+napalm.base.exceptions.ModuleImportError: Cannot import "juniper". Is the library installed?
+
+2020-05-19 20:03:19,711 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': '192.168.122.1'} on 5 hosts
+2020-05-19 20:06:42,884 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': '192.168.122.2'} on 5 hosts
+2020-05-19 20:07:39,760 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': '192.168.122.2'} on 5 hosts
+2020-05-19 20:14:17,736 -  nornir.core -     INFO -        run() - Running task 'napalm_cli' with args {'commands': ['ping 192.168.122.2']} on 5 hosts
+2020-05-19 20:22:19,584 -  nornir.core -     INFO -        run() - Running task 'napalm_cli' with args {'commands': ['ping 192.168.122.2']} on 5 hosts
+2020-05-19 20:22:25,201 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': 'ping 192.168.122.2'} on 5 hosts
+2020-05-19 20:22:25,248 - nornir.core.task -    ERROR -      start() - Host 'R2': task 'napalm_ping' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_ping.py", line 46, in napalm_ping
+    result = device.ping(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 1967, in ping
+    rpc_reply = self.device._conn.rpc(ping_rpc)._NCElement__doc
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/manager.py", line 231, in execute
+    return cls(self._session,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/third_party/juniper/rpc.py", line 52, in request
+    return self._request(rpc)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/rpc.py", line 348, in _request
+    raise self._reply.error
+ncclient.operations.rpc.RPCError: syntax error
+
+2020-05-19 20:26:19,829 -  nornir.core -  WARNING -        run() - Task 'napalm_cli' has not been run – 0 hosts selected
+2020-05-19 20:26:19,829 -  nornir.core -  WARNING -        run() - Task 'napalm_ping' has not been run – 0 hosts selected
+2020-05-19 20:47:22,059 -  nornir.core -     INFO -        run() - Running task 'napalm_cli' with args {'commands': ['ping 192.168.122.2']} on 4 hosts
+2020-05-19 20:47:27,856 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': 'ping 192.168.122.2'} on 1 hosts
+2020-05-19 20:47:28,714 - nornir.core.task -    ERROR -      start() - Host 'R2': task 'napalm_ping' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_ping.py", line 46, in napalm_ping
+    result = device.ping(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 1967, in ping
+    rpc_reply = self.device._conn.rpc(ping_rpc)._NCElement__doc
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/manager.py", line 231, in execute
+    return cls(self._session,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/third_party/juniper/rpc.py", line 52, in request
+    return self._request(rpc)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/rpc.py", line 348, in _request
+    raise self._reply.error
+ncclient.operations.rpc.RPCError: syntax error
+
+2020-05-19 20:49:32,509 -  nornir.core -     INFO -        run() - Running task 'napalm_cli' with args {'commands': ['ping 192.168.122.2']} on 4 hosts
+2020-05-19 20:49:38,122 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': 'ping 192.168.122.1'} on 1 hosts
+2020-05-19 20:49:38,888 - nornir.core.task -    ERROR -      start() - Host 'R2': task 'napalm_ping' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_ping.py", line 46, in napalm_ping
+    result = device.ping(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 1967, in ping
+    rpc_reply = self.device._conn.rpc(ping_rpc)._NCElement__doc
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/manager.py", line 231, in execute
+    return cls(self._session,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/third_party/juniper/rpc.py", line 52, in request
+    return self._request(rpc)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/rpc.py", line 348, in _request
+    raise self._reply.error
+ncclient.operations.rpc.RPCError: syntax error
+
+2020-05-19 20:49:53,712 -  nornir.core -     INFO -        run() - Running task 'napalm_cli' with args {'commands': ['ping 192.168.122.2']} on 4 hosts
+2020-05-19 20:49:59,335 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': '192.168.122.1'} on 1 hosts
+2020-05-19 20:50:36,035 -  nornir.core -     INFO -        run() - Running task 'napalm_cli' with args {'commands': ['ping 192.168.122.9']} on 4 hosts
+2020-05-19 20:50:54,958 -  nornir.core -     INFO -        run() - Running task 'napalm_cli' with args {'commands': ['ping 192.168.122.9']} on 4 hosts
+2020-05-19 20:51:10,771 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': '192.168.122.9'} on 1 hosts
+2020-05-19 20:57:33,985 -  nornir.core -     INFO -        run() - Running task 'napalm_cli' with args {'commands': ['ping 192.168.122.0', 'ping 192.168.122.1', 'ping 192.168.122.2', 'ping 192.168.122.3', 'ping 192.168.122.4', 'ping 192.168.122.5', 'ping 192.168.122.6', 'ping 192.168.122.7', 'ping 192.168.122.8']} on 4 hosts
+2020-05-19 20:58:39,490 - nornir.core.task -    ERROR -      start() - Host 'SW3': task 'napalm_cli' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 204, in _send_command
+    output = self.device.send_command(command)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 1335, in send_command
+    raise IOError(
+OSError: Search pattern never detected in send_command_expect: vIOS\-L2\-01\#
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_cli.py", line 18, in napalm_cli
+    result = device.cli(commands)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 2319, in cli
+    output = self._send_command(command)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 207, in _send_command
+    raise ConnectionClosedException(str(e))
+napalm.base.exceptions.ConnectionClosedException: Search pattern never detected in send_command_expect: vIOS\-L2\-01\#
+
+2020-05-19 20:58:39,491 - nornir.core.task -    ERROR -      start() - Host 'SW2': task 'napalm_cli' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 204, in _send_command
+    output = self.device.send_command(command)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 1335, in send_command
+    raise IOError(
+OSError: Search pattern never detected in send_command_expect: vIOS\-L2\-01\#
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_cli.py", line 18, in napalm_cli
+    result = device.cli(commands)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 2319, in cli
+    output = self._send_command(command)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 207, in _send_command
+    raise ConnectionClosedException(str(e))
+napalm.base.exceptions.ConnectionClosedException: Search pattern never detected in send_command_expect: vIOS\-L2\-01\#
+
+2020-05-19 20:58:39,492 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'napalm_cli' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 204, in _send_command
+    output = self.device.send_command(command)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 1335, in send_command
+    raise IOError(
+OSError: Search pattern never detected in send_command_expect: vIOS\-L2\-01\#
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_cli.py", line 18, in napalm_cli
+    result = device.cli(commands)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 2319, in cli
+    output = self._send_command(command)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 207, in _send_command
+    raise ConnectionClosedException(str(e))
+napalm.base.exceptions.ConnectionClosedException: Search pattern never detected in send_command_expect: vIOS\-L2\-01\#
+
+2020-05-19 21:00:48,562 -  nornir.core -     INFO -        run() - Running task 'napalm_cli' with args {'commands': ['ping 192.168.122.1', 'ping 192.168.122.2']} on 4 hosts
+2020-05-19 21:01:26,185 -  nornir.core -     INFO -        run() - Running task 'napalm_cli' with args {'commands': ['ping 192.168.122.1', 'ping 192.168.122.2', 'ping 192.168.122.3', 'ping 192.168.122.4']} on 4 hosts
+2020-05-19 21:09:35,644 -  nornir.core -     INFO -        run() - Running task 'napalm_cli' with args {'commands': ['ping 192.168.122.0', 'ping 192.168.122.1', 'ping 192.168.122.2', 'ping 192.168.122.3', 'ping 192.168.122.4', 'ping 192.168.122.5', 'ping 192.168.122.6', 'ping 192.168.122.7', 'ping 192.168.122.8']} on 4 hosts
+2020-05-19 21:10:40,979 - nornir.core.task -    ERROR -      start() - Host 'SW3': task 'napalm_cli' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 204, in _send_command
+    output = self.device.send_command(command)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 1335, in send_command
+    raise IOError(
+OSError: Search pattern never detected in send_command_expect: vIOS\-L2\-01\#
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_cli.py", line 18, in napalm_cli
+    result = device.cli(commands)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 2319, in cli
+    output = self._send_command(command)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 207, in _send_command
+    raise ConnectionClosedException(str(e))
+napalm.base.exceptions.ConnectionClosedException: Search pattern never detected in send_command_expect: vIOS\-L2\-01\#
+
+2020-05-19 21:10:40,980 - nornir.core.task -    ERROR -      start() - Host 'SW2': task 'napalm_cli' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 204, in _send_command
+    output = self.device.send_command(command)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 1335, in send_command
+    raise IOError(
+OSError: Search pattern never detected in send_command_expect: vIOS\-L2\-01\#
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_cli.py", line 18, in napalm_cli
+    result = device.cli(commands)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 2319, in cli
+    output = self._send_command(command)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 207, in _send_command
+    raise ConnectionClosedException(str(e))
+napalm.base.exceptions.ConnectionClosedException: Search pattern never detected in send_command_expect: vIOS\-L2\-01\#
+
+2020-05-19 21:10:41,044 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'napalm_cli' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 204, in _send_command
+    output = self.device.send_command(command)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 1335, in send_command
+    raise IOError(
+OSError: Search pattern never detected in send_command_expect: vIOS\-L2\-01\#
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_cli.py", line 18, in napalm_cli
+    result = device.cli(commands)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 2319, in cli
+    output = self._send_command(command)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 207, in _send_command
+    raise ConnectionClosedException(str(e))
+napalm.base.exceptions.ConnectionClosedException: Search pattern never detected in send_command_expect: vIOS\-L2\-01\#
+
+2020-05-19 21:10:41,045 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': '192.168.122.9'} on 1 hosts
+2020-05-19 21:11:25,223 -  nornir.core -     INFO -        run() - Running task 'napalm_cli' with args {'commands': ['ping 192.168.122.1', 'ping 192.168.122.2']} on 4 hosts
+2020-05-19 21:11:31,515 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': '192.168.122.9'} on 1 hosts
+2020-05-19 21:17:12,331 -  nornir.core -     INFO -        run() - Running task 'napalm_cli' with args {'commands': ['ping 192.168.122.1', 'ping 192.168.122.2', 'ping 192.168.122.3', 'ping 192.168.122.4', 'ping 192.168.122.5', 'ping 192.168.122.6', 'ping 192.168.122.7']} on 4 hosts
+2020-05-19 21:17:25,701 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': '192.168.122.9'} on 1 hosts
+2020-05-19 21:18:03,842 -  nornir.core -     INFO -        run() - Running task 'napalm_cli' with args {'commands': ['ping 192.168.122.0', 'ping 192.168.122.1', 'ping 192.168.122.2', 'ping 192.168.122.3', 'ping 192.168.122.4', 'ping 192.168.122.5', 'ping 192.168.122.6', 'ping 192.168.122.7']} on 4 hosts
+2020-05-19 21:19:09,248 - nornir.core.task -    ERROR -      start() - Host 'SW3': task 'napalm_cli' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 204, in _send_command
+    output = self.device.send_command(command)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 1335, in send_command
+    raise IOError(
+OSError: Search pattern never detected in send_command_expect: vIOS\-L2\-01\#
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_cli.py", line 18, in napalm_cli
+    result = device.cli(commands)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 2319, in cli
+    output = self._send_command(command)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 207, in _send_command
+    raise ConnectionClosedException(str(e))
+napalm.base.exceptions.ConnectionClosedException: Search pattern never detected in send_command_expect: vIOS\-L2\-01\#
+
+2020-05-19 21:19:09,256 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'napalm_cli' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 204, in _send_command
+    output = self.device.send_command(command)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 1335, in send_command
+    raise IOError(
+OSError: Search pattern never detected in send_command_expect: vIOS\-L2\-01\#
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_cli.py", line 18, in napalm_cli
+    result = device.cli(commands)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 2319, in cli
+    output = self._send_command(command)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 207, in _send_command
+    raise ConnectionClosedException(str(e))
+napalm.base.exceptions.ConnectionClosedException: Search pattern never detected in send_command_expect: vIOS\-L2\-01\#
+
+2020-05-19 21:19:09,409 - nornir.core.task -    ERROR -      start() - Host 'SW2': task 'napalm_cli' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 204, in _send_command
+    output = self.device.send_command(command)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 1335, in send_command
+    raise IOError(
+OSError: Search pattern never detected in send_command_expect: vIOS\-L2\-01\#
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_cli.py", line 18, in napalm_cli
+    result = device.cli(commands)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 2319, in cli
+    output = self._send_command(command)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 207, in _send_command
+    raise ConnectionClosedException(str(e))
+napalm.base.exceptions.ConnectionClosedException: Search pattern never detected in send_command_expect: vIOS\-L2\-01\#
+
+2020-05-19 21:19:09,409 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': '192.168.122.9'} on 1 hosts
+2020-05-19 21:21:07,721 -  nornir.core -     INFO -        run() - Running task 'napalm_cli' with args {'commands': ['ping -i 2 192.168.122.0', 'ping -i 2 192.168.122.1', 'ping -i 2 192.168.122.2', 'ping -i 2 192.168.122.3', 'ping -i 2 192.168.122.4', 'ping -i 2 192.168.122.5', 'ping -i 2 192.168.122.6', 'ping -i 2 192.168.122.7']} on 4 hosts
+2020-05-19 21:21:35,631 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': '192.168.122.9'} on 1 hosts
+2020-05-19 21:24:13,820 -  nornir.core -     INFO -        run() - Running task 'napalm_cli' with args {'commands': ['ping 192.168.122.0']} on 4 hosts
+2020-05-19 21:25:19,250 - nornir.core.task -    ERROR -      start() - Host 'SW2': task 'napalm_cli' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 204, in _send_command
+    output = self.device.send_command(command)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 1335, in send_command
+    raise IOError(
+OSError: Search pattern never detected in send_command_expect: vIOS\-L2\-01\#
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_cli.py", line 18, in napalm_cli
+    result = device.cli(commands)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 2319, in cli
+    output = self._send_command(command)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 207, in _send_command
+    raise ConnectionClosedException(str(e))
+napalm.base.exceptions.ConnectionClosedException: Search pattern never detected in send_command_expect: vIOS\-L2\-01\#
+
+2020-05-19 21:25:19,254 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'napalm_cli' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 204, in _send_command
+    output = self.device.send_command(command)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 1335, in send_command
+    raise IOError(
+OSError: Search pattern never detected in send_command_expect: vIOS\-L2\-01\#
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_cli.py", line 18, in napalm_cli
+    result = device.cli(commands)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 2319, in cli
+    output = self._send_command(command)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 207, in _send_command
+    raise ConnectionClosedException(str(e))
+napalm.base.exceptions.ConnectionClosedException: Search pattern never detected in send_command_expect: vIOS\-L2\-01\#
+
+2020-05-19 21:25:19,307 - nornir.core.task -    ERROR -      start() - Host 'SW3': task 'napalm_cli' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 204, in _send_command
+    output = self.device.send_command(command)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 1335, in send_command
+    raise IOError(
+OSError: Search pattern never detected in send_command_expect: vIOS\-L2\-01\#
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 85, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/plugins/tasks/networking/napalm_cli.py", line 18, in napalm_cli
+    result = device.cli(commands)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 2319, in cli
+    output = self._send_command(command)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 207, in _send_command
+    raise ConnectionClosedException(str(e))
+napalm.base.exceptions.ConnectionClosedException: Search pattern never detected in send_command_expect: vIOS\-L2\-01\#
+
+2020-05-19 21:25:19,307 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': '192.168.122.9'} on 1 hosts
+2020-05-19 21:28:25,556 -  nornir.core -     INFO -        run() - Running task 'napalm_cli' with args {'commands': ['ping 192.168.122.8', 'ping 192.168.122.9']} on 4 hosts
+2020-05-19 21:28:42,000 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': '192.168.122.9'} on 1 hosts
+2020-05-19 21:29:58,500 -  nornir.core -     INFO -        run() - Running task 'napalm_cli' with args {'commands': ['ping 192.168.122.8', 'ping 192.168.122.9']} on 4 hosts
+2020-05-19 21:30:14,759 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': 'google.com'} on 1 hosts
+2020-05-19 21:30:32,667 -  nornir.core -     INFO -        run() - Running task 'napalm_cli' with args {'commands': ['ping 192.168.122.8', 'ping 192.168.122.9']} on 4 hosts
+2020-05-19 21:30:48,998 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': '8.8.8.8'} on 1 hosts
+2020-05-19 21:31:26,519 -  nornir.core -     INFO -        run() - Running task 'napalm_cli' with args {'commands': ['ping 192.168.122.1', 'ping 192.168.122.2', 'ping 192.168.122.3', 'ping 192.168.122.4', 'ping 192.168.122.5', 'ping 192.168.122.6', 'ping 192.168.122.7', 'ping 192.168.122.8', 'ping 192.168.122.9']} on 4 hosts
+2020-05-19 21:31:47,123 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': '192.168.122.1'} on 1 hosts

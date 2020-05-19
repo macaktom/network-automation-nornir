@@ -5,8 +5,8 @@ cisco_group:
   password: "cisco"
 
 junos_group:
-  platform: "juniper_junos"
-  username: "root"
+  platform: "junos"
+  username: "juniper"
   password: "Juniper"
 
 linux_group:
