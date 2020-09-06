@@ -3,6 +3,11 @@ cisco_group:
   platform: "ios"
   username: "cisco"
   password: "cisco"
+  connection_options:
+    napalm:
+      extras:
+        optional_args:
+          secret: "cisco"
 
 junos_group:
   platform: "junos"
@@ -13,3 +18,6 @@ linux_group:
   platform: "linux"
   username: "root"
   password: "root"
+
+test:
+  platfo: test

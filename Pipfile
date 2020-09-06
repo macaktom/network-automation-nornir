@@ -6,25 +6,21 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-jinja2 = "*"
-pyyaml = "*"
+Jinja2 = "*"
+PyYAML = "*"
 textfsm = "*"
 pytest = "*"
 setuptools = "*"
 simplejson = "*"
-black = "*"
 yamllint = "*"
 requests = "*"
 pylint = "*"
 lxml = "*"
 ntc-templates = "*"
 cryptography = "*"
-nornir = "==2.4.0"
+junos-eznc = "*"
 napalm = "*"
-pprint = "*"
+nornir = "*"
 
 [requires]
 python_version = "3.8"
-
-[pipenv]
-allow_prereleases = true

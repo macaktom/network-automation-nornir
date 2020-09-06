@@ -2457,3 +2457,7 @@ napalm.base.exceptions.ConnectionClosedException: Search pattern never detected 
 2020-05-19 21:30:48,998 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': '8.8.8.8'} on 1 hosts
 2020-05-19 21:31:26,519 -  nornir.core -     INFO -        run() - Running task 'napalm_cli' with args {'commands': ['ping 192.168.122.1', 'ping 192.168.122.2', 'ping 192.168.122.3', 'ping 192.168.122.4', 'ping 192.168.122.5', 'ping 192.168.122.6', 'ping 192.168.122.7', 'ping 192.168.122.8', 'ping 192.168.122.9']} on 4 hosts
 2020-05-19 21:31:47,123 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': '192.168.122.1'} on 1 hosts
+2020-09-06 22:31:57,924 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': '192.168.122.1'} on 1 hosts
+2020-09-06 22:33:01,494 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': '192.168.122.1'} on 1 hosts
+2020-09-06 22:33:05,809 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': '192.168.122.1'} on 1 hosts
+2020-09-06 22:35:46,284 -  nornir.core -     INFO -        run() - Running task 'napalm_ping' with args {'dest': '192.168.122.1'} on 1 hosts
