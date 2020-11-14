@@ -1,7 +1,7 @@
 ---
 cisco_group:
   platform: "ios"
-  username: "cisco"
+  username: "admin"
   password: "cisco"
   connection_options:
     napalm:
@@ -16,8 +16,6 @@ junos_group:
 
 linux_group:
   platform: "linux"
-  username: "root"
-  password: "root"
+  username: "linux"
+  password: "linux"
 
-test:
-  platfo: test

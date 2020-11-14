@@ -1,0 +1,6 @@
+{%- for ip_route in static_routes_config %}
+    set routing-options static route {{ ip_route.dest_ip }}{{ ip_route.prefix_length }} next-hop {{ ip_route.next_hop }}
+{%- endfor %}
+{%- if route.default %}
+    set routing-options static route 0.0.0.0/0 next-hop {{ route.next_hop }}
+{%- endif -%}

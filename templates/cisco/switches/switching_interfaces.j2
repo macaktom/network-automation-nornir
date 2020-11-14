@@ -1,0 +1,12 @@
+{%- for int, int_dict in switching_interfaces.items() | sort %}
+    interface {{ int }}
+    description {{ int_dict.description }}
+    {%- if int_dict.mode == "access" %}
+        switchport mode {{ int_dict.mode }}
+        switchport access vlan {{ int_dict.vlan }}
+    {%- else %}
+        switchport trunk encapsulation dot1q
+        switchport mode {{ int_dict.mode }}
+        switchport {{ int_dict.mode }} allowed vlan {{ int_dict.trunk_vlans }}
+    {%- endif %}
+{% endfor %}

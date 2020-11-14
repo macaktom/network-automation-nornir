@@ -1,0 +1,13 @@
+set routing-options router-id {{ 4.4.4.4 }}
+{%- for interface in ospfv3_interfaces %}
+    {%- if passive %}
+        set protocols ospf3 area {{ 0 }} interface {{ em1 }} passive
+    {%- else %}
+        set protocols ospf3 area {{ 0 }} interface {{ em1 }}
+    {%- endif -%}
+{%- endfor %}
+{%- if redistribute_static %}
+    set policy-options policy-statement {{ static-into-ospf }} term {{ static }} from protocol static
+    set policy-options policy-statement {{ static-into-ospf }} term {{ static }} then accept
+    set protocols ospf3 export {{ static-into-ospf }}
+{%- endif -%}
