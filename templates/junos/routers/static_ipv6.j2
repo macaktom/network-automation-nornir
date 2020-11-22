@@ -1,6 +1,0 @@
-{%- for ip_route in static_routes_ipv6_config %}
-    set routing-options rib inet6 static route  {{ ip_route.dest_ip }}{{ ip_route.prefix_length }} next-hop {{ ip_route.next_hop }}
-{%- endfor %}
-{%- if route.default %}
-    set routing-options rib inet6 static route ::/0 next-hop {{ route.next_hop }}
-{%- endif -%}

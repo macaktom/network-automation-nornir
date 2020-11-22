@@ -1,6 +1,9 @@
 ipv6 unicast-routing
 ipv6 router ospf {{ ospfv3_config.process }}
 router-id {{ ospfv3_config.router_id }}
+{%- for interface in ospfv3_config.passive_interfaces %}
+    passive-interface {{ interface }}
+{%- endfor %}
 {%- if ospfv3_config.redistribute_static %}
     redistribute static
 {%- endif -%}

@@ -1,0 +1,87 @@
+---
+# YAML soubor, který slouží POUZE jako přehled VŠECH definovatelných možností nastavení inventáře u zařízení Juniper Olive (router). Nejedná se o reálnou situaci.
+# Je zde definována struktura a formát dat pro jednotlivé konfigurace zařízení.
+# Pokud vývojář využívá jako typ Nornir inventáře plugin SimpleInventory, tak modifikované data je nutné překopírovat do slovníku data v souboru hosts.yaml.
+data:
+  interfaces_ipv4:
+    em0:
+      description: popis pro rozhraní
+      units:
+        - number: 0
+          net: 192.168.20.1
+          prefix_length: /64
+        - number: 1
+          net: 192.168.30.1
+          prefix_length: /64
+    em1:
+      description: popis pro rozhraní
+      units:
+        - number: 0
+          net: 192.168.40.1
+          prefix_length: /64
+  static_routing_config:
+    networks:
+      - dest_ip: 192.168.50.1
+        prefix_length: /64
+        next_hop: 192.168.20.2
+      - dest_ip: 192.168.60.1
+        prefix_length: /64
+        next_hop: 192.168.30.2
+    default:
+      defined: True
+      next_hop: 192.168.20.2
+  ospf_config: # OSPFv2 konfigurace + redistribuce
+    process: 1
+    router_id: 1.1.1.1
+    interfaces:
+      em0:
+        passive: True
+        area_number: 0
+      em1:
+        passive: False
+        area_number: 0
+    redistribute_static:
+      defined: True
+      policy_name: static-into-ospf
+      term_name: static
+  interfaces_ipv6:
+    em0:
+      description: popis pro rozhraní
+      units:
+        - number: 0
+          net: 2001:db8:0:21::1
+          prefix_length: /64
+        - number: 1
+          net: 2001:db8:0:25::1
+          prefix_length: /64
+    em1:
+      description: popis pro rozhraní
+      units:
+        - number: 0
+          net: 2001:db8:0:22::1
+          prefix_length: /64
+  static_routing_ipv6_config:
+    networks:
+      - dest_ip: 2001:db8:0:28::1
+        prefix_length: /64
+        next_hop: 2001:db8:0:25::1
+      - dest_ip: 2001:db8:0:28::9
+        prefix_length: /64
+        next_hop: 2001:db8:0:21::1
+    default:
+      defined: True
+      next_hop: 2001:db8:0:25::1
+  ospfv3_config: # OSPFv3 konfigurace + redistribuce
+    process: 1
+    router_id: 2.2.2.2
+    interfaces:
+      em0:
+        passive: True
+        area_number: 0
+      em1:
+        passive: False
+        area_number: 0
+    redistribute_static:
+      defined: True
+      policy_name: static-into-ospf
+      term_name: static

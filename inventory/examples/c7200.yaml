@@ -1,0 +1,154 @@
+---
+# YAML soubor, který slouží POUZE jako přehled VŠECH definovatelných možností nastavení inventáře u zařízení Cisco 7200 (router). Nejedná se o reálnou situaci.
+# Je zde definována struktura a formát dat pro jednotlivé části konfigurace zařízení (konfigurace např. rozhraní, statického a dynamického routování, ACL atd.).
+# Pokud vývojář využívá jako typ Nornir inventáře plugin SimpleInventory, tak modifikované data je nutné překopírovat do slovníku data v souboru hosts.yaml.
+data:
+  interfaces_ipv4: # Základní nastavení rozhraní
+    Loopback 0:
+      description: description of virtual interface
+      net: 192.168.10.1
+      mask: 255.255.255.255
+    FastEthernet 0/0:
+      description: connected to switch_mgmt Ethernet10
+      net: 192.168.20.1
+      mask: 255.255.255.0
+    FastEthernet 0/1:
+      description: connected to router1 FastEthernet 0/0
+      net: 192.168.50.1
+      mask: 255.255.255.252
+  static_routing_config: # IPv4 statický routing
+    networks:
+      - dest_ip: 192.168.30.0
+        dest_mask: 255.255.255.0
+        next_hop: 192.168.10.2
+      - dest_ip: 192.168.40.0
+        dest_mask: 255.255.255.0
+        next_hop: 192.168.10.2
+    default:
+      defined: True
+      next_hop: 192.168.10.2
+  ospf_config: # OSPFv2 konfigurace + redistribuce
+    process: 1
+    router_id: 1.1.1.1
+    passive_interfaces: [FastEthernet 0/0, FastEthernet 0/1]
+    networks:
+      - ip: 192.168.10.0
+        wildcard: 0.0.0.255
+        area_number: 0
+      - ip: 192.168.50.0
+        wildcard: 0.0.0.3
+        area_number: 0
+    redistribute_static: True
+    redistribute_eigrp: True
+    redistribute_eigrp_AS_numbers: [1, 2, 3]
+    distribute_default: True
+  eigrp_config: # EIGRP konfigurace + redistribuce
+    AS_number: 1
+    passive_interfaces: [FastEthernet 0/0, FastEthernet 0/1]
+    networks:
+      - ip: 192.168.10.0
+        wildcard: 0.0.0.255
+      - ip: 192.168.50.0
+        wildcard: 0.0.0.3
+    redistribute_static: True
+    redistribute_ospf: True
+    redistribute_ospf_processes: [1, 2, 3, 4]
+  access_list_config: # Named ACL konfigurace standard + extended
+    ADMIN-ACL:
+      type: extended
+      rules:
+        - deny ip 192.168.10.0 0.0.0.255 192.168.20.0 0.0.0.255
+        - deny ip 192.168.30.0 0.0.0.255 192.168.20.0 0.0.0.255
+        - deny ip 192.168.50.0 0.0.0.255 192.168.20.0 0.0.0.255
+        - permit ip any any
+      interfaces:
+        - name: FastEthernet 0/0
+          acl_direction: in
+    Student-ACL:
+      type: standard
+      rules:
+        - permit 172.30.0.0 0.0.255.255
+        - deny 192.168.1.53
+      interfaces:
+        - name: FastEthernet 0/1
+          acl_direction: out
+  nat_config: # source NAT typu PAT
+    access_list_name: NATACL
+    source_network:
+      ip: 192.168.0.0
+      wild_card: 0.0.0.255
+    interface_types:
+      inside:
+        name: FastEthernet 0/0
+      outside:
+        name: FastEthernet 0/1
+  interfaces_ipv6: # Základní nastavení rozhraní - IPv6
+    Loopback 0:
+      description: description of virtual interface
+      networks:
+        - net: "2001:db8::1"
+          prefix_length: /128
+    FastEthernet 0/0:
+      description: connected to switch_mgmt Ethernet10
+      networks:
+        - net: "2001:0BB9:aabb:1234:1111:2222:3333:4444"
+          prefix_length: /64
+        - net: "2001:bb9:aabb:1234::"
+          prefix_length: /64
+          eui_format_auto: True  # povolení IEEE EUI-64 metody kalkulace IPv6 adresy
+    FastEthernet 0/1:
+      description: connected to router1 FastEthernet 0/1
+      networks:
+        - net: "2001:718:1::1"
+          prefix_length: /64
+  static_routing_ipv6_config: # Statický routing - IPv6
+    networks:
+      - dest_ip: "2001:db8::0"
+        prefix_length: /32
+        next_hop: "2001:db8:0:ee44::1"
+      - dest_ip: "2001:db9::0"
+        prefix_length: /32
+        next_hop: FastEthernet 0/1
+    default:
+      defined: True
+      next_hop: "2001:db8:0:ee44::1"
+  ospfv3_config: # OSPFv3 konfigurace + redistribuce
+    process: 1
+    router_id: 1.1.1.1
+    passive_interfaces: [FastEthernet 0/0]
+    interfaces:
+      Loopback 0:
+        area_number: 0
+      FastThernet 0/0:
+        area_number: 0
+      FastEthernet 0/1:
+        area_number: 0
+    redistribute_static: True
+    redistribute_eigrp: True
+    redistribute_eigrp_AS_numbers: [1, 2]
+    distribute_default: True
+  eigrp_ipv6_config: # EIGRP konfigurace + redistribuce - IPv6
+    AS_number: 1
+    router_id: 1.1.1.1
+    passive_interfaces: [FastEthernet 0/0]
+    interfaces: [Loopback 0, FastEthernet 0/0, FastEthernet 0/1]
+    redistribute_static: True
+    redistribute_ospf: True
+    redistribute_ospf_processes: [1, 2]
+  access_list_ipv6_config: # Named ACL konfigurace - IPv6
+    ACLName:
+      rules:
+        - deny tcp host 2001:db8:e0bb::2 any eq telnet
+        - permit ipv6 any any
+      interfaces:
+        - name: Loopback 0
+          acl_direction: in
+        - name: FastEthernet 0/1
+          acl_direction: out
+    ExampleACL:
+      rules:
+        - permit icmp 2001:db8:e0bb::/64 2001:db8::/64
+        - deny udp any any
+      interfaces:
+        - name: FastEthernet 0/0
+          acl_direction: in

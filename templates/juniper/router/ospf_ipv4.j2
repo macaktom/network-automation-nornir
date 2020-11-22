@@ -1,0 +1,13 @@
+set routing-options router-id {{ ospf_config.router_id }}
+{%- for int, int_dict in ospf_config.interfaces.items() | sort %}
+    {%- if int_dict.passive %}
+        set protocols ospf area {{ int_dict.area_number }} interface {{ int }} passive
+    {%- else %}
+        set protocols ospf area {{ int_dict.area_number }} interface {{ int }}
+    {%- endif -%}
+{%- endfor %}
+{%- if ospf_config.redistribute_static.defined %}
+    set policy-options policy-statement {{ ospf_config.redistribute_static.policy_name }} term {{ ospf_config.redistribute_static.term_name }} from protocol static
+    set policy-options policy-statement {{ ospf_config.redistribute_static.policy_name }} term {{ ospf_config.redistribute_static.term_name }} then accept
+    set protocols ospf export {{ ospf_config.redistribute_static.policy_name }}
+{%- endif -%}
