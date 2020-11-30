@@ -1,0 +1,7 @@
+set firewall family inet filter verizon term 10 from protocol tcp
+set firewall family inet filter verizon term 10 from source-address 172.27.31.0/24
+set firewall family inet filter verizon term 10 from destination-address 172.27.0.0/16
+set firewall family inet filter verizon term 10 from destination-port 3389
+set firewall family inet filter verizon term 10 then discard
+
+set interfaces em1 unit 0 family inet filter input/output verizon

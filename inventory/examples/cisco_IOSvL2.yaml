@@ -65,7 +65,7 @@ data:
     redistribute_static: True
     redistribute_ospf: True
     redistribute_ospf_processes: [ 1, 2, 3, 4 ]
-  access_list_config: # Named ACL konfigurace standard + extended
+  access_list_config: # Named ACL konfigurace standard + extended, lze pouze u ROUTED (no switchport) rozhraní
     ADMIN-ACL:
       type: extended
       rules:
@@ -123,7 +123,7 @@ data:
     redistribute_static: True
     redistribute_ospf: True
     redistribute_ospf_processes: [ 1, 2 ]
-  access_list_ipv6_config: # Named ACL konfigurace - IPv6
+  access_list_ipv6_config: # Named ACL konfigurace - IPv6, lze pouze u ROUTED (no switchport) rozhraní
     ACLName:
       rules:
         - deny tcp host 2001:DB8:e0bb::2 any eq telnet

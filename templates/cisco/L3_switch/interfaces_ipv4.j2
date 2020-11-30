@@ -1,8 +1,8 @@
-{%- for int, int_dict in l3_interfaces_ipv4.items() | sort %}
+{% for int, int_dict in interfaces_ipv4.items() | sort -%}
     interface {{ int }}
-    {%- if int_dict.routed_port %}
-        no switchport
-    {%- endif -%}
+    {% if int_dict.routed_port %}
+    no switchport
+    {% endif %}
     description {{ int_dict.description }}
     ip address {{ int_dict.net }} {{ int_dict.mask }}
 {% endfor %}

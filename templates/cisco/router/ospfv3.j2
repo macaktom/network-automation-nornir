@@ -1,24 +1,23 @@
 ipv6 unicast-routing
 ipv6 router ospf {{ ospfv3_config.process }}
 router-id {{ ospfv3_config.router_id }}
-{%- for interface in ospfv3_config.passive_interfaces %}
+{% for interface in ospfv3_config.passive_interfaces -%}
     passive-interface {{ interface }}
-{%- endfor %}
-{%- if ospfv3_config.redistribute_static %}
+{% endfor %}
+{% if ospfv3_config.redistribute_static -%}
     redistribute static
-{%- endif -%}
-{%- if ospf_config.redistribute_eigrp %}
-    {%- for AS_number in ospfv3_config.redistribute_eigrp_AS_numbers %}
+{% endif %}
+{% if ospfv3_config.redistribute_eigrp -%}
+    {% for AS_number in ospfv3_config.redistribute_eigrp_AS_numbers -%}
         redistribute eigrp {{ AS_number }}
-    {%- endfor %}
-{%- endif -%}
-{%- if ospfv3_config.distribute_default %}
+    {% endfor %}
+{% endif %}
+{% if ospfv3_config.distribute_default -%}
     default-information originate always
-{%- endif -%}
-exit
-{%- for int, int_dict in ospfv3_config.interfaces.items() | sort %}
+{% endif -%}
+    exit
+{% for int, int_dict in ospfv3_config.interfaces.items() | sort -%}
     interface {{ int }}
-    ipv6 enable
     ipv6 ospf {{ ospfv3_config.process }} area {{ int_dict.area_number }}
     exit
-{%- endfor %}
+{% endfor %}

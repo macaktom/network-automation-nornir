@@ -26,6 +26,9 @@ nornir-ansible = "*"
 nornir-scrapli = "*"
 nornir-utils = "*"
 nornir-jinja2 = "*"
+prettytable = "*"
+openpyxl = "*"
+pdoc3 = "*"
 
 [requires]
 python_version = "3.8"

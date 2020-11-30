@@ -1,0 +1,72 @@
+cisco_R1:
+    hostname: 10.10.10.2
+    groups:
+        - cisco_group
+    data:
+        type: network_device
+        vendor: "cisco"
+        dev_type: "router"
+
+cisco_R2:
+    hostname: 10.10.10.3
+    groups:
+        - cisco_group
+    data:
+        type: network_device
+        vendor: "cisco"
+        dev_type: "router"
+
+junos_R3:
+    hostname: 10.10.10.4
+    groups:
+        - junos_group
+        - cisco_group
+    data:
+        type: network_device
+        vendor: "juniper"
+        dev_type: "router"
+
+SW1:
+    hostname: 10.10.10.5
+    groups:
+        - cisco_group
+    data:
+        type: network_device
+        vendor: "cisco"
+        dev_type: "L3_switch"
+
+SW2:
+    hostname: 10.10.10.6
+    groups:
+        - cisco_group
+    data:
+        type: network_device
+        vendor: "cisco"
+        dev_type: "L3_switch"
+
+SW3:
+    hostname: 10.10.10.7
+    groups:
+        - cisco_group
+    data:
+        type: network_device
+        vendor: "cisco"
+        dev_type: "L3_switch"
+
+SW4:
+    hostname: 10.10.10.8
+    groups:
+        - cisco_group
+    data:
+        type: network_device
+        vendor: "cisco"
+        dev_type: "L3_switch"
+
+
+TFTPserver:
+    hostname: 10.10.10.9
+    groups:
+        - linux_group
+    data:
+        type: end_device
+        dev_type: "server"

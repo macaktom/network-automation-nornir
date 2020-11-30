@@ -1,5 +1,5 @@
-{%- for vlan in vlans_config %}
+{% for vlan in vlans_config -%}
     vlan {{ vlan.number }}
     name {{ vlan.name }}
     exit
-{%- endfor %}
+{% endfor %}

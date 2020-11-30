@@ -1,7 +1,7 @@
-access list {{ nat_config.access_list_name }} permit {{ nat_config.source_network.ip }} {{ nat_config.source_network.wild_mask }}
+access list {{ nat_config.access_list_name }} permit {{ nat_config.source_network.ip }} {{ nat_config.source_network.wild_card }}
 ip nat inside source list {{ nat_config.access_list_name }} interface {{ nat_config.interface_types.outside.name }} overload
-{%- for type, int_dict in nat_config.interface_types.items() %}
+{% for type, int_dict in nat_config.interface_types.items() -%}
     interface {{ int_dict.name }}
     ip nat {{ type }}
     exit
-{%- endfor %}
+{% endfor %}

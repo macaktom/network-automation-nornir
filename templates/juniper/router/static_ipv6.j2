@@ -1,6 +1,6 @@
-{%- for net in static_routing_ipv6_config.networks %}
+{% for net in static_routing_ipv6_config.networks -%}
     set routing-options rib inet6 static route {{ net.dest_ip }}{{ net.prefix_length }} next-hop {{ net.next_hop }}
-{%- endfor %}
-{%- if static_routing_ipv6_config.default.defined and static_routing_ipv6_config.default | length == 2 %}
+{% endfor %}
+{% if static_routing_ipv6_config.default.defined and static_routing_ipv6_config.default | length == 2 -%}
     set routing-options rib inet6 static route ::/0 next-hop {{ static_routing_ipv6_config.default.next_hop }}
-{%- endif -%}
+{% endif %}

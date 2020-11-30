@@ -1,7 +1,7 @@
 ipv6 unicast-routing
-{%- for net in static_routing_ipv6_config.networks %}
-    ipv6 route {{ net.dest_ip }}{{ net.prefix_length }} {{ net.next_hop_interface }}
-{%- endfor %}
-{%- if static_routing_ipv6_config.default.defined and static_routing_ipv6_config.default | length == 2 %}
+{% for net in static_routing_ipv6_config.networks -%}
+    ipv6 route {{ net.dest_ip }}{{ net.prefix_length }} {{ net.next_hop }}
+{% endfor %}
+{% if static_routing_ipv6_config.default.defined and static_routing_ipv6_config.default | length == 2 -%}
     ipv6 route ::/0 {{ static_routing_ipv6_config.default.next_hop }}
-{%- endif -%}
+{% endif %}
