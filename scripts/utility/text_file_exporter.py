@@ -16,7 +16,7 @@ class TextFileExporter:
         else:
             raise ValueError("Not valid file path.")
 
-    def _export_to_file(self, data) -> None:
+    def export_to_file(self, data: str) -> None:
         if path.isfile:
             folder_path = self.dest_file_absolute_path.parent
             folder_path.mkdir(parents=True, exist_ok=True)

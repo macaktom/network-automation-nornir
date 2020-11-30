@@ -1,20 +1,13 @@
 import datetime
-from pathlib import Path
 
 from colorama import Fore
 from nornir import InitNornir
 from nornir.core import Task
 from nornir.core.filter import F
 from nornir_jinja2.plugins.tasks import template_file
-from nornir_napalm.plugins.tasks import napalm_get, napalm_configure, napalm_cli
-from nornir_utils.plugins.functions import print_result
-from os import path
-from openpyxl.styles import Alignment
-from scripts.tasks.excel_exporter import ExcelExporter
-from scripts.tasks.network_info_exporter import NetworkInfoExporter
-from scripts.tasks.network_info_viewer import NetworkUtilityViewer
-from openpyxl import Workbook
-from openpyxl.utils import get_column_letter
+from nornir_napalm.plugins.tasks import napalm_configure
+from scripts.utility.network_info_exporter import NetworkInfoExporter
+from scripts.utility.network_info_viewer import NetworkUtilityViewer
 
 
 # Rozdelit SHOW commandy:
@@ -53,24 +46,24 @@ def configure_ipv4_interfaces(task: Task):
 
 def main():
     # nr = InitNornir(config_file="config.yml", core = {"raise_on_error": True}) # Nornir objekt, který upozorní na chybu při provedení tasku
-    nr = InitNornir(config_file="config.yml") # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný task - více o chybě v nornir.log
+    nr = InitNornir(
+        config_file="config.yml")  # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný task - více o chybě v nornir.log
     routers = nr.filter(F(dev_type="router"))
     l3_switches = nr.filter(F(dev_type="L3_switch"))
     l3_cisco = nr.filter(F(groups__contains="cisco_group") & F(dev_type="router") | F(dev_type="L3_switch"))
     all_devices = nr.filter(F(dev_type="router") | F(dev_type="L3_switch"))
     viewer = NetworkUtilityViewer()
-    # exporter = NetworkInfoExporter()
-    all_devices.run(task=viewer.show_vlans)
-    #z = all_devices.run(task=viewer.show_device_configuration)
+    exporter = NetworkInfoExporter()
+    #all_devices.run(task=viewer.show_vlans)
+    z = all_devices.run(task=exporter.export_ipv6_routes)
     # print(z['R1'][1].result['facts'])
     # print(z['R1'][2].result)
 
-    #exporter_xlsx = ExcelExporter(Workbook(), "Testa")
-    #z = all_devices.run(task=exporter_xlsx.get_conn_state_and_device_facts)
+    # exporter_xlsx = ExcelExporter(Workbook(), "Testa")
+    # z = all_devices.run(task=exporter_xlsx.get_conn_state_and_device_facts)
 
 
-
-# if contains access list, if contains family
+# TODO 1.12 - Prazdne soubory pri exportovani - u ipv4 a ipv6 ip routes nevytvaret, dopsat excel exporter, zacit configuration
 if __name__ == "__main__":
     try:
         start = datetime.datetime.now()

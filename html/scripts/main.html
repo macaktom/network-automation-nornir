@@ -27,22 +27,15 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">import datetime
-from pathlib import Path
 
 from colorama import Fore
 from nornir import InitNornir
 from nornir.core import Task
 from nornir.core.filter import F
 from nornir_jinja2.plugins.tasks import template_file
-from nornir_napalm.plugins.tasks import napalm_get, napalm_configure, napalm_cli
-from nornir_utils.plugins.functions import print_result
-from os import path
-from openpyxl.styles import Alignment
-from scripts.tasks.excel_exporter import ExcelExporter
-from scripts.tasks.network_info_exporter import NetworkInfoExporter
-from scripts.tasks.network_info_viewer import NetworkUtilityViewer
-from openpyxl import Workbook
-from openpyxl.utils import get_column_letter
+from nornir_napalm.plugins.tasks import napalm_configure
+from scripts.utility.network_info_exporter import NetworkInfoExporter
+from scripts.utility.network_info_viewer import NetworkUtilityViewer
 
 
 # Rozdelit SHOW commandy:
@@ -81,24 +74,24 @@ def configure_ipv4_interfaces(task: Task):
 
 def main():
     # nr = InitNornir(config_file=&#34;config.yml&#34;, core = {&#34;raise_on_error&#34;: True}) # Nornir objekt, který upozorní na chybu při provedení tasku
-    nr = InitNornir(config_file=&#34;config.yml&#34;) # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný task - více o chybě v nornir.log
+    nr = InitNornir(
+        config_file=&#34;config.yml&#34;)  # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný task - více o chybě v nornir.log
     routers = nr.filter(F(dev_type=&#34;router&#34;))
     l3_switches = nr.filter(F(dev_type=&#34;L3_switch&#34;))
     l3_cisco = nr.filter(F(groups__contains=&#34;cisco_group&#34;) &amp; F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;))
     all_devices = nr.filter(F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;))
     viewer = NetworkUtilityViewer()
-    # exporter = NetworkInfoExporter()
-    all_devices.run(task=viewer.show_vlans)
-    #z = all_devices.run(task=viewer.show_device_configuration)
+    exporter = NetworkInfoExporter()
+    #all_devices.run(task=viewer.show_vlans)
+    z = all_devices.run(task=exporter.export_ipv6_routes)
     # print(z[&#39;R1&#39;][1].result[&#39;facts&#39;])
     # print(z[&#39;R1&#39;][2].result)
 
-    #exporter_xlsx = ExcelExporter(Workbook(), &#34;Testa&#34;)
-    #z = all_devices.run(task=exporter_xlsx.get_conn_state_and_device_facts)
+    # exporter_xlsx = ExcelExporter(Workbook(), &#34;Testa&#34;)
+    # z = all_devices.run(task=exporter_xlsx.get_conn_state_and_device_facts)
 
 
-
-# if contains access list, if contains family
+# TODO 1.12 - Prazdne soubory pri exportovani - u ipv4 a ipv6 ip routes nevytvaret, dopsat excel exporter, zacit configuration
 if __name__ == &#34;__main__&#34;:
     try:
         start = datetime.datetime.now()
@@ -166,14 +159,16 @@ if __name__ == &#34;__main__&#34;:
 </summary>
 <pre><code class="python">def main():
     # nr = InitNornir(config_file=&#34;config.yml&#34;, core = {&#34;raise_on_error&#34;: True}) # Nornir objekt, který upozorní na chybu při provedení tasku
-    nr = InitNornir(config_file=&#34;config.yml&#34;) # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný task - více o chybě v nornir.log
+    nr = InitNornir(
+        config_file=&#34;config.yml&#34;)  # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný task - více o chybě v nornir.log
     routers = nr.filter(F(dev_type=&#34;router&#34;))
     l3_switches = nr.filter(F(dev_type=&#34;L3_switch&#34;))
     l3_cisco = nr.filter(F(groups__contains=&#34;cisco_group&#34;) &amp; F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;))
     all_devices = nr.filter(F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;))
     viewer = NetworkUtilityViewer()
-    # exporter = NetworkInfoExporter()
-    all_devices.run(task=viewer.show_vlans)</code></pre>
+    exporter = NetworkInfoExporter()
+    #all_devices.run(task=viewer.show_vlans)
+    z = all_devices.run(task=exporter.export_ipv6_routes)</code></pre>
 </details>
 </dd>
 </dl>

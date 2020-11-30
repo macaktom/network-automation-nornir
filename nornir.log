@@ -2398,3 +2398,88 @@ Traceback (most recent call last):
 nornir.core.exceptions.NornirSubTaskError: Subtask: Invalid device type to execute this task. Only switches are allowed (failed)
 
 
+2020-11-30 16:35:28,080 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 3 hosts
+2020-11-30 20:19:01,548 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 3 hosts
+2020-11-30 20:19:31,181 -  nornir.core -     INFO -        run() - Running task 'show_ntp_info' with args {} on 3 hosts
+2020-11-30 20:19:53,833 -  nornir.core -     INFO -        run() - Running task 'show_ntp_info' with args {'json_out': True} on 3 hosts
+2020-11-30 20:20:21,171 -  nornir.core -     INFO -        run() - Running task 'show_snmp_info' with args {} on 3 hosts
+2020-11-30 20:20:37,175 -  nornir.core -     INFO -        run() - Running task 'show_users' with args {} on 3 hosts
+2020-11-30 20:20:37,178 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'show_users' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/network_info_viewer.py", line 40, in show_users
+    raise NornirSubTaskError("Invalid vendor to execute this task. Only Cisco is supported.", task)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Invalid vendor to execute this task. Only Cisco is supported. (failed)
+
+
+2020-11-30 20:23:15,392 -  nornir.core -     INFO -        run() - Running task 'show_users' with args {} on 3 hosts
+2020-11-30 20:23:18,027 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'Show created users on device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_get.py", line 44, in napalm_get
+    result[g] = method(**options)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 2140, in get_users
+    root_user = self._get_root()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 2108, in _get_root
+    root_items = root_table.items()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/factory/table.py", line 190, in items
+    return list(zip(self.keys(), self.values()))
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/factory/table.py", line 166, in keys
+    self._key_list = self._keys()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/factory/table.py", line 146, in _keys
+    return self._keys_simple(xpath + "/" + key_value)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/factory/table.py", line 114, in _keys_simple
+    return [x.text.strip() for x in self.xml.xpath(xpath)]
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/factory/table.py", line 114, in <listcomp>
+    return [x.text.strip() for x in self.xml.xpath(xpath)]
+AttributeError: 'NoneType' object has no attribute 'strip'
+
+2020-11-30 20:23:18,027 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'show_users' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/network_info_viewer.py", line 34, in show_users
+    result = task.run(task=napalm_get, name="Show created users on device", getters=["users"])
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Show created users on device (failed)
+
+
+2020-11-30 20:27:12,529 -  nornir.core -     INFO -        run() - Running task 'show_users' with args {} on 3 hosts
+2020-11-30 20:27:12,532 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'show_users' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/network_info_viewer.py", line 40, in show_users
+    raise NornirSubTaskError("Invalid vendor to execute this task. Only Cisco is supported.", task)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Invalid vendor to execute this task. Only Cisco is supported. (failed)
+
+
+2020-11-30 20:29:53,719 -  nornir.core -     INFO -        run() - Running task 'show_connection_state' with args {} on 3 hosts
+2020-11-30 20:30:07,924 -  nornir.core -     INFO -        run() - Running task 'show_hardware_details' with args {} on 3 hosts
+2020-11-30 20:30:07,928 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'show_hardware_details' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/network_info_viewer.py", line 58, in show_hardware_details
+    raise NornirSubTaskError("Command is not supported for Juniper Olive", task)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Command is not supported for Juniper Olive (failed)
+
+
+2020-11-30 20:30:30,972 -  nornir.core -     INFO -        run() - Running task 'show_ipv4_routes' with args {} on 3 hosts
+2020-11-30 20:31:37,222 -  nornir.core -     INFO -        run() - Running task 'show_ipv4_routes' with args {} on 3 hosts
+2020-11-30 20:31:46,076 -  nornir.core -     INFO -        run() - Running task 'show_ipv4_routes' with args {} on 3 hosts
+2020-11-30 20:32:07,834 -  nornir.core -     INFO -        run() - Running task 'show_ipv4_routes' with args {} on 3 hosts
+2020-11-30 20:32:48,554 -  nornir.core -     INFO -        run() - Running task 'show_packet_filter_info' with args {} on 3 hosts
+2020-11-30 20:33:40,459 -  nornir.core -     INFO -        run() - Running task 'show_ipv6_routes' with args {} on 3 hosts
+2020-11-30 20:34:24,909 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-11-30 20:34:46,226 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {'json_out': True} on 3 hosts
+2020-11-30 20:35:42,477 -  nornir.core -     INFO -        run() - Running task 'export_ipv4_routes' with args {} on 3 hosts
+2020-11-30 20:36:10,894 -  nornir.core -     INFO -        run() - Running task 'export_ipv6_routes' with args {} on 3 hosts
+2020-11-30 20:36:32,599 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-11-30 20:36:56,639 -  nornir.core -     INFO -        run() - Running task 'export_packet_filter_info' with args {} on 3 hosts
+2020-11-30 20:46:17,467 -  nornir.core -     INFO -        run() - Running task 'export_packet_filter_info' with args {} on 3 hosts
+2020-11-30 20:51:20,568 -  nornir.core -     INFO -        run() - Running task 'export_packet_filter_info' with args {} on 3 hosts
+2020-11-30 20:52:01,741 -  nornir.core -     INFO -        run() - Running task 'export_ipv6_routes' with args {} on 3 hosts
