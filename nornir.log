@@ -2483,3 +2483,345 @@ nornir.core.exceptions.NornirSubTaskError: Subtask: Command is not supported for
 2020-11-30 20:46:17,467 -  nornir.core -     INFO -        run() - Running task 'export_packet_filter_info' with args {} on 3 hosts
 2020-11-30 20:51:20,568 -  nornir.core -     INFO -        run() - Running task 'export_packet_filter_info' with args {} on 3 hosts
 2020-11-30 20:52:01,741 -  nornir.core -     INFO -        run() - Running task 'export_ipv6_routes' with args {} on 3 hosts
+2020-12-01 15:04:22,433 -  nornir.core -     INFO -        run() - Running task 'export_ipv6_routes' with args {} on 3 hosts
+2020-12-03 13:53:31,776 -  nornir.core -     INFO -        run() - Running task 'show_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-03 13:53:34,867 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Show interfaces packet counters' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 920, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/client.py", line 368, in connect
+    raise NoValidConnectionsError(errors)
+paramiko.ssh_exception.NoValidConnectionsError: [Errno None] Unable to connect to port 22 on 10.10.10.5
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/base.py", line 86, in _netmiko_open
+    self._netmiko_device = ConnectHandler(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/ssh_dispatcher.py", line 312, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/cisco/cisco_ios.py", line 17, in __init__
+    return super().__init__(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 346, in __init__
+    self._open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 351, in _open
+    self.establish_connection()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 942, in establish_connection
+    raise NetmikoTimeoutException(msg)
+netmiko.ssh_exception.NetmikoTimeoutException: TCP connection to device failed.
+
+Common causes of this problem are:
+1. Incorrect hostname or IP address.
+2. Wrong TCP port.
+3. Intermediate firewall blocking access.
+
+Device settings: cisco_ios 10.10.10.5:22
+
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_get.py", line 32, in napalm_get
+    device = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 440, in get_connection
+    self.open_connection(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 492, in open_connection
+    conn_obj.open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/connections/__init__.py", line 57, in open
+    connection.open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 169, in open
+    self.device = self._netmiko_open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/base.py", line 95, in _netmiko_open
+    raise ConnectionException("Cannot connect to {}".format(self.hostname))
+napalm.base.exceptions.ConnectionException: Cannot connect to 10.10.10.5
+
+2020-12-03 13:53:34,868 - nornir.core.task -    ERROR -      start() - Host 'R1': task 'Show interfaces packet counters' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 920, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/client.py", line 368, in connect
+    raise NoValidConnectionsError(errors)
+paramiko.ssh_exception.NoValidConnectionsError: [Errno None] Unable to connect to port 22 on 10.10.10.2
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/base.py", line 86, in _netmiko_open
+    self._netmiko_device = ConnectHandler(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/ssh_dispatcher.py", line 312, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/cisco/cisco_ios.py", line 17, in __init__
+    return super().__init__(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 346, in __init__
+    self._open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 351, in _open
+    self.establish_connection()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 942, in establish_connection
+    raise NetmikoTimeoutException(msg)
+netmiko.ssh_exception.NetmikoTimeoutException: TCP connection to device failed.
+
+Common causes of this problem are:
+1. Incorrect hostname or IP address.
+2. Wrong TCP port.
+3. Intermediate firewall blocking access.
+
+Device settings: cisco_ios 10.10.10.2:22
+
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_get.py", line 32, in napalm_get
+    device = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 440, in get_connection
+    self.open_connection(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 492, in open_connection
+    conn_obj.open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/connections/__init__.py", line 57, in open
+    connection.open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 169, in open
+    self.device = self._netmiko_open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/base.py", line 95, in _netmiko_open
+    raise ConnectionException("Cannot connect to {}".format(self.hostname))
+napalm.base.exceptions.ConnectionException: Cannot connect to 10.10.10.2
+
+2020-12-03 13:53:34,868 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'show_interfaces_packet_counters' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_viewer.py", line 240, in show_interfaces_packet_counters
+    result = task.run(task=napalm_get, name="Show interfaces packet counters", getters=["interfaces_counters"])
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Show interfaces packet counters (failed)
+
+
+2020-12-03 13:53:34,869 - nornir.core.task -    ERROR -      start() - Host 'R1': task 'show_interfaces_packet_counters' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_viewer.py", line 240, in show_interfaces_packet_counters
+    result = task.run(task=napalm_get, name="Show interfaces packet counters", getters=["interfaces_counters"])
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Show interfaces packet counters (failed)
+
+
+2020-12-03 13:54:39,109 -  nornir.core -     INFO -        run() - Running task 'show_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-04 08:25:04,570 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-04 09:16:39,368 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-04 09:17:08,197 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-04 09:17:23,050 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-04 09:17:35,669 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-04 09:18:03,971 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-04 09:18:28,531 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-04 09:18:50,317 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-04 09:19:01,699 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-04 09:21:07,713 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-04 09:25:16,781 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-04 09:27:09,552 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-04 09:46:10,571 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 3 hosts
+2020-12-04 09:46:44,227 -  nornir.core -     INFO -        run() - Running task 'show_ntp_info' with args {} on 3 hosts
+2020-12-04 09:47:06,815 -  nornir.core -     INFO -        run() - Running task 'show_ntp_info' with args {'json_out': True} on 3 hosts
+2020-12-04 09:47:32,275 -  nornir.core -     INFO -        run() - Running task 'show_snmp_info' with args {'json_out': True} on 3 hosts
+2020-12-04 09:47:46,837 -  nornir.core -     INFO -        run() - Running task 'show_snmp_info' with args {'json_out': False} on 3 hosts
+2020-12-04 09:48:12,972 -  nornir.core -     INFO -        run() - Running task 'show_users' with args {'json_out': False} on 3 hosts
+2020-12-04 09:48:12,978 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'show_users' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_viewer.py", line 88, in show_users
+    raise NornirSubTaskError("Not supported for Juniper Olive image.", task)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Not supported for Juniper Olive image. (failed)
+
+
+2020-12-04 09:48:23,404 -  nornir.core -     INFO -        run() - Running task 'show_users' with args {'json_out': True} on 3 hosts
+2020-12-04 09:48:23,408 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'show_users' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_viewer.py", line 88, in show_users
+    raise NornirSubTaskError("Not supported for Juniper Olive image.", task)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Not supported for Juniper Olive image. (failed)
+
+
+2020-12-04 09:48:41,196 -  nornir.core -     INFO -        run() - Running task 'show_connection_state' with args {} on 3 hosts
+2020-12-04 09:48:53,168 -  nornir.core -     INFO -        run() - Running task 'show_hardware_details' with args {} on 3 hosts
+2020-12-04 09:48:53,172 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'show_hardware_details' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_viewer.py", line 126, in show_hardware_details
+    raise NornirSubTaskError("Command is not supported for Juniper Olive", task)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Command is not supported for Juniper Olive (failed)
+
+
+2020-12-04 09:49:06,299 -  nornir.core -     INFO -        run() - Running task 'show_hardware_details' with args {'json_out': True} on 3 hosts
+2020-12-04 09:49:06,302 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'show_hardware_details' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_viewer.py", line 126, in show_hardware_details
+    raise NornirSubTaskError("Command is not supported for Juniper Olive", task)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Command is not supported for Juniper Olive (failed)
+
+
+2020-12-04 09:49:29,468 -  nornir.core -     INFO -        run() - Running task 'show_ipv4_routes' with args {} on 3 hosts
+2020-12-04 09:49:45,558 -  nornir.core -     INFO -        run() - Running task 'show_ipv6_routes' with args {} on 3 hosts
+2020-12-04 09:50:03,593 -  nornir.core -     INFO -        run() - Running task 'show_packet_filter_info' with args {} on 3 hosts
+2020-12-04 09:50:40,048 -  nornir.core -     INFO -        run() - Running task 'show_vlans' with args {} on 3 hosts
+2020-12-04 09:50:40,052 - nornir.core.task -    ERROR -      start() - Host 'R1': task 'show_vlans' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_viewer.py", line 234, in show_vlans
+    raise NornirSubTaskError("Invalid device type to execute this task. Only switches are allowed", task)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Invalid device type to execute this task. Only switches are allowed (failed)
+
+
+2020-12-04 09:50:40,052 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'show_vlans' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_viewer.py", line 234, in show_vlans
+    raise NornirSubTaskError("Invalid device type to execute this task. Only switches are allowed", task)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Invalid device type to execute this task. Only switches are allowed (failed)
+
+
+2020-12-04 09:51:12,065 -  nornir.core -     INFO -        run() - Running task 'show_interfaces_basic_info' with args {} on 3 hosts
+2020-12-04 09:51:43,182 -  nornir.core -     INFO -        run() - Running task 'show_interfaces_basic_info' with args {'json_out': True} on 3 hosts
+2020-12-04 09:52:34,938 -  nornir.core -     INFO -        run() - Running task 'show_ospf_neighbors' with args {} on 3 hosts
+2020-12-04 09:53:04,980 -  nornir.core -     INFO -        run() - Running task 'show_ospf_neighbors' with args {'ipv6': True} on 3 hosts
+2020-12-04 09:53:30,801 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'Show OSPF neighbors' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/channel.py", line 699, in recv
+    out = self.in_buffer.read(nbytes, self.timeout)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/buffered_pipe.py", line 164, in read
+    raise PipeTimeout()
+paramiko.buffered_pipe.PipeTimeout
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 569, in _read_channel_expect
+    new_data = self.remote_conn.recv(MAX_BUFFER)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/channel.py", line 701, in recv
+    raise socket.timeout()
+socket.timeout
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_netmiko/tasks/netmiko_send_command.py", line 32, in netmiko_send_command
+    result = net_connect.send_command(command_string, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/utilities.py", line 429, in wrapper_decorator
+    return func(self, *args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 1484, in send_command
+    new_data = self.read_until_pattern(pattern=re.escape(cmd))
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 646, in read_until_pattern
+    return self._read_channel_expect(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 579, in _read_channel_expect
+    raise NetmikoTimeoutException(
+netmiko.ssh_exception.NetmikoTimeoutException: Timed-out reading channel, data not available.
+
+2020-12-04 09:53:30,802 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'show_ospf_neighbors' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_viewer.py", line 333, in show_ospf_neighbors
+    result = task.run(task=netmiko_send_command, name="Show OSPF neighbors", command_string=command,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Show OSPF neighbors (failed)
+
+
+2020-12-04 10:02:26,921 -  nornir.core -     INFO -        run() - Running task 'show_ospf_neighbors' with args {'ipv6': True} on 3 hosts
+2020-12-04 10:02:26,938 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'show_ospf_neighbors' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_viewer.py", line 327, in show_ospf_neighbors
+    raise NornirSubTaskError("Function was not implemented for particular device.", task)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Function was not implemented for particular device. (failed)
+
+
+2020-12-04 10:04:55,892 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-04 10:04:57,417 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'export_device_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_exporter.py", line 42, in export_device_configuration
+    exporter = TextFileExporter(file_path, running_configuration)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/text_file_exporter.py", line 20, in __init__
+    self._check_full_file_path()
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/text_file_exporter.py", line 50, in _check_full_file_path
+    raise ValueError("Not valid file path.")
+ValueError: Not valid file path.
+
+2020-12-04 10:04:57,687 - nornir.core.task -    ERROR -      start() - Host 'R1': task 'export_device_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_exporter.py", line 42, in export_device_configuration
+    exporter = TextFileExporter(file_path, running_configuration)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/text_file_exporter.py", line 20, in __init__
+    self._check_full_file_path()
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/text_file_exporter.py", line 50, in _check_full_file_path
+    raise ValueError("Not valid file path.")
+ValueError: Not valid file path.
+
+2020-12-04 10:04:58,587 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'export_device_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_exporter.py", line 42, in export_device_configuration
+    exporter = TextFileExporter(file_path, running_configuration)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/text_file_exporter.py", line 20, in __init__
+    self._check_full_file_path()
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/text_file_exporter.py", line 50, in _check_full_file_path
+    raise ValueError("Not valid file path.")
+ValueError: Not valid file path.
+
+2020-12-04 10:09:25,100 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-04 10:10:07,550 -  nornir.core -     INFO -        run() - Running task 'export_ipv4_routes' with args {} on 3 hosts
+2020-12-04 10:10:19,174 -  nornir.core -     INFO -        run() - Running task 'export_ipv6_routes' with args {} on 3 hosts
+2020-12-04 10:10:39,185 -  nornir.core -     INFO -        run() - Running task 'export_packet_filter_info' with args {} on 3 hosts
+2020-12-04 14:49:07,406 -  nornir.core -     INFO -        run() - Running task 'export_packet_filter_info' with args {} on 3 hosts
+2020-12-04 16:52:52,399 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-04 16:52:53,472 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'get_conn_state_and_device_facts' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_collector.py", line 41, in get_conn_state_and_device_facts
+    return AggregatedResult(*result)
+TypeError: __init__() takes 2 positional arguments but 3 were given
+
+2020-12-04 16:52:53,741 - nornir.core.task -    ERROR -      start() - Host 'R1': task 'get_conn_state_and_device_facts' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_collector.py", line 41, in get_conn_state_and_device_facts
+    return AggregatedResult(*result)
+TypeError: __init__() takes 2 positional arguments but 3 were given
+
+2020-12-04 16:52:56,901 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'get_conn_state_and_device_facts' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_collector.py", line 41, in get_conn_state_and_device_facts
+    return AggregatedResult(*result)
+TypeError: __init__() takes 2 positional arguments but 3 were given
+
+2020-12-04 17:46:46,874 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-04 17:47:30,880 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-04 17:50:00,702 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-04 18:05:54,890 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-04 18:07:33,521 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts

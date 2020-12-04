@@ -26,33 +26,67 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from os import path
-from pathlib import Path
+<pre><code class="python">from pathlib import Path
 
 
 class TextFileExporter:
-    def __init__(self, full_file_path: Path):
+    &#34;&#34;&#34;
+    Třida pro exportování dat do formátu .txt.
+
+    Args:
+        full_file_path (Path): argument metody, obsahující cestu k exportovanému .txt souboru.
+        data (str): argument metody, obsahující data, která budou exportována do .txt souboru.
+
+    Attributes:
+         dest_file_absolute_path (Path): instanční proměnná, definující cestu k exportovanému .txt souboru.
+         data (str): instanční proměnná, definující data, která budou exportována do .txt souboru.
+
+    &#34;&#34;&#34;
+    def __init__(self, full_file_path: Path, data: str):
         self.dest_file_absolute_path = full_file_path
+        self.data = data
+        self._check_full_file_path()
 
     def _create_parent_folders(self, folder_path: Path) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro vytvoření všech nadřazených složek k definované instanční proměnné dest_file_absolute_path.
+        Složky jsou vytvořeny pouze tehdy, pokud nebyly dříve uživatelem vytvořeny.
+
+        Args:
+            folder_path (Path): cesta obsahující všechny nadřazené složky, které jsou nutné pro nalezení výsledného .txt souboru
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         folder_path.mkdir(parents=True, exist_ok=True)
 
-    def _check_full_file_patch(self) -&gt; None:
-        if path.isfile and self.dest_file_absolute_path.suffix == &#34;.txt&#34;:
+    def _check_full_file_path(self) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda, která zkontroluje, jestli je k instanční proměnné dest_file_absolute_path přiřazena validní cesta k .txt souboru.
+        Dodatečně vytvoří požadované nadřazené složky, pokud už nejsou vytvořené za pomocí metody _create_parent_folders.
+
+        Raises:
+            ValueError: Výjimka, která nastane pokud atribut dest_file_absolute_path není validní cestou k .txt souboru.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        if self.dest_file_absolute_path.suffix == &#34;.txt&#34;:
             folder_path = self.dest_file_absolute_path.parent
             self._create_parent_folders(folder_path)
         else:
             raise ValueError(&#34;Not valid file path.&#34;)
 
-    def export_to_file(self, data: str) -&gt; None:
-        if path.isfile:
-            folder_path = self.dest_file_absolute_path.parent
-            folder_path.mkdir(parents=True, exist_ok=True)
-            with open(self.dest_file_absolute_path, &#39;w&#39;) as file:
-                file.write(data)
-                print(f&#34;{self.dest_file_absolute_path.name} was created successfully.&#34;)
-        else:
-            print(&#34;Provided filepath is not valid.&#34;)</code></pre>
+    def export_to_file(self) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda, která provádí export dat do souboru.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        with open(self.dest_file_absolute_path, &#39;w&#39;) as file:
+            file.write(self.data)
+            print(f&#34;{self.dest_file_absolute_path.name} was created successfully.&#34;)</code></pre>
 </details>
 </section>
 <section>
@@ -66,58 +100,110 @@ class TextFileExporter:
 <dl>
 <dt id="scripts.utility.text_file_exporter.TextFileExporter"><code class="flex name class">
 <span>class <span class="ident">TextFileExporter</span></span>
-<span>(</span><span>full_file_path: pathlib.Path)</span>
+<span>(</span><span>full_file_path: pathlib.Path, data: str)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Třida pro exportování dat do formátu .txt.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>full_file_path</code></strong> :&ensp;<code>Path</code></dt>
+<dd>argument metody, obsahující cestu k exportovanému .txt souboru.</dd>
+<dt><strong><code>data</code></strong> :&ensp;<code>str</code></dt>
+<dd>argument metody, obsahující data, která budou exportována do .txt souboru.</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>dest_file_absolute_path</code></strong> :&ensp;<code>Path</code></dt>
+<dd>instanční proměnná, definující cestu k exportovanému .txt souboru.</dd>
+<dt><strong><code>data</code></strong> :&ensp;<code>str</code></dt>
+<dd>instanční proměnná, definující data, která budou exportována do .txt souboru.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class TextFileExporter:
-    def __init__(self, full_file_path: Path):
+    &#34;&#34;&#34;
+    Třida pro exportování dat do formátu .txt.
+
+    Args:
+        full_file_path (Path): argument metody, obsahující cestu k exportovanému .txt souboru.
+        data (str): argument metody, obsahující data, která budou exportována do .txt souboru.
+
+    Attributes:
+         dest_file_absolute_path (Path): instanční proměnná, definující cestu k exportovanému .txt souboru.
+         data (str): instanční proměnná, definující data, která budou exportována do .txt souboru.
+
+    &#34;&#34;&#34;
+    def __init__(self, full_file_path: Path, data: str):
         self.dest_file_absolute_path = full_file_path
+        self.data = data
+        self._check_full_file_path()
 
     def _create_parent_folders(self, folder_path: Path) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro vytvoření všech nadřazených složek k definované instanční proměnné dest_file_absolute_path.
+        Složky jsou vytvořeny pouze tehdy, pokud nebyly dříve uživatelem vytvořeny.
+
+        Args:
+            folder_path (Path): cesta obsahující všechny nadřazené složky, které jsou nutné pro nalezení výsledného .txt souboru
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         folder_path.mkdir(parents=True, exist_ok=True)
 
-    def _check_full_file_patch(self) -&gt; None:
-        if path.isfile and self.dest_file_absolute_path.suffix == &#34;.txt&#34;:
+    def _check_full_file_path(self) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda, která zkontroluje, jestli je k instanční proměnné dest_file_absolute_path přiřazena validní cesta k .txt souboru.
+        Dodatečně vytvoří požadované nadřazené složky, pokud už nejsou vytvořené za pomocí metody _create_parent_folders.
+
+        Raises:
+            ValueError: Výjimka, která nastane pokud atribut dest_file_absolute_path není validní cestou k .txt souboru.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        if self.dest_file_absolute_path.suffix == &#34;.txt&#34;:
             folder_path = self.dest_file_absolute_path.parent
             self._create_parent_folders(folder_path)
         else:
             raise ValueError(&#34;Not valid file path.&#34;)
 
-    def export_to_file(self, data: str) -&gt; None:
-        if path.isfile:
-            folder_path = self.dest_file_absolute_path.parent
-            folder_path.mkdir(parents=True, exist_ok=True)
-            with open(self.dest_file_absolute_path, &#39;w&#39;) as file:
-                file.write(data)
-                print(f&#34;{self.dest_file_absolute_path.name} was created successfully.&#34;)
-        else:
-            print(&#34;Provided filepath is not valid.&#34;)</code></pre>
+    def export_to_file(self) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda, která provádí export dat do souboru.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        with open(self.dest_file_absolute_path, &#39;w&#39;) as file:
+            file.write(self.data)
+            print(f&#34;{self.dest_file_absolute_path.name} was created successfully.&#34;)</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
 <dt id="scripts.utility.text_file_exporter.TextFileExporter.export_to_file"><code class="name flex">
-<span>def <span class="ident">export_to_file</span></span>(<span>self, data: str) ‑> NoneType</span>
+<span>def <span class="ident">export_to_file</span></span>(<span>self) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Metoda, která provádí export dat do souboru.</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def export_to_file(self, data: str) -&gt; None:
-    if path.isfile:
-        folder_path = self.dest_file_absolute_path.parent
-        folder_path.mkdir(parents=True, exist_ok=True)
-        with open(self.dest_file_absolute_path, &#39;w&#39;) as file:
-            file.write(data)
-            print(f&#34;{self.dest_file_absolute_path.name} was created successfully.&#34;)
-    else:
-        print(&#34;Provided filepath is not valid.&#34;)</code></pre>
+<pre><code class="python">def export_to_file(self) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda, která provádí export dat do souboru.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
+    with open(self.dest_file_absolute_path, &#39;w&#39;) as file:
+        file.write(self.data)
+        print(f&#34;{self.dest_file_absolute_path.name} was created successfully.&#34;)</code></pre>
 </details>
 </dd>
 </dl>

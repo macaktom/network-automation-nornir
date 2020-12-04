@@ -47,15 +47,7 @@ from scripts.utility.network_info_viewer import NetworkUtilityViewer
 
 
 def configure_ipv4_interfaces(task: Task):
-    &#34;&#34;&#34;
-    Cool function
-    Args:
-        task(Task): typte Task
 
-    Returns:
-        None
-
-    &#34;&#34;&#34;
     r = task.run(task=template_file,
                  name=&#34;IPv4 Intefaces Configuration&#34;,
                  template=&#34;interfaces_ipv4.j2&#34;,
@@ -72,7 +64,13 @@ def configure_ipv4_interfaces(task: Task):
              configuration=task.host[&#34;ipv4_interfaces&#34;])
 
 
-def main():
+def main() -&gt; None:
+    &#34;&#34;&#34;
+    Hlavní funkce skriptu, která se zavolá po spuštění skriptu main.py
+
+    Returns:
+        None
+    &#34;&#34;&#34;
     # nr = InitNornir(config_file=&#34;config.yml&#34;, core = {&#34;raise_on_error&#34;: True}) # Nornir objekt, který upozorní na chybu při provedení tasku
     nr = InitNornir(
         config_file=&#34;config.yml&#34;)  # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný task - více o chybě v nornir.log
@@ -83,7 +81,7 @@ def main():
     viewer = NetworkUtilityViewer()
     exporter = NetworkInfoExporter()
     #all_devices.run(task=viewer.show_vlans)
-    z = all_devices.run(task=exporter.export_ipv6_routes)
+    z = all_devices.run(task=exporter.export_packet_filter_info)
     # print(z[&#39;R1&#39;][1].result[&#39;facts&#39;])
     # print(z[&#39;R1&#39;][2].result)
 
@@ -91,7 +89,8 @@ def main():
     # z = all_devices.run(task=exporter_xlsx.get_conn_state_and_device_facts)
 
 
-# TODO 1.12 - Prazdne soubory pri exportovani - u ipv4 a ipv6 ip routes nevytvaret, dopsat excel exporter, zacit configuration
+# TODO 3.12 - result.result u parsed metod, dokumentace, dopsat excel exporter, zacit configuration
+# TODO
 if __name__ == &#34;__main__&#34;:
     try:
         start = datetime.datetime.now()
@@ -113,25 +112,13 @@ if __name__ == &#34;__main__&#34;:
 <span>def <span class="ident">configure_ipv4_interfaces</span></span>(<span>task: nornir.core.task.Task)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Cool function</p>
-<h2 id="args">Args</h2>
-<p>task(Task): typte Task</p>
-<h2 id="returns">Returns</h2>
-<p>None</p></div>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def configure_ipv4_interfaces(task: Task):
-    &#34;&#34;&#34;
-    Cool function
-    Args:
-        task(Task): typte Task
 
-    Returns:
-        None
-
-    &#34;&#34;&#34;
     r = task.run(task=template_file,
                  name=&#34;IPv4 Intefaces Configuration&#34;,
                  template=&#34;interfaces_ipv4.j2&#34;,
@@ -149,15 +136,23 @@ if __name__ == &#34;__main__&#34;:
 </details>
 </dd>
 <dt id="scripts.main.main"><code class="name flex">
-<span>def <span class="ident">main</span></span>(<span>)</span>
+<span>def <span class="ident">main</span></span>(<span>) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Hlavní funkce skriptu, která se zavolá po spuštění skriptu main.py</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def main():
+<pre><code class="python">def main() -&gt; None:
+    &#34;&#34;&#34;
+    Hlavní funkce skriptu, která se zavolá po spuštění skriptu main.py
+
+    Returns:
+        None
+    &#34;&#34;&#34;
     # nr = InitNornir(config_file=&#34;config.yml&#34;, core = {&#34;raise_on_error&#34;: True}) # Nornir objekt, který upozorní na chybu při provedení tasku
     nr = InitNornir(
         config_file=&#34;config.yml&#34;)  # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný task - více o chybě v nornir.log
@@ -168,7 +163,7 @@ if __name__ == &#34;__main__&#34;:
     viewer = NetworkUtilityViewer()
     exporter = NetworkInfoExporter()
     #all_devices.run(task=viewer.show_vlans)
-    z = all_devices.run(task=exporter.export_ipv6_routes)</code></pre>
+    z = all_devices.run(task=exporter.export_packet_filter_info)</code></pre>
 </details>
 </dd>
 </dl>

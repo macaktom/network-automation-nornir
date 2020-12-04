@@ -1,3 +1,5 @@
 class InterfacesConfiguration:
-    def __init__(self):
-        pass
+    """
+    Třída pro konfiguraci jednotlivých rozhraní daných zařízení (např: přidělení IPv4, IPv6 adres, popisu,
+    konfigurace switchovaných a routovaných portů).
+    """

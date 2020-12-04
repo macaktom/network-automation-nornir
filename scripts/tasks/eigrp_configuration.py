@@ -3,5 +3,6 @@ from nornir_napalm.plugins.tasks import napalm_configure
 
 
 class EIGRPConfiguration:
-    def __init__(self):
-        pass
+    """
+    Třída pro konfiguraci EIGRP (IPv4 i IPv6).
+    """

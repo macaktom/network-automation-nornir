@@ -40,22 +40,55 @@ from scripts.utility.text_file_exporter import TextFileExporter
 
 
 class NetworkInfoExporter:
+    &#34;&#34;&#34;
+    Třída která umožňuje exportovat data ze síťových zařízení.
+    &#34;&#34;&#34;
+
+    def export_interfaces_packet_counters(self, nornir_device: Nornir):
+        pass
 
     def export_device_facts(self, nornir_device: Nornir):
         pass
 
     def export_device_configuration(self, task: Task) -&gt; None:
+        &#34;&#34;&#34;
+        Export současné (running) konfigurace síťových prvků do .txt souborů.
+        Export je proveden paralelně. Výsledná cesta je ./export/running_configuration/{konkrétní host}.txt (při spuštění skriptu na GNU/Linux).
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
         result = task.run(task=napalm_get, name=&#34;Get running configuration&#34;, getters=[&#34;config&#34;])
         if not result.failed:
             running_configuration = result[0].result[&#34;config&#34;][&#39;running&#39;].strip()
             host = result[0].host
             file_path = Path(Path.cwd() / &#39;export&#39; / &#34;running_configuration&#34; / f&#34;{host}.txt&#34;)
-            exporter = TextFileExporter(file_path)
-            exporter.export_to_file(running_configuration)
+            exporter = TextFileExporter(file_path, running_configuration)
+            exporter.export_to_file()
         else:
             print(&#34;Export failed - more in nornir.log&#34;)
 
     def export_ipv4_routes(self, task: Task) -&gt; None:
+        &#34;&#34;&#34;
+        Export směrovací IPv4 tabulky jednotlivých síťových prvků do .txt souborů.
+        Export je proveden paralelně. Výsledná cesta je ./export/ip_routes/{konkrétní host}_ipv4.txt (při spuštění skriptu na GNU/Linux).
+        Podporovaní výrobci + typy zařízení: Cisco (L3 switche nebo routery), Juniper (routery).
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+                export na nepodporovaných zařízeních.
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
         command = &#34;&#34;
         if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
                 task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
@@ -71,13 +104,32 @@ class NetworkInfoExporter:
             if task.host[&#39;vendor&#39;] == &#34;juniper&#34;:
                 parser = NetworkInfoParser()
                 ipv4_routes = parser.get_parsed_juniper_routes(result)
-            file_path = Path(Path.cwd() / &#39;export&#39; / &#34;ip_routes&#34; / f&#34;{host}_ipv4.txt&#34;)
-            exporter = TextFileExporter(file_path)
-            exporter.export_to_file(ipv4_routes)
+            if ipv4_routes != &#34;&#34;:
+                file_path = Path(Path.cwd() / &#39;export&#39; / &#34;ip_routes&#34; / f&#34;{host}_ipv4.txt&#34;)
+                exporter = TextFileExporter(file_path, ipv4_routes)
+                exporter.export_to_file()
+            else:
+                print(f&#34;{host}: No IPv4 routes are defined.&#34;)
         else:
             print(&#34;Export failed - more in nornir.log&#34;)
 
     def export_ipv6_routes(self, task: Task) -&gt; None:
+        &#34;&#34;&#34;
+        Export směrovací IPv6 tabulky jednotlivých síťových prvků do .txt souborů.
+        Export je proveden paralelně. Výsledná cesta je ./export/ip_routes/{konkrétní host}_ipv6.txt (při spuštění skriptu na GNU/Linux).
+        Podporovaní výrobci + typy zařízení: Cisco (L3 switche nebo routery), Juniper (routery).
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+                export na nepodporovaných zařízeních.
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
         command = &#34;&#34;
         if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
                 task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
@@ -93,13 +145,32 @@ class NetworkInfoExporter:
             if task.host[&#39;vendor&#39;] == &#34;juniper&#34;:
                 parser = NetworkInfoParser()
                 ipv6_routes = parser.get_parsed_juniper_routes(result, ipv6_routes=True)
-            file_path = Path(Path.cwd() / &#39;export&#39; / &#34;ip_routes&#34; / f&#34;{host}_ipv6.txt&#34;)
-            exporter = TextFileExporter(file_path)
-            exporter.export_to_file(ipv6_routes)
+            if ipv6_routes != &#34;&#34;:
+                file_path = Path(Path.cwd() / &#39;export&#39; / &#34;ip_routes&#34; / f&#34;{host}_ipv6.txt&#34;)
+                exporter = TextFileExporter(file_path, ipv6_routes)
+                exporter.export_to_file()
+            else:
+                print(f&#34;{host}: No IPv6 routes are defined.&#34;)
         else:
             print(&#34;Export failed - more in nornir.log&#34;)
 
     def export_packet_filter_info(self, task: Task) -&gt; None:
+        &#34;&#34;&#34;
+        Export definovaných paketových filtrů (IPv4 i IPv6) u jednotlivých síťových prvků do .txt souborů.
+        Export je proveden paralelně. Výsledná cesta je ./export/packet_filter/{konkrétní host}.txt (při spuštění skriptu na GNU/Linux).
+        Podporovaní výrobci + typy zařízení: Cisco (L3 switche nebo routery), Juniper (routery).
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+                export na nepodporovaných zařízeních.
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
         command = &#34;&#34;
         if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
                 task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
@@ -115,18 +186,12 @@ class NetworkInfoExporter:
             host = result[0].host
             if packet_filter_info != &#34;&#34;:
                 file_path = Path(Path.cwd() / &#39;export&#39; / &#34;packet_filter&#34; / f&#34;{host}.txt&#34;)
-                exporter = TextFileExporter(file_path)
-                exporter.export_to_file(packet_filter_info)
+                exporter = TextFileExporter(file_path, packet_filter_info)
+                exporter.export_to_file()
             else:
-                print(f&#34;{host}: No ACL defined.&#34;)
+                print(f&#34;{host}: No packet filter is defined.&#34;)
         else:
-            print(&#34;Export failed - more in nornir.log&#34;)
-
-    def _print_info_to_console(self, result_dict: MultiResult):
-        if not result_dict.failed:
-            print(f&#34;Device: {result_dict.host}&#34;)
-            for result in result_dict:
-                print(json.dumps(result.result, sort_keys=True, indent=4))</code></pre>
+            print(&#34;Export failed - more in nornir.log&#34;)</code></pre>
 </details>
 </section>
 <section>
@@ -142,28 +207,61 @@ class NetworkInfoExporter:
 <span>class <span class="ident">NetworkInfoExporter</span></span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Třída která umožňuje exportovat data ze síťových zařízení.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class NetworkInfoExporter:
+    &#34;&#34;&#34;
+    Třída která umožňuje exportovat data ze síťových zařízení.
+    &#34;&#34;&#34;
+
+    def export_interfaces_packet_counters(self, nornir_device: Nornir):
+        pass
 
     def export_device_facts(self, nornir_device: Nornir):
         pass
 
     def export_device_configuration(self, task: Task) -&gt; None:
+        &#34;&#34;&#34;
+        Export současné (running) konfigurace síťových prvků do .txt souborů.
+        Export je proveden paralelně. Výsledná cesta je ./export/running_configuration/{konkrétní host}.txt (při spuštění skriptu na GNU/Linux).
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
         result = task.run(task=napalm_get, name=&#34;Get running configuration&#34;, getters=[&#34;config&#34;])
         if not result.failed:
             running_configuration = result[0].result[&#34;config&#34;][&#39;running&#39;].strip()
             host = result[0].host
             file_path = Path(Path.cwd() / &#39;export&#39; / &#34;running_configuration&#34; / f&#34;{host}.txt&#34;)
-            exporter = TextFileExporter(file_path)
-            exporter.export_to_file(running_configuration)
+            exporter = TextFileExporter(file_path, running_configuration)
+            exporter.export_to_file()
         else:
             print(&#34;Export failed - more in nornir.log&#34;)
 
     def export_ipv4_routes(self, task: Task) -&gt; None:
+        &#34;&#34;&#34;
+        Export směrovací IPv4 tabulky jednotlivých síťových prvků do .txt souborů.
+        Export je proveden paralelně. Výsledná cesta je ./export/ip_routes/{konkrétní host}_ipv4.txt (při spuštění skriptu na GNU/Linux).
+        Podporovaní výrobci + typy zařízení: Cisco (L3 switche nebo routery), Juniper (routery).
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+                export na nepodporovaných zařízeních.
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
         command = &#34;&#34;
         if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
                 task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
@@ -179,13 +277,32 @@ class NetworkInfoExporter:
             if task.host[&#39;vendor&#39;] == &#34;juniper&#34;:
                 parser = NetworkInfoParser()
                 ipv4_routes = parser.get_parsed_juniper_routes(result)
-            file_path = Path(Path.cwd() / &#39;export&#39; / &#34;ip_routes&#34; / f&#34;{host}_ipv4.txt&#34;)
-            exporter = TextFileExporter(file_path)
-            exporter.export_to_file(ipv4_routes)
+            if ipv4_routes != &#34;&#34;:
+                file_path = Path(Path.cwd() / &#39;export&#39; / &#34;ip_routes&#34; / f&#34;{host}_ipv4.txt&#34;)
+                exporter = TextFileExporter(file_path, ipv4_routes)
+                exporter.export_to_file()
+            else:
+                print(f&#34;{host}: No IPv4 routes are defined.&#34;)
         else:
             print(&#34;Export failed - more in nornir.log&#34;)
 
     def export_ipv6_routes(self, task: Task) -&gt; None:
+        &#34;&#34;&#34;
+        Export směrovací IPv6 tabulky jednotlivých síťových prvků do .txt souborů.
+        Export je proveden paralelně. Výsledná cesta je ./export/ip_routes/{konkrétní host}_ipv6.txt (při spuštění skriptu na GNU/Linux).
+        Podporovaní výrobci + typy zařízení: Cisco (L3 switche nebo routery), Juniper (routery).
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+                export na nepodporovaných zařízeních.
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
         command = &#34;&#34;
         if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
                 task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
@@ -201,13 +318,32 @@ class NetworkInfoExporter:
             if task.host[&#39;vendor&#39;] == &#34;juniper&#34;:
                 parser = NetworkInfoParser()
                 ipv6_routes = parser.get_parsed_juniper_routes(result, ipv6_routes=True)
-            file_path = Path(Path.cwd() / &#39;export&#39; / &#34;ip_routes&#34; / f&#34;{host}_ipv6.txt&#34;)
-            exporter = TextFileExporter(file_path)
-            exporter.export_to_file(ipv6_routes)
+            if ipv6_routes != &#34;&#34;:
+                file_path = Path(Path.cwd() / &#39;export&#39; / &#34;ip_routes&#34; / f&#34;{host}_ipv6.txt&#34;)
+                exporter = TextFileExporter(file_path, ipv6_routes)
+                exporter.export_to_file()
+            else:
+                print(f&#34;{host}: No IPv6 routes are defined.&#34;)
         else:
             print(&#34;Export failed - more in nornir.log&#34;)
 
     def export_packet_filter_info(self, task: Task) -&gt; None:
+        &#34;&#34;&#34;
+        Export definovaných paketových filtrů (IPv4 i IPv6) u jednotlivých síťových prvků do .txt souborů.
+        Export je proveden paralelně. Výsledná cesta je ./export/packet_filter/{konkrétní host}.txt (při spuštění skriptu na GNU/Linux).
+        Podporovaní výrobci + typy zařízení: Cisco (L3 switche nebo routery), Juniper (routery).
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+                export na nepodporovaných zařízeních.
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
         command = &#34;&#34;
         if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
                 task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
@@ -223,18 +359,12 @@ class NetworkInfoExporter:
             host = result[0].host
             if packet_filter_info != &#34;&#34;:
                 file_path = Path(Path.cwd() / &#39;export&#39; / &#34;packet_filter&#34; / f&#34;{host}.txt&#34;)
-                exporter = TextFileExporter(file_path)
-                exporter.export_to_file(packet_filter_info)
+                exporter = TextFileExporter(file_path, packet_filter_info)
+                exporter.export_to_file()
             else:
-                print(f&#34;{host}: No ACL defined.&#34;)
+                print(f&#34;{host}: No packet filter is defined.&#34;)
         else:
-            print(&#34;Export failed - more in nornir.log&#34;)
-
-    def _print_info_to_console(self, result_dict: MultiResult):
-        if not result_dict.failed:
-            print(f&#34;Device: {result_dict.host}&#34;)
-            for result in result_dict:
-                print(json.dumps(result.result, sort_keys=True, indent=4))</code></pre>
+            print(&#34;Export failed - more in nornir.log&#34;)</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
@@ -242,19 +372,38 @@ class NetworkInfoExporter:
 <span>def <span class="ident">export_device_configuration</span></span>(<span>self, task: nornir.core.task.Task) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Export současné (running) konfigurace síťových prvků do .txt souborů.
+Export je proveden paralelně. Výsledná cesta je ./export/running_configuration/{konkrétní host}.txt (při spuštění skriptu na GNU/Linux).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def export_device_configuration(self, task: Task) -&gt; None:
+    &#34;&#34;&#34;
+    Export současné (running) konfigurace síťových prvků do .txt souborů.
+    Export je proveden paralelně. Výsledná cesta je ./export/running_configuration/{konkrétní host}.txt (při spuštění skriptu na GNU/Linux).
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+    Returns:
+        None
+
+    &#34;&#34;&#34;
     result = task.run(task=napalm_get, name=&#34;Get running configuration&#34;, getters=[&#34;config&#34;])
     if not result.failed:
         running_configuration = result[0].result[&#34;config&#34;][&#39;running&#39;].strip()
         host = result[0].host
         file_path = Path(Path.cwd() / &#39;export&#39; / &#34;running_configuration&#34; / f&#34;{host}.txt&#34;)
-        exporter = TextFileExporter(file_path)
-        exporter.export_to_file(running_configuration)
+        exporter = TextFileExporter(file_path, running_configuration)
+        exporter.export_to_file()
     else:
         print(&#34;Export failed - more in nornir.log&#34;)</code></pre>
 </details>
@@ -272,8 +421,8 @@ class NetworkInfoExporter:
     pass</code></pre>
 </details>
 </dd>
-<dt id="scripts.utility.network_info_exporter.NetworkInfoExporter.export_ipv4_routes"><code class="name flex">
-<span>def <span class="ident">export_ipv4_routes</span></span>(<span>self, task: nornir.core.task.Task) ‑> NoneType</span>
+<dt id="scripts.utility.network_info_exporter.NetworkInfoExporter.export_interfaces_packet_counters"><code class="name flex">
+<span>def <span class="ident">export_interfaces_packet_counters</span></span>(<span>self, nornir_device: nornir.core.Nornir)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -281,7 +430,51 @@ class NetworkInfoExporter:
 <summary>
 <span>Expand source code</span>
 </summary>
+<pre><code class="python">def export_interfaces_packet_counters(self, nornir_device: Nornir):
+    pass</code></pre>
+</details>
+</dd>
+<dt id="scripts.utility.network_info_exporter.NetworkInfoExporter.export_ipv4_routes"><code class="name flex">
+<span>def <span class="ident">export_ipv4_routes</span></span>(<span>self, task: nornir.core.task.Task) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Export směrovací IPv4 tabulky jednotlivých síťových prvků do .txt souborů.
+Export je proveden paralelně. Výsledná cesta je ./export/ip_routes/{konkrétní host}_ipv4.txt (při spuštění skriptu na GNU/Linux).
+Podporovaní výrobci + typy zařízení: Cisco (L3 switche nebo routery), Juniper (routery).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NornirSubTaskError</code></dt>
+<dd>Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+export na nepodporovaných zařízeních.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def export_ipv4_routes(self, task: Task) -&gt; None:
+    &#34;&#34;&#34;
+    Export směrovací IPv4 tabulky jednotlivých síťových prvků do .txt souborů.
+    Export je proveden paralelně. Výsledná cesta je ./export/ip_routes/{konkrétní host}_ipv4.txt (při spuštění skriptu na GNU/Linux).
+    Podporovaní výrobci + typy zařízení: Cisco (L3 switche nebo routery), Juniper (routery).
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+    Raises:
+        NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+            export na nepodporovaných zařízeních.
+
+    Returns:
+        None
+
+    &#34;&#34;&#34;
     command = &#34;&#34;
     if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
             task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
@@ -297,9 +490,12 @@ class NetworkInfoExporter:
         if task.host[&#39;vendor&#39;] == &#34;juniper&#34;:
             parser = NetworkInfoParser()
             ipv4_routes = parser.get_parsed_juniper_routes(result)
-        file_path = Path(Path.cwd() / &#39;export&#39; / &#34;ip_routes&#34; / f&#34;{host}_ipv4.txt&#34;)
-        exporter = TextFileExporter(file_path)
-        exporter.export_to_file(ipv4_routes)
+        if ipv4_routes != &#34;&#34;:
+            file_path = Path(Path.cwd() / &#39;export&#39; / &#34;ip_routes&#34; / f&#34;{host}_ipv4.txt&#34;)
+            exporter = TextFileExporter(file_path, ipv4_routes)
+            exporter.export_to_file()
+        else:
+            print(f&#34;{host}: No IPv4 routes are defined.&#34;)
     else:
         print(&#34;Export failed - more in nornir.log&#34;)</code></pre>
 </details>
@@ -308,12 +504,43 @@ class NetworkInfoExporter:
 <span>def <span class="ident">export_ipv6_routes</span></span>(<span>self, task: nornir.core.task.Task) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Export směrovací IPv6 tabulky jednotlivých síťových prvků do .txt souborů.
+Export je proveden paralelně. Výsledná cesta je ./export/ip_routes/{konkrétní host}_ipv6.txt (při spuštění skriptu na GNU/Linux).
+Podporovaní výrobci + typy zařízení: Cisco (L3 switche nebo routery), Juniper (routery).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NornirSubTaskError</code></dt>
+<dd>Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+export na nepodporovaných zařízeních.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def export_ipv6_routes(self, task: Task) -&gt; None:
+    &#34;&#34;&#34;
+    Export směrovací IPv6 tabulky jednotlivých síťových prvků do .txt souborů.
+    Export je proveden paralelně. Výsledná cesta je ./export/ip_routes/{konkrétní host}_ipv6.txt (při spuštění skriptu na GNU/Linux).
+    Podporovaní výrobci + typy zařízení: Cisco (L3 switche nebo routery), Juniper (routery).
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+    Raises:
+        NornirSubTaskError: Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+            export na nepodporovaných zařízeních.
+
+    Returns:
+        None
+
+    &#34;&#34;&#34;
     command = &#34;&#34;
     if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
             task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
@@ -329,9 +556,12 @@ class NetworkInfoExporter:
         if task.host[&#39;vendor&#39;] == &#34;juniper&#34;:
             parser = NetworkInfoParser()
             ipv6_routes = parser.get_parsed_juniper_routes(result, ipv6_routes=True)
-        file_path = Path(Path.cwd() / &#39;export&#39; / &#34;ip_routes&#34; / f&#34;{host}_ipv6.txt&#34;)
-        exporter = TextFileExporter(file_path)
-        exporter.export_to_file(ipv6_routes)
+        if ipv6_routes != &#34;&#34;:
+            file_path = Path(Path.cwd() / &#39;export&#39; / &#34;ip_routes&#34; / f&#34;{host}_ipv6.txt&#34;)
+            exporter = TextFileExporter(file_path, ipv6_routes)
+            exporter.export_to_file()
+        else:
+            print(f&#34;{host}: No IPv6 routes are defined.&#34;)
     else:
         print(&#34;Export failed - more in nornir.log&#34;)</code></pre>
 </details>
@@ -340,12 +570,43 @@ class NetworkInfoExporter:
 <span>def <span class="ident">export_packet_filter_info</span></span>(<span>self, task: nornir.core.task.Task) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Export definovaných paketových filtrů (IPv4 i IPv6) u jednotlivých síťových prvků do .txt souborů.
+Export je proveden paralelně. Výsledná cesta je ./export/packet_filter/{konkrétní host}.txt (při spuštění skriptu na GNU/Linux).
+Podporovaní výrobci + typy zařízení: Cisco (L3 switche nebo routery), Juniper (routery).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NornirSubTaskError</code></dt>
+<dd>Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+export na nepodporovaných zařízeních.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def export_packet_filter_info(self, task: Task) -&gt; None:
+    &#34;&#34;&#34;
+    Export definovaných paketových filtrů (IPv4 i IPv6) u jednotlivých síťových prvků do .txt souborů.
+    Export je proveden paralelně. Výsledná cesta je ./export/packet_filter/{konkrétní host}.txt (při spuštění skriptu na GNU/Linux).
+    Podporovaní výrobci + typy zařízení: Cisco (L3 switche nebo routery), Juniper (routery).
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+    Raises:
+        NornirSubTaskError: Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+            export na nepodporovaných zařízeních.
+
+    Returns:
+        None
+
+    &#34;&#34;&#34;
     command = &#34;&#34;
     if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
             task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
@@ -361,10 +622,10 @@ class NetworkInfoExporter:
         host = result[0].host
         if packet_filter_info != &#34;&#34;:
             file_path = Path(Path.cwd() / &#39;export&#39; / &#34;packet_filter&#34; / f&#34;{host}.txt&#34;)
-            exporter = TextFileExporter(file_path)
-            exporter.export_to_file(packet_filter_info)
+            exporter = TextFileExporter(file_path, packet_filter_info)
+            exporter.export_to_file()
         else:
-            print(f&#34;{host}: No ACL defined.&#34;)
+            print(f&#34;{host}: No packet filter is defined.&#34;)
     else:
         print(&#34;Export failed - more in nornir.log&#34;)</code></pre>
 </details>
@@ -392,6 +653,7 @@ class NetworkInfoExporter:
 <ul class="">
 <li><code><a title="scripts.utility.network_info_exporter.NetworkInfoExporter.export_device_configuration" href="#scripts.utility.network_info_exporter.NetworkInfoExporter.export_device_configuration">export_device_configuration</a></code></li>
 <li><code><a title="scripts.utility.network_info_exporter.NetworkInfoExporter.export_device_facts" href="#scripts.utility.network_info_exporter.NetworkInfoExporter.export_device_facts">export_device_facts</a></code></li>
+<li><code><a title="scripts.utility.network_info_exporter.NetworkInfoExporter.export_interfaces_packet_counters" href="#scripts.utility.network_info_exporter.NetworkInfoExporter.export_interfaces_packet_counters">export_interfaces_packet_counters</a></code></li>
 <li><code><a title="scripts.utility.network_info_exporter.NetworkInfoExporter.export_ipv4_routes" href="#scripts.utility.network_info_exporter.NetworkInfoExporter.export_ipv4_routes">export_ipv4_routes</a></code></li>
 <li><code><a title="scripts.utility.network_info_exporter.NetworkInfoExporter.export_ipv6_routes" href="#scripts.utility.network_info_exporter.NetworkInfoExporter.export_ipv6_routes">export_ipv6_routes</a></code></li>
 <li><code><a title="scripts.utility.network_info_exporter.NetworkInfoExporter.export_packet_filter_info" href="#scripts.utility.network_info_exporter.NetworkInfoExporter.export_packet_filter_info">export_packet_filter_info</a></code></li>

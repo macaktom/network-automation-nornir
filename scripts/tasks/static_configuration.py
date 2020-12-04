@@ -1,3 +1,4 @@
 class StaticConfiguration:
-    def __init__(self):
-        pass
+    """
+    Třída pro konfiguraci statického směrování (IPv4 i IPv6).
+    """

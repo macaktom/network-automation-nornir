@@ -6,7 +6,6 @@ from nornir_napalm.plugins.tasks import napalm_get
 from openpyxl import Workbook
 from openpyxl.styles import Alignment
 from openpyxl.utils import get_column_letter
-from os import path
 import datetime
 
 
@@ -15,40 +14,42 @@ class ExcelExporter:
     def __init__(self, workbook: Workbook, sheet_title: str, dest_file: Path):
         self._workbook = workbook
         self._dest_file = dest_file
+        self.sheets = []
         self._setup_export(sheet_title)
 
     def _create_parent_folders(self, folder_path: Path) -> None:
         folder_path.mkdir(parents=True, exist_ok=True)
 
     def _check_file_dest(self) -> None:
-        if path.isfile and self._dest_file.suffix == '.xlsx':
+        if self._dest_file.suffix == '.xlsx':
             self._create_parent_folders(self._dest_file.parent)
         else:
             raise ValueError("Not valid filepath or extension")
 
-    def _write_data(self, lst_data: List[Dict[str, str]], sorted_headers: List[str], row_start: int, column_start: int) -> None:
+    def _write_data(self, lst_data: List[Dict[str, str]], sorted_headers: List[str], row_start: int,
+                    column_start: int) -> None:
         current_column = column_start
         for host_data in lst_data:
             row_start += 1
             for header in sorted_headers:
                 if host_data[header] is None or host_data[header] == "None" or host_data[header] == "":
-                    self.ws1.cell(row=row_start, column=current_column).value = "-"
+                    self.active_sheet.cell(row=row_start, column=current_column).value = "-"
                 else:
-                    self.ws1.cell(row=row_start, column=current_column).value = host_data[header]
-                self.ws1.cell(row=row_start, column=current_column).alignment = Alignment(horizontal='center',
+                    self.active_sheet.cell(row=row_start, column=current_column).value = host_data[header]
+                self.active_sheet.cell(row=row_start, column=current_column).alignment = Alignment(horizontal='center',
                                                                                           vertical='center')
                 current_column += 1
             current_column = column_start
 
     def _write_header(self, headers: List[str], row_start: int, column_start: int) -> None:
         for header in headers:
-            self.ws1.cell(row=row_start, column=column_start).value = header
-            self.ws1.cell(row=row_start, column=column_start).alignment = Alignment(horizontal='center',
+            self.active_sheet.cell(row=row_start, column=column_start).value = header
+            self.active_sheet.cell(row=row_start, column=column_start).alignment = Alignment(horizontal='center',
                                                                                     vertical='center')
             if header.lower() == "os_version" or header.lower() == "fqdn":
-                self.ws1.column_dimensions[get_column_letter(column_start)].width = 40
+                self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 40
             else:
-                self.ws1.column_dimensions[get_column_letter(column_start)].width = 15
+                self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 15
             column_start += 1
 
     def export_to_xlsx(self, sorted_headers: List[str], data: List[Dict[str, str]], row_start: int = 2,
@@ -62,5 +63,18 @@ class ExcelExporter:
 
     def _setup_export(self, sheet_title: str) -> None:
         self._check_file_dest()
-        self.ws1 = self._workbook.active
-        self.ws1.title = sheet_title
+        ws1 = self._workbook.active
+        self.sheets.append(ws1)
+        self.active_sheet = ws1
+        ws1.title = sheet_title
+
+    def _change_active_sheet(self, sheet_title: str) -> None:
+        if sheet_title:
+            for sheet in self.sheets:
+                if sheet.title.lower() == sheet_title.lower():
+                    self._workbook.active = sheet
+                    self.active_sheet = sheet
+
+    def _create_sheet(self, sheet_title: str) -> None:
+        ws = self._workbook.create_sheet(sheet_title)
+        self.sheets.append(ws)

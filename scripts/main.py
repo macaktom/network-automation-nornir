@@ -1,4 +1,5 @@
 import datetime
+from pathlib import Path
 
 from colorama import Fore
 from nornir import InitNornir
@@ -19,15 +20,7 @@ from scripts.utility.network_info_viewer import NetworkUtilityViewer
 
 
 def configure_ipv4_interfaces(task: Task):
-    """
-    Cool function
-    Args:
-        task(Task): typte Task
 
-    Returns:
-        None
-
-    """
     r = task.run(task=template_file,
                  name="IPv4 Intefaces Configuration",
                  template="interfaces_ipv4.j2",
@@ -44,7 +37,13 @@ def configure_ipv4_interfaces(task: Task):
              configuration=task.host["ipv4_interfaces"])
 
 
-def main():
+def main() -> None:
+    """
+    Hlavní funkce skriptu, která se zavolá po spuštění skriptu main.py
+
+    Returns:
+        None
+    """
     # nr = InitNornir(config_file="config.yml", core = {"raise_on_error": True}) # Nornir objekt, který upozorní na chybu při provedení tasku
     nr = InitNornir(
         config_file="config.yml")  # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný task - více o chybě v nornir.log
@@ -54,8 +53,9 @@ def main():
     all_devices = nr.filter(F(dev_type="router") | F(dev_type="L3_switch"))
     viewer = NetworkUtilityViewer()
     exporter = NetworkInfoExporter()
-    #all_devices.run(task=viewer.show_vlans)
-    z = all_devices.run(task=exporter.export_ipv6_routes)
+    dest_path = Path(Path.cwd() / 'export' / "excel" / f"new.xlsx")
+    #z = all_devices.run(task=exporter.export_packet_filter_info)
+    exporter.export_device_facts(all_devices, dest_path)
     # print(z['R1'][1].result['facts'])
     # print(z['R1'][2].result)
 
@@ -63,7 +63,8 @@ def main():
     # z = all_devices.run(task=exporter_xlsx.get_conn_state_and_device_facts)
 
 
-# TODO 1.12 - Prazdne soubory pri exportovani - u ipv4 a ipv6 ip routes nevytvaret, dopsat excel exporter, zacit configuration
+# TODO 4.12 - result.result u parsed metod, dokumentace, dopsat excel exporter, zacit configuration
+
 if __name__ == "__main__":
     try:
         start = datetime.datetime.now()

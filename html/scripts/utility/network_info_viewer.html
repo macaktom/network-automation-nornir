@@ -36,13 +36,37 @@ from scripts.utility.network_info_parser import NetworkInfoParser
 
 
 class NetworkUtilityViewer:
+    &#34;&#34;&#34;
+    Třída, která slouží pro zobrazení informací ze síťových zařízení.
+    Data jsou zobrazována v konzoli (buď jako strukturovaný JSON string nebo nestrukturovaný string - podle NAPALM nebo TextFSM podpory)
+    &#34;&#34;&#34;
 
     def show_device_configuration(self, task: Task) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení současné (running) konfigurace u jednotlivých síťových zařízení.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         result = task.run(task=napalm_get, name=&#34;Show running configuration&#34;, getters=[&#34;config&#34;])
-        result[0].result = result[0].result[&#34;config&#34;][&#39;running&#39;].strip()
+        if result[0].result:
+            result[0].result = result[0].result[&#34;config&#34;][&#39;running&#39;].strip()
         self._print_info_default(result)
 
     def show_ntp_info(self, task: Task, json_out: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení NTP (Network Time Protocol) informací.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         result = task.run(task=napalm_get, name=&#34;Show ntp info (servers, peers, statistics)&#34;,
                           getters=[&#34;ntp_servers&#34;, &#34;ntp_peers&#34;, &#34;ntp_stats&#34;])
         if json_out:
@@ -51,6 +75,16 @@ class NetworkUtilityViewer:
             self._print_info_default(result)
 
     def show_snmp_info(self, task: Task, json_out: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení SNMP (Simple Network Management Protocol) údajů.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         result = task.run(task=napalm_get, name=&#34;Show SNMP info&#34;, getters=[&#34;snmp_information&#34;])
         if json_out:
             self._print_info_json(result)
@@ -58,6 +92,20 @@ class NetworkUtilityViewer:
             self._print_info_default(result)
 
     def show_users(self, task: Task, json_out: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení vytvořených uživatelů na jednotlivých zařízeních.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+                                export na nepodporovaných zařízeních (např. NAPALM metoda get_users není podporována obrazem Juniper Olive.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         if not task.host[&#39;image&#39;] == &#34;olive&#34;:
             result = task.run(task=napalm_get, name=&#34;Show created users on device&#34;, getters=[&#34;users&#34;])
             if json_out:
@@ -68,14 +116,34 @@ class NetworkUtilityViewer:
             raise NornirSubTaskError(&#34;Not supported for Juniper Olive image.&#34;, task)
 
     def show_connection_state(self, task: Task) -&gt; None:
-        try:
-            napalm = task.host.get_connection(&#34;napalm&#34;, task.nornir.config)
-            device_status = &#34;OK&#34; if napalm.is_alive()[&#39;is_alive&#39;] else &#34;is not OK&#34;
-            print(f&#34;Connection to device {task.host} is {device_status}.&#34;)
-        except Exception:
-            raise
+        &#34;&#34;&#34;
+        Metoda pro zobrazení stavu připojení k jednotlivým zařízením.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        napalm = task.host.get_connection(&#34;napalm&#34;, task.nornir.config)
+        device_status = &#34;OK&#34; if napalm.is_alive()[&#39;is_alive&#39;] else &#34;is not OK&#34;
+        print(f&#34;Connection to device {task.host} is {device_status}.&#34;)
 
     def show_hardware_details(self, task: Task, json_out: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení HW vytížení síťových prvků.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+                                export na nepodporovaných zařízeních (např. NAPALM metoda get_environment není podporována obrazem Juniper Olive.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         if task.host[&#39;image&#39;] != &#34;olive&#34;:
             result = task.run(task=napalm_get, name=&#34;Show HW details&#34;, getters=[&#34;environment&#34;])
             if json_out:
@@ -86,6 +154,19 @@ class NetworkUtilityViewer:
             raise NornirSubTaskError(&#34;Command is not supported for Juniper Olive&#34;, task)
 
     def show_ipv4_routes(self, task: Task) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení IPv4 směrovací tabulky jednotlivých zařízení.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+                                export na nepodporovaných zařízeních (podporuje pouze Juniper a Cisco zařízení).
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         command = &#34;&#34;
         if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
                 task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
@@ -95,12 +176,25 @@ class NetworkUtilityViewer:
         else:
             raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
         result = task.run(task=netmiko_send_command, name=&#34;Show IP routes&#34;, command_string=command)
-        if task.host[&#39;vendor&#39;] == &#34;juniper&#34;:
+        if task.host[&#39;vendor&#39;] == &#34;juniper&#34; and result[0].result:
             parser = NetworkInfoParser()
             result[0].result = parser.get_parsed_juniper_routes(result)
         self._print_info_default(result)
 
     def show_packet_filter_info(self, task: Task) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení definovaných paketových filtrů.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+                                export na nepodporovaných zařízeních (podporuje pouze Juniper a Cisco zařízení).
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         command = &#34;&#34;
         if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
                 task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
@@ -111,10 +205,24 @@ class NetworkUtilityViewer:
             raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
         result = task.run(task=netmiko_send_config, name=&#34;Show packet filters info&#34;, config_commands=[command])
         parser = NetworkInfoParser()
-        result[0].result = parser.get_parsed_packet_filter_data(task.host[&#39;vendor&#39;], result)
+        if result[0].result:
+            result[0].result = parser.get_parsed_packet_filter_data(task.host[&#39;vendor&#39;], result)
         self._print_info_default(result)
 
     def show_ipv6_routes(self, task: Task) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení IPv6 směrovací tabulky jednotlivých zařízení.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+                                export na nepodporovaných zařízeních (podporuje pouze Juniper a Cisco zařízení).
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         command = &#34;&#34;
         if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
                 task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
@@ -124,14 +232,27 @@ class NetworkUtilityViewer:
         else:
             raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
         result = task.run(task=netmiko_send_command, name=&#34;Show IP routes&#34;, command_string=command)
-        if task.host[&#39;vendor&#39;] == &#34;juniper&#34;:
+        if task.host[&#39;vendor&#39;] == &#34;juniper&#34; and result[0].result:
             parser = NetworkInfoParser()
             result[0].result = parser.get_parsed_juniper_routes(result, ipv6_routes=True)
         self._print_info_default(result)
 
     def show_vlans(self, task: Task, json_out: bool = False) -&gt; None:
-        if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
-                task.host[&#39;dev_type&#39;] == &#34;switch&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
+        &#34;&#34;&#34;
+        Metoda pro zobrazení konfigurovaných VLAN.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+                                export na nepodporovaných zařízeních.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        if task.host[&#39;dev_type&#39;] == &#34;switch&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;:
             result = task.run(task=napalm_get, name=&#34;Show configured VLANs&#34;, getters=[&#34;vlans&#34;])
             if json_out:
                 self._print_info_json(result)
@@ -141,6 +262,16 @@ class NetworkUtilityViewer:
             raise NornirSubTaskError(&#34;Invalid device type to execute this task. Only switches are allowed&#34;, task)
 
     def show_device_facts(self, task: Task, json_out: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení základní údajů o síťových zařízení.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         result = task.run(task=napalm_get, name=&#34;Show device basic facts&#34;, getters=[&#34;facts&#34;])
         if json_out:
             self._print_info_json(result)
@@ -148,6 +279,16 @@ class NetworkUtilityViewer:
             self._print_info_default(result)
 
     def show_interfaces_basic_info(self, task: Task, json_out: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení základních informací o rozhraních jednotlivých síťových zařízení.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         result = task.run(task=napalm_get, name=&#34;Show interfaces basic info&#34;, getters=[&#34;interfaces&#34;])
         if json_out:
             self._print_info_json(result)
@@ -155,6 +296,16 @@ class NetworkUtilityViewer:
             self._print_info_default(result)
 
     def show_interfaces_ip_info(self, task: Task, json_out: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení konfigurovaných IP adres na rozhraních jednotlivých síťových zařízení.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         result = task.run(task=napalm_get, name=&#34;Show IP addresses assigned to interfaces&#34;, getters=[&#34;interfaces_ip&#34;])
         if json_out:
             self._print_info_json(result)
@@ -162,36 +313,88 @@ class NetworkUtilityViewer:
             self._print_info_default(result)
 
     def show_interfaces_packet_counters(self, task: Task, json_out: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení statistik týkající se přijímaní a vysílaní paketů pro jednotlivá rozhraní síťových zařízení.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         result = task.run(task=napalm_get, name=&#34;Show interfaces packet counters&#34;, getters=[&#34;interfaces_counters&#34;])
         if json_out:
             self._print_info_json(result)
         else:
             self._print_info_default(result)
 
-    def show_ospf_neighbors(self, task: Task) -&gt; None:
+    def show_ospf_neighbors(self, task: Task, ipv6=False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení OSPF (nebo OSPFv3) sousedů.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            ipv6 (bool): Parametr, který definuje, jestli mají být zobrazeni OSPF (False) nebo OSPFv3 (True) sousedé.
+
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+                                export na nepodporovaných zařízeních.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         command = &#34;&#34;
-        if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
-                task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
-            command = &#34;show ip ospf neighbor&#34;
+        if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and task.host[&#39;dev_type&#39;] == &#34;router&#34;:
+            if ipv6:
+                command = &#34;show ipv6 ospf neighbor&#34;
+            else:
+                command = &#34;show ip ospf neighbor&#34;
+        elif task.host[&#39;vendor&#39;] == &#34;cisco&#34; and task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;:
+            if ipv6:
+                raise NornirSubTaskError(&#34;Function was not implemented for particular device.&#34;, task)
+            else:
+                command = &#34;show ip ospf neighbor&#34;
         elif task.host[&#39;vendor&#39;] == &#34;juniper&#34; and task.host[&#39;dev_type&#39;] == &#34;router&#34;:
-            command = &#34;show ospf neighbor&#34;
+            if ipv6:
+                command = &#34;show ospf3 neighbor&#34;
+            else:
+                command = &#34;show ospf neighbor&#34;
         else:
             raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
         result = task.run(task=netmiko_send_command, name=&#34;Show OSPF neighbors&#34;, command_string=command,
                           use_textfsm=True)
         self._print_info_default(result)
 
-    def _print_info_default(self, result_dict: MultiResult) -&gt; None:
-        if not result_dict.failed:
-            print(f&#34;Device: {result_dict.host}&#34;)
-            for result in result_dict:
+    def _print_info_default(self, result_list: MultiResult) -&gt; None:
+        &#34;&#34;&#34;
+        Upravená defaultní nornir metoda, pro přehledné zobrazení Nornir objektů v konzoli.
+
+        Args:
+            result_list (MultiResult): Speciální nornir objekt (připomínající Python list), který obsahuje výsledky několika nornir úkolů konkrétního síťového zařízení.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        if not result_list.failed:
+            print(f&#34;Device: {result_list.host}&#34;)
+            for result in result_list:
                 print_result(result)
                 print()
 
-    def _print_info_json(self, result_dict: MultiResult) -&gt; None:
-        if not result_dict.failed:
-            print(f&#34;Device: {result_dict.host}&#34;)
-            for result in result_dict:
+    def _print_info_json(self, result_list: MultiResult) -&gt; None:
+        &#34;&#34;&#34;
+         Metoda, pro přehledné zobrazení Nornir objektů v konzoli. Nornir objekty jsou zobrazeny jako formátovaný JSON string.
+
+         Args:
+             result_list (MultiResult): Speciální nornir objekt (připomínající Python list), který obsahuje výsledky několika nornir úkolů konkrétního síťového zařízení.
+
+         Returns:
+             None
+         &#34;&#34;&#34;
+        if not result_list.failed:
+            print(f&#34;Device: {result_list.host}&#34;)
+            for result in result_list:
                 print(json.dumps(result.result, sort_keys=True, indent=4))</code></pre>
 </details>
 </section>
@@ -208,19 +411,44 @@ class NetworkUtilityViewer:
 <span>class <span class="ident">NetworkUtilityViewer</span></span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Třída, která slouží pro zobrazení informací ze síťových zařízení.
+Data jsou zobrazována v konzoli (buď jako strukturovaný JSON string nebo nestrukturovaný string - podle NAPALM nebo TextFSM podpory)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class NetworkUtilityViewer:
+    &#34;&#34;&#34;
+    Třída, která slouží pro zobrazení informací ze síťových zařízení.
+    Data jsou zobrazována v konzoli (buď jako strukturovaný JSON string nebo nestrukturovaný string - podle NAPALM nebo TextFSM podpory)
+    &#34;&#34;&#34;
 
     def show_device_configuration(self, task: Task) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení současné (running) konfigurace u jednotlivých síťových zařízení.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         result = task.run(task=napalm_get, name=&#34;Show running configuration&#34;, getters=[&#34;config&#34;])
-        result[0].result = result[0].result[&#34;config&#34;][&#39;running&#39;].strip()
+        if result[0].result:
+            result[0].result = result[0].result[&#34;config&#34;][&#39;running&#39;].strip()
         self._print_info_default(result)
 
     def show_ntp_info(self, task: Task, json_out: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení NTP (Network Time Protocol) informací.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         result = task.run(task=napalm_get, name=&#34;Show ntp info (servers, peers, statistics)&#34;,
                           getters=[&#34;ntp_servers&#34;, &#34;ntp_peers&#34;, &#34;ntp_stats&#34;])
         if json_out:
@@ -229,6 +457,16 @@ class NetworkUtilityViewer:
             self._print_info_default(result)
 
     def show_snmp_info(self, task: Task, json_out: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení SNMP (Simple Network Management Protocol) údajů.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         result = task.run(task=napalm_get, name=&#34;Show SNMP info&#34;, getters=[&#34;snmp_information&#34;])
         if json_out:
             self._print_info_json(result)
@@ -236,6 +474,20 @@ class NetworkUtilityViewer:
             self._print_info_default(result)
 
     def show_users(self, task: Task, json_out: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení vytvořených uživatelů na jednotlivých zařízeních.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+                                export na nepodporovaných zařízeních (např. NAPALM metoda get_users není podporována obrazem Juniper Olive.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         if not task.host[&#39;image&#39;] == &#34;olive&#34;:
             result = task.run(task=napalm_get, name=&#34;Show created users on device&#34;, getters=[&#34;users&#34;])
             if json_out:
@@ -246,14 +498,34 @@ class NetworkUtilityViewer:
             raise NornirSubTaskError(&#34;Not supported for Juniper Olive image.&#34;, task)
 
     def show_connection_state(self, task: Task) -&gt; None:
-        try:
-            napalm = task.host.get_connection(&#34;napalm&#34;, task.nornir.config)
-            device_status = &#34;OK&#34; if napalm.is_alive()[&#39;is_alive&#39;] else &#34;is not OK&#34;
-            print(f&#34;Connection to device {task.host} is {device_status}.&#34;)
-        except Exception:
-            raise
+        &#34;&#34;&#34;
+        Metoda pro zobrazení stavu připojení k jednotlivým zařízením.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        napalm = task.host.get_connection(&#34;napalm&#34;, task.nornir.config)
+        device_status = &#34;OK&#34; if napalm.is_alive()[&#39;is_alive&#39;] else &#34;is not OK&#34;
+        print(f&#34;Connection to device {task.host} is {device_status}.&#34;)
 
     def show_hardware_details(self, task: Task, json_out: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení HW vytížení síťových prvků.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+                                export na nepodporovaných zařízeních (např. NAPALM metoda get_environment není podporována obrazem Juniper Olive.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         if task.host[&#39;image&#39;] != &#34;olive&#34;:
             result = task.run(task=napalm_get, name=&#34;Show HW details&#34;, getters=[&#34;environment&#34;])
             if json_out:
@@ -264,6 +536,19 @@ class NetworkUtilityViewer:
             raise NornirSubTaskError(&#34;Command is not supported for Juniper Olive&#34;, task)
 
     def show_ipv4_routes(self, task: Task) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení IPv4 směrovací tabulky jednotlivých zařízení.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+                                export na nepodporovaných zařízeních (podporuje pouze Juniper a Cisco zařízení).
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         command = &#34;&#34;
         if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
                 task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
@@ -273,12 +558,25 @@ class NetworkUtilityViewer:
         else:
             raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
         result = task.run(task=netmiko_send_command, name=&#34;Show IP routes&#34;, command_string=command)
-        if task.host[&#39;vendor&#39;] == &#34;juniper&#34;:
+        if task.host[&#39;vendor&#39;] == &#34;juniper&#34; and result[0].result:
             parser = NetworkInfoParser()
             result[0].result = parser.get_parsed_juniper_routes(result)
         self._print_info_default(result)
 
     def show_packet_filter_info(self, task: Task) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení definovaných paketových filtrů.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+                                export na nepodporovaných zařízeních (podporuje pouze Juniper a Cisco zařízení).
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         command = &#34;&#34;
         if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
                 task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
@@ -289,10 +587,24 @@ class NetworkUtilityViewer:
             raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
         result = task.run(task=netmiko_send_config, name=&#34;Show packet filters info&#34;, config_commands=[command])
         parser = NetworkInfoParser()
-        result[0].result = parser.get_parsed_packet_filter_data(task.host[&#39;vendor&#39;], result)
+        if result[0].result:
+            result[0].result = parser.get_parsed_packet_filter_data(task.host[&#39;vendor&#39;], result)
         self._print_info_default(result)
 
     def show_ipv6_routes(self, task: Task) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení IPv6 směrovací tabulky jednotlivých zařízení.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+                                export na nepodporovaných zařízeních (podporuje pouze Juniper a Cisco zařízení).
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         command = &#34;&#34;
         if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
                 task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
@@ -302,14 +614,27 @@ class NetworkUtilityViewer:
         else:
             raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
         result = task.run(task=netmiko_send_command, name=&#34;Show IP routes&#34;, command_string=command)
-        if task.host[&#39;vendor&#39;] == &#34;juniper&#34;:
+        if task.host[&#39;vendor&#39;] == &#34;juniper&#34; and result[0].result:
             parser = NetworkInfoParser()
             result[0].result = parser.get_parsed_juniper_routes(result, ipv6_routes=True)
         self._print_info_default(result)
 
     def show_vlans(self, task: Task, json_out: bool = False) -&gt; None:
-        if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
-                task.host[&#39;dev_type&#39;] == &#34;switch&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
+        &#34;&#34;&#34;
+        Metoda pro zobrazení konfigurovaných VLAN.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+                                export na nepodporovaných zařízeních.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        if task.host[&#39;dev_type&#39;] == &#34;switch&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;:
             result = task.run(task=napalm_get, name=&#34;Show configured VLANs&#34;, getters=[&#34;vlans&#34;])
             if json_out:
                 self._print_info_json(result)
@@ -319,6 +644,16 @@ class NetworkUtilityViewer:
             raise NornirSubTaskError(&#34;Invalid device type to execute this task. Only switches are allowed&#34;, task)
 
     def show_device_facts(self, task: Task, json_out: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení základní údajů o síťových zařízení.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         result = task.run(task=napalm_get, name=&#34;Show device basic facts&#34;, getters=[&#34;facts&#34;])
         if json_out:
             self._print_info_json(result)
@@ -326,6 +661,16 @@ class NetworkUtilityViewer:
             self._print_info_default(result)
 
     def show_interfaces_basic_info(self, task: Task, json_out: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení základních informací o rozhraních jednotlivých síťových zařízení.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         result = task.run(task=napalm_get, name=&#34;Show interfaces basic info&#34;, getters=[&#34;interfaces&#34;])
         if json_out:
             self._print_info_json(result)
@@ -333,6 +678,16 @@ class NetworkUtilityViewer:
             self._print_info_default(result)
 
     def show_interfaces_ip_info(self, task: Task, json_out: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení konfigurovaných IP adres na rozhraních jednotlivých síťových zařízení.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         result = task.run(task=napalm_get, name=&#34;Show IP addresses assigned to interfaces&#34;, getters=[&#34;interfaces_ip&#34;])
         if json_out:
             self._print_info_json(result)
@@ -340,36 +695,88 @@ class NetworkUtilityViewer:
             self._print_info_default(result)
 
     def show_interfaces_packet_counters(self, task: Task, json_out: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení statistik týkající se přijímaní a vysílaní paketů pro jednotlivá rozhraní síťových zařízení.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         result = task.run(task=napalm_get, name=&#34;Show interfaces packet counters&#34;, getters=[&#34;interfaces_counters&#34;])
         if json_out:
             self._print_info_json(result)
         else:
             self._print_info_default(result)
 
-    def show_ospf_neighbors(self, task: Task) -&gt; None:
+    def show_ospf_neighbors(self, task: Task, ipv6=False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zobrazení OSPF (nebo OSPFv3) sousedů.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            ipv6 (bool): Parametr, který definuje, jestli mají být zobrazeni OSPF (False) nebo OSPFv3 (True) sousedé.
+
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+                                export na nepodporovaných zařízeních.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         command = &#34;&#34;
-        if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
-                task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
-            command = &#34;show ip ospf neighbor&#34;
+        if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and task.host[&#39;dev_type&#39;] == &#34;router&#34;:
+            if ipv6:
+                command = &#34;show ipv6 ospf neighbor&#34;
+            else:
+                command = &#34;show ip ospf neighbor&#34;
+        elif task.host[&#39;vendor&#39;] == &#34;cisco&#34; and task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;:
+            if ipv6:
+                raise NornirSubTaskError(&#34;Function was not implemented for particular device.&#34;, task)
+            else:
+                command = &#34;show ip ospf neighbor&#34;
         elif task.host[&#39;vendor&#39;] == &#34;juniper&#34; and task.host[&#39;dev_type&#39;] == &#34;router&#34;:
-            command = &#34;show ospf neighbor&#34;
+            if ipv6:
+                command = &#34;show ospf3 neighbor&#34;
+            else:
+                command = &#34;show ospf neighbor&#34;
         else:
             raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
         result = task.run(task=netmiko_send_command, name=&#34;Show OSPF neighbors&#34;, command_string=command,
                           use_textfsm=True)
         self._print_info_default(result)
 
-    def _print_info_default(self, result_dict: MultiResult) -&gt; None:
-        if not result_dict.failed:
-            print(f&#34;Device: {result_dict.host}&#34;)
-            for result in result_dict:
+    def _print_info_default(self, result_list: MultiResult) -&gt; None:
+        &#34;&#34;&#34;
+        Upravená defaultní nornir metoda, pro přehledné zobrazení Nornir objektů v konzoli.
+
+        Args:
+            result_list (MultiResult): Speciální nornir objekt (připomínající Python list), který obsahuje výsledky několika nornir úkolů konkrétního síťového zařízení.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        if not result_list.failed:
+            print(f&#34;Device: {result_list.host}&#34;)
+            for result in result_list:
                 print_result(result)
                 print()
 
-    def _print_info_json(self, result_dict: MultiResult) -&gt; None:
-        if not result_dict.failed:
-            print(f&#34;Device: {result_dict.host}&#34;)
-            for result in result_dict:
+    def _print_info_json(self, result_list: MultiResult) -&gt; None:
+        &#34;&#34;&#34;
+         Metoda, pro přehledné zobrazení Nornir objektů v konzoli. Nornir objekty jsou zobrazeny jako formátovaný JSON string.
+
+         Args:
+             result_list (MultiResult): Speciální nornir objekt (připomínající Python list), který obsahuje výsledky několika nornir úkolů konkrétního síťového zařízení.
+
+         Returns:
+             None
+         &#34;&#34;&#34;
+        if not result_list.failed:
+            print(f&#34;Device: {result_list.host}&#34;)
+            for result in result_list:
                 print(json.dumps(result.result, sort_keys=True, indent=4))</code></pre>
 </details>
 <h3>Methods</h3>
@@ -378,32 +785,62 @@ class NetworkUtilityViewer:
 <span>def <span class="ident">show_connection_state</span></span>(<span>self, task: nornir.core.task.Task) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Metoda pro zobrazení stavu připojení k jednotlivým zařízením.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def show_connection_state(self, task: Task) -&gt; None:
-    try:
-        napalm = task.host.get_connection(&#34;napalm&#34;, task.nornir.config)
-        device_status = &#34;OK&#34; if napalm.is_alive()[&#39;is_alive&#39;] else &#34;is not OK&#34;
-        print(f&#34;Connection to device {task.host} is {device_status}.&#34;)
-    except Exception:
-        raise</code></pre>
+    &#34;&#34;&#34;
+    Metoda pro zobrazení stavu připojení k jednotlivým zařízením.
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+    Returns:
+        None
+    &#34;&#34;&#34;
+    napalm = task.host.get_connection(&#34;napalm&#34;, task.nornir.config)
+    device_status = &#34;OK&#34; if napalm.is_alive()[&#39;is_alive&#39;] else &#34;is not OK&#34;
+    print(f&#34;Connection to device {task.host} is {device_status}.&#34;)</code></pre>
 </details>
 </dd>
 <dt id="scripts.utility.network_info_viewer.NetworkUtilityViewer.show_device_configuration"><code class="name flex">
 <span>def <span class="ident">show_device_configuration</span></span>(<span>self, task: nornir.core.task.Task) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Metoda pro zobrazení současné (running) konfigurace u jednotlivých síťových zařízení.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def show_device_configuration(self, task: Task) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda pro zobrazení současné (running) konfigurace u jednotlivých síťových zařízení.
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+    Returns:
+        None
+    &#34;&#34;&#34;
     result = task.run(task=napalm_get, name=&#34;Show running configuration&#34;, getters=[&#34;config&#34;])
-    result[0].result = result[0].result[&#34;config&#34;][&#39;running&#39;].strip()
+    if result[0].result:
+        result[0].result = result[0].result[&#34;config&#34;][&#39;running&#39;].strip()
     self._print_info_default(result)</code></pre>
 </details>
 </dd>
@@ -411,12 +848,31 @@ class NetworkUtilityViewer:
 <span>def <span class="ident">show_device_facts</span></span>(<span>self, task: nornir.core.task.Task, json_out: bool = False) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Metoda pro zobrazení základní údajů o síťových zařízení.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+<dt><strong><code>json_out</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def show_device_facts(self, task: Task, json_out: bool = False) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda pro zobrazení základní údajů o síťových zařízení.
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+        json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
     result = task.run(task=napalm_get, name=&#34;Show device basic facts&#34;, getters=[&#34;facts&#34;])
     if json_out:
         self._print_info_json(result)
@@ -428,12 +884,41 @@ class NetworkUtilityViewer:
 <span>def <span class="ident">show_hardware_details</span></span>(<span>self, task: nornir.core.task.Task, json_out: bool = False) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Metoda pro zobrazení HW vytížení síťových prvků.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+<dt><strong><code>json_out</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NornirSubTaskError</code></dt>
+<dd>Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+export na nepodporovaných zařízeních (např. NAPALM metoda get_environment není podporována obrazem Juniper Olive.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def show_hardware_details(self, task: Task, json_out: bool = False) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda pro zobrazení HW vytížení síťových prvků.
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+        json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+    Raises:
+        NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+                            export na nepodporovaných zařízeních (např. NAPALM metoda get_environment není podporována obrazem Juniper Olive.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
     if task.host[&#39;image&#39;] != &#34;olive&#34;:
         result = task.run(task=napalm_get, name=&#34;Show HW details&#34;, getters=[&#34;environment&#34;])
         if json_out:
@@ -448,12 +933,31 @@ class NetworkUtilityViewer:
 <span>def <span class="ident">show_interfaces_basic_info</span></span>(<span>self, task: nornir.core.task.Task, json_out: bool = False) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Metoda pro zobrazení základních informací o rozhraních jednotlivých síťových zařízení.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+<dt><strong><code>json_out</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def show_interfaces_basic_info(self, task: Task, json_out: bool = False) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda pro zobrazení základních informací o rozhraních jednotlivých síťových zařízení.
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+        json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
     result = task.run(task=napalm_get, name=&#34;Show interfaces basic info&#34;, getters=[&#34;interfaces&#34;])
     if json_out:
         self._print_info_json(result)
@@ -465,12 +969,31 @@ class NetworkUtilityViewer:
 <span>def <span class="ident">show_interfaces_ip_info</span></span>(<span>self, task: nornir.core.task.Task, json_out: bool = False) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Metoda pro zobrazení konfigurovaných IP adres na rozhraních jednotlivých síťových zařízení.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+<dt><strong><code>json_out</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def show_interfaces_ip_info(self, task: Task, json_out: bool = False) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda pro zobrazení konfigurovaných IP adres na rozhraních jednotlivých síťových zařízení.
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+        json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
     result = task.run(task=napalm_get, name=&#34;Show IP addresses assigned to interfaces&#34;, getters=[&#34;interfaces_ip&#34;])
     if json_out:
         self._print_info_json(result)
@@ -482,12 +1005,31 @@ class NetworkUtilityViewer:
 <span>def <span class="ident">show_interfaces_packet_counters</span></span>(<span>self, task: nornir.core.task.Task, json_out: bool = False) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Metoda pro zobrazení statistik týkající se přijímaní a vysílaní paketů pro jednotlivá rozhraní síťových zařízení.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+<dt><strong><code>json_out</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def show_interfaces_packet_counters(self, task: Task, json_out: bool = False) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda pro zobrazení statistik týkající se přijímaní a vysílaní paketů pro jednotlivá rozhraní síťových zařízení.
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+        json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
     result = task.run(task=napalm_get, name=&#34;Show interfaces packet counters&#34;, getters=[&#34;interfaces_counters&#34;])
     if json_out:
         self._print_info_json(result)
@@ -499,12 +1041,38 @@ class NetworkUtilityViewer:
 <span>def <span class="ident">show_ipv4_routes</span></span>(<span>self, task: nornir.core.task.Task) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Metoda pro zobrazení IPv4 směrovací tabulky jednotlivých zařízení.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NornirSubTaskError</code></dt>
+<dd>Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+export na nepodporovaných zařízeních (podporuje pouze Juniper a Cisco zařízení).</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def show_ipv4_routes(self, task: Task) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda pro zobrazení IPv4 směrovací tabulky jednotlivých zařízení.
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+    Raises:
+        NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+                            export na nepodporovaných zařízeních (podporuje pouze Juniper a Cisco zařízení).
+
+    Returns:
+        None
+    &#34;&#34;&#34;
     command = &#34;&#34;
     if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
             task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
@@ -514,7 +1082,7 @@ class NetworkUtilityViewer:
     else:
         raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
     result = task.run(task=netmiko_send_command, name=&#34;Show IP routes&#34;, command_string=command)
-    if task.host[&#39;vendor&#39;] == &#34;juniper&#34;:
+    if task.host[&#39;vendor&#39;] == &#34;juniper&#34; and result[0].result:
         parser = NetworkInfoParser()
         result[0].result = parser.get_parsed_juniper_routes(result)
     self._print_info_default(result)</code></pre>
@@ -524,12 +1092,38 @@ class NetworkUtilityViewer:
 <span>def <span class="ident">show_ipv6_routes</span></span>(<span>self, task: nornir.core.task.Task) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Metoda pro zobrazení IPv6 směrovací tabulky jednotlivých zařízení.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NornirSubTaskError</code></dt>
+<dd>Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+export na nepodporovaných zařízeních (podporuje pouze Juniper a Cisco zařízení).</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def show_ipv6_routes(self, task: Task) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda pro zobrazení IPv6 směrovací tabulky jednotlivých zařízení.
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+    Raises:
+        NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+                            export na nepodporovaných zařízeních (podporuje pouze Juniper a Cisco zařízení).
+
+    Returns:
+        None
+    &#34;&#34;&#34;
     command = &#34;&#34;
     if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
             task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
@@ -539,7 +1133,7 @@ class NetworkUtilityViewer:
     else:
         raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
     result = task.run(task=netmiko_send_command, name=&#34;Show IP routes&#34;, command_string=command)
-    if task.host[&#39;vendor&#39;] == &#34;juniper&#34;:
+    if task.host[&#39;vendor&#39;] == &#34;juniper&#34; and result[0].result:
         parser = NetworkInfoParser()
         result[0].result = parser.get_parsed_juniper_routes(result, ipv6_routes=True)
     self._print_info_default(result)</code></pre>
@@ -549,12 +1143,31 @@ class NetworkUtilityViewer:
 <span>def <span class="ident">show_ntp_info</span></span>(<span>self, task: nornir.core.task.Task, json_out: bool = False) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Metoda pro zobrazení NTP (Network Time Protocol) informací.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+<dt><strong><code>json_out</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def show_ntp_info(self, task: Task, json_out: bool = False) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda pro zobrazení NTP (Network Time Protocol) informací.
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+        json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
     result = task.run(task=napalm_get, name=&#34;Show ntp info (servers, peers, statistics)&#34;,
                       getters=[&#34;ntp_servers&#34;, &#34;ntp_peers&#34;, &#34;ntp_stats&#34;])
     if json_out:
@@ -564,21 +1177,60 @@ class NetworkUtilityViewer:
 </details>
 </dd>
 <dt id="scripts.utility.network_info_viewer.NetworkUtilityViewer.show_ospf_neighbors"><code class="name flex">
-<span>def <span class="ident">show_ospf_neighbors</span></span>(<span>self, task: nornir.core.task.Task) ‑> NoneType</span>
+<span>def <span class="ident">show_ospf_neighbors</span></span>(<span>self, task: nornir.core.task.Task, ipv6=False) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Metoda pro zobrazení OSPF (nebo OSPFv3) sousedů.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+<dt><strong><code>ipv6</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Parametr, který definuje, jestli mají být zobrazeni OSPF (False) nebo OSPFv3 (True) sousedé.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NornirSubTaskError</code></dt>
+<dd>Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+export na nepodporovaných zařízeních.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def show_ospf_neighbors(self, task: Task) -&gt; None:
+<pre><code class="python">def show_ospf_neighbors(self, task: Task, ipv6=False) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda pro zobrazení OSPF (nebo OSPFv3) sousedů.
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+        ipv6 (bool): Parametr, který definuje, jestli mají být zobrazeni OSPF (False) nebo OSPFv3 (True) sousedé.
+
+    Raises:
+        NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+                            export na nepodporovaných zařízeních.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
     command = &#34;&#34;
-    if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
-            task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
-        command = &#34;show ip ospf neighbor&#34;
+    if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and task.host[&#39;dev_type&#39;] == &#34;router&#34;:
+        if ipv6:
+            command = &#34;show ipv6 ospf neighbor&#34;
+        else:
+            command = &#34;show ip ospf neighbor&#34;
+    elif task.host[&#39;vendor&#39;] == &#34;cisco&#34; and task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;:
+        if ipv6:
+            raise NornirSubTaskError(&#34;Function was not implemented for particular device.&#34;, task)
+        else:
+            command = &#34;show ip ospf neighbor&#34;
     elif task.host[&#39;vendor&#39;] == &#34;juniper&#34; and task.host[&#39;dev_type&#39;] == &#34;router&#34;:
-        command = &#34;show ospf neighbor&#34;
+        if ipv6:
+            command = &#34;show ospf3 neighbor&#34;
+        else:
+            command = &#34;show ospf neighbor&#34;
     else:
         raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
     result = task.run(task=netmiko_send_command, name=&#34;Show OSPF neighbors&#34;, command_string=command,
@@ -590,12 +1242,38 @@ class NetworkUtilityViewer:
 <span>def <span class="ident">show_packet_filter_info</span></span>(<span>self, task: nornir.core.task.Task) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Metoda pro zobrazení definovaných paketových filtrů.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NornirSubTaskError</code></dt>
+<dd>Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+export na nepodporovaných zařízeních (podporuje pouze Juniper a Cisco zařízení).</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def show_packet_filter_info(self, task: Task) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda pro zobrazení definovaných paketových filtrů.
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+
+    Raises:
+        NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+                            export na nepodporovaných zařízeních (podporuje pouze Juniper a Cisco zařízení).
+
+    Returns:
+        None
+    &#34;&#34;&#34;
     command = &#34;&#34;
     if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
             task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
@@ -606,7 +1284,8 @@ class NetworkUtilityViewer:
         raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
     result = task.run(task=netmiko_send_config, name=&#34;Show packet filters info&#34;, config_commands=[command])
     parser = NetworkInfoParser()
-    result[0].result = parser.get_parsed_packet_filter_data(task.host[&#39;vendor&#39;], result)
+    if result[0].result:
+        result[0].result = parser.get_parsed_packet_filter_data(task.host[&#39;vendor&#39;], result)
     self._print_info_default(result)</code></pre>
 </details>
 </dd>
@@ -614,12 +1293,31 @@ class NetworkUtilityViewer:
 <span>def <span class="ident">show_snmp_info</span></span>(<span>self, task: nornir.core.task.Task, json_out: bool = False) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Metoda pro zobrazení SNMP (Simple Network Management Protocol) údajů.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+<dt><strong><code>json_out</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def show_snmp_info(self, task: Task, json_out: bool = False) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda pro zobrazení SNMP (Simple Network Management Protocol) údajů.
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+        json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
     result = task.run(task=napalm_get, name=&#34;Show SNMP info&#34;, getters=[&#34;snmp_information&#34;])
     if json_out:
         self._print_info_json(result)
@@ -631,12 +1329,41 @@ class NetworkUtilityViewer:
 <span>def <span class="ident">show_users</span></span>(<span>self, task: nornir.core.task.Task, json_out: bool = False) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Metoda pro zobrazení vytvořených uživatelů na jednotlivých zařízeních.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+<dt><strong><code>json_out</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NornirSubTaskError</code></dt>
+<dd>Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+export na nepodporovaných zařízeních (např. NAPALM metoda get_users není podporována obrazem Juniper Olive.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def show_users(self, task: Task, json_out: bool = False) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda pro zobrazení vytvořených uživatelů na jednotlivých zařízeních.
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+        json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+    Raises:
+        NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+                            export na nepodporovaných zařízeních (např. NAPALM metoda get_users není podporována obrazem Juniper Olive.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
     if not task.host[&#39;image&#39;] == &#34;olive&#34;:
         result = task.run(task=napalm_get, name=&#34;Show created users on device&#34;, getters=[&#34;users&#34;])
         if json_out:
@@ -651,14 +1378,42 @@ class NetworkUtilityViewer:
 <span>def <span class="ident">show_vlans</span></span>(<span>self, task: nornir.core.task.Task, json_out: bool = False) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Metoda pro zobrazení konfigurovaných VLAN.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+<dt><strong><code>json_out</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NornirSubTaskError</code></dt>
+<dd>Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+export na nepodporovaných zařízeních.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def show_vlans(self, task: Task, json_out: bool = False) -&gt; None:
-    if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
-            task.host[&#39;dev_type&#39;] == &#34;switch&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
+    &#34;&#34;&#34;
+    Metoda pro zobrazení konfigurovaných VLAN.
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+        json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
+
+    Raises:
+        NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
+                            export na nepodporovaných zařízeních.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
+    if task.host[&#39;dev_type&#39;] == &#34;switch&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;:
         result = task.run(task=napalm_get, name=&#34;Show configured VLANs&#34;, getters=[&#34;vlans&#34;])
         if json_out:
             self._print_info_json(result)

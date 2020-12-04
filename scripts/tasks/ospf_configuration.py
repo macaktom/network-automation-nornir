@@ -1,3 +1,4 @@
 class OSPFConfiguration:
-    def __init__(self):
-        pass
+    """
+    Třída pro konfiguraci OSPF a OSPFv3.
+    """
