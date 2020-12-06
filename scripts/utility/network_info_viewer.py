@@ -286,7 +286,7 @@ class NetworkUtilityViewer:
 
     def show_interfaces_packet_counters(self, task: Task, json_out: bool = False) -> None:
         """
-        Metoda pro zobrazení statistik týkající se přijímaní a vysílaní paketů pro jednotlivá rozhraní síťových zařízení.
+        Metoda pro zobrazení statistik týkající se přijímání a vysílání paketů pro jednotlivá rozhraní síťových zařízení.
 
         Args:
             task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).

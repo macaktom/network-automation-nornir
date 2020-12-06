@@ -2825,3 +2825,225 @@ TypeError: __init__() takes 2 positional arguments but 3 were given
 2020-12-04 17:50:00,702 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
 2020-12-04 18:05:54,890 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
 2020-12-04 18:07:33,521 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-04 19:00:28,790 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-04 19:09:49,277 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-04 19:11:08,055 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-04 19:17:33,825 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-04 19:18:06,092 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-04 19:19:54,186 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-04 19:20:17,702 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 10:23:15,487 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 10:23:18,577 - nornir.core.task -    ERROR -      start() - Host 'R1': task 'Get device basic facts' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 920, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/client.py", line 368, in connect
+    raise NoValidConnectionsError(errors)
+paramiko.ssh_exception.NoValidConnectionsError: [Errno None] Unable to connect to port 22 on 10.10.10.2
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/base.py", line 86, in _netmiko_open
+    self._netmiko_device = ConnectHandler(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/ssh_dispatcher.py", line 312, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/cisco/cisco_ios.py", line 17, in __init__
+    return super().__init__(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 346, in __init__
+    self._open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 351, in _open
+    self.establish_connection()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 942, in establish_connection
+    raise NetmikoTimeoutException(msg)
+netmiko.ssh_exception.NetmikoTimeoutException: TCP connection to device failed.
+
+Common causes of this problem are:
+1. Incorrect hostname or IP address.
+2. Wrong TCP port.
+3. Intermediate firewall blocking access.
+
+Device settings: cisco_ios 10.10.10.2:22
+
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_get.py", line 32, in napalm_get
+    device = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 440, in get_connection
+    self.open_connection(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 492, in open_connection
+    conn_obj.open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/connections/__init__.py", line 57, in open
+    connection.open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 169, in open
+    self.device = self._netmiko_open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/base.py", line 95, in _netmiko_open
+    raise ConnectionException("Cannot connect to {}".format(self.hostname))
+napalm.base.exceptions.ConnectionException: Cannot connect to 10.10.10.2
+
+2020-12-05 10:23:18,578 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Get device basic facts' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 920, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/client.py", line 368, in connect
+    raise NoValidConnectionsError(errors)
+paramiko.ssh_exception.NoValidConnectionsError: [Errno None] Unable to connect to port 22 on 10.10.10.5
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/base.py", line 86, in _netmiko_open
+    self._netmiko_device = ConnectHandler(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/ssh_dispatcher.py", line 312, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/cisco/cisco_ios.py", line 17, in __init__
+    return super().__init__(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 346, in __init__
+    self._open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 351, in _open
+    self.establish_connection()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 942, in establish_connection
+    raise NetmikoTimeoutException(msg)
+netmiko.ssh_exception.NetmikoTimeoutException: TCP connection to device failed.
+
+Common causes of this problem are:
+1. Incorrect hostname or IP address.
+2. Wrong TCP port.
+3. Intermediate firewall blocking access.
+
+Device settings: cisco_ios 10.10.10.5:22
+
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_get.py", line 32, in napalm_get
+    device = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 440, in get_connection
+    self.open_connection(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 492, in open_connection
+    conn_obj.open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/connections/__init__.py", line 57, in open
+    connection.open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 169, in open
+    self.device = self._netmiko_open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/base.py", line 95, in _netmiko_open
+    raise ConnectionException("Cannot connect to {}".format(self.hostname))
+napalm.base.exceptions.ConnectionException: Cannot connect to 10.10.10.5
+
+2020-12-05 10:23:18,579 - nornir.core.task -    ERROR -      start() - Host 'R1': task 'get_conn_state_and_device_facts' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_collector.py", line 40, in get_conn_state_and_device_facts
+    result = task.run(task=napalm_get, name="Get device basic facts", getters=["facts"])
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Get device basic facts (failed)
+
+
+2020-12-05 10:23:18,579 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'get_conn_state_and_device_facts' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_collector.py", line 40, in get_conn_state_and_device_facts
+    result = task.run(task=napalm_get, name="Get device basic facts", getters=["facts"])
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Get device basic facts (failed)
+
+
+2020-12-05 10:24:59,341 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 10:26:39,466 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 10:34:43,668 -  nornir.core -     INFO -        run() - Running task 'export_ipv6_routes' with args {} on 3 hosts
+2020-12-05 10:36:22,153 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 10:51:22,940 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 10:52:24,941 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 12:01:43,636 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 13:18:27,071 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 13:20:07,956 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 13:20:43,234 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 13:21:54,655 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 13:23:27,497 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 13:24:40,452 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 13:25:39,658 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 13:27:43,884 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 13:40:08,220 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 13:40:58,123 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 13:44:12,615 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 13:52:29,226 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 13:54:47,056 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 13:58:50,398 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 14:00:37,809 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 14:01:38,690 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 14:03:26,914 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 14:16:38,886 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 14:22:02,935 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 14:23:57,059 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 14:24:29,873 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 14:33:16,745 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 14:34:07,401 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 14:34:47,410 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 16:07:58,717 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 16:09:16,604 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 16:12:10,701 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 16:15:52,806 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 16:23:05,053 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 16:25:05,489 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 16:31:37,988 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 16:31:55,331 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 16:44:44,243 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 16:46:20,430 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 16:46:24,762 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 17:19:24,745 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 17:19:29,689 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 17:40:09,864 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 17:40:14,408 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 17:41:05,298 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 17:41:10,555 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 17:41:46,795 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 17:41:52,507 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 18:07:54,696 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 18:07:59,901 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 18:10:35,291 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 18:10:39,986 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 18:13:29,487 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 18:13:34,347 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 18:14:01,454 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 18:14:06,901 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 18:21:59,393 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 18:23:32,683 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 18:23:58,338 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 18:24:21,620 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 18:25:35,145 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 18:25:52,901 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 18:26:49,986 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 18:39:00,404 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 18:39:05,170 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 18:47:42,418 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 18:47:46,334 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 18:48:57,921 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-05 18:55:04,566 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 18:55:07,275 -  nornir.core -     INFO -        run() - Running task 'show_interfaces_packet_counters' with args {'json_out': True} on 3 hosts
+2020-12-05 19:30:04,932 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 19:30:09,159 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 19:31:25,845 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 19:31:29,886 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 19:32:33,748 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 19:32:39,408 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 19:32:45,486 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 19:32:50,661 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 19:33:17,638 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 19:33:23,461 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 19:39:34,919 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 19:39:38,862 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts
+2020-12-05 19:39:57,976 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2020-12-05 19:40:03,735 -  nornir.core -     INFO -        run() - Running task 'get_interfaces_packet_counters' with args {} on 3 hosts

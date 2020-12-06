@@ -19,19 +19,72 @@ class NetworkInfoExporter:
     Třída která umožňuje exportovat data ze síťových zařízení.
     """
 
-    def export_device_facts(self, nornir_devices: Nornir, dest_file_path: Path):
+    def export_device_facts(self, nornir_devices: Nornir, dest_file_path: Path) -> None:
+        """
+        Export základních údajů jednotlivých zařízení do .xlsx souboru.
+
+        Args:
+            nornir_devices (Nornir): filtrovaný Nornir objekt umožňující na daných zařízeních volat nornir úkoly.
+            dest_file_path: (Path): cesta k výslednému .xlsx souboru.
+
+        Returns:
+            None
+
+        """
         info_collector = NetworkInfoCollector()
-        all_results_aggregation: AggregatedResult = nornir_devices.run(task=info_collector.get_conn_state_and_device_facts)
+        all_results_aggregation: AggregatedResult = nornir_devices.run(
+            task=info_collector.get_conn_state_and_device_facts)
+        sorted_headers_export = ["hostname", "FQDN", "vendor", "serial_number", "os_version", "uptime", "connection"]
+        wider_header_columns = ["os_version", "FQDN"]
         if not all_results_aggregation.failed:
-            exporter = ExcelExporter(Workbook(), "reporting", dest_file_path)
+            exporter = ExcelExporter(Workbook(), "Základní informace o zařízeních", dest_file_path)
             parser = NetworkInfoParser()
-            sorted_headers, parsed_data = parser.parse_facts_data(all_results_aggregation)
-            exporter.export_to_xlsx(sorted_headers, parsed_data)
+            parsed_data = parser.get_parsed_facts_data(all_results_aggregation)
+            exporter.write_header(sorted_headers_export, wider_header_columns)
+            exporter.write_data(sorted_headers_export, parsed_data)
+            exporter.save_xlsx_file()
         else:
             print("Export failed - more in nornir.log")
 
-    def export_interfaces_packet_counters(self, nornir_device: Nornir):
-        pass
+    def export_interfaces_packet_counters(self, nornir_devices: Nornir, dest_file_path: Path) -> None:
+        """
+         Export statistik týkající se přijímání a vysílání paketů pro jednotlivá rozhraní síťových zařízení. Statistiky jsou exportovány do .xslx souboru.
+
+         Args:
+             nornir_devices (Nornir): filtrovaný Nornir objekt umožňující na daných zařízeních volat nornir úkoly.
+             dest_file_path: (Path): cesta k výslednému .xlsx souboru.
+
+         Returns:
+             None
+
+         """
+        info_collector = NetworkInfoCollector()
+        all_results_aggregation: AggregatedResult = nornir_devices.run(
+            task=info_collector.get_interfaces_packet_counters)
+        sorted_headers_export = ["interface", "rx_broadcast", "rx_discards", "rx_errors",
+                                 "rx_multicast", "rx_octets", "rx_unicast", "tx_broadcast",
+                                 "tx_discards", "tx_errors", "tx_multicast", "tx_octets", "tx_unicast"]
+        wider_header_columns = ["interface"]
+        if not all_results_aggregation.failed:
+            parser = NetworkInfoParser()
+            parser.parse_interfaces_packet_counters_data(all_results_aggregation)
+            exporter = ExcelExporter(Workbook(), list(all_results_aggregation.keys())[0], dest_file_path)
+            for host in all_results_aggregation:
+                sheet_name = host
+                exporter.create_sheet(sheet_name)
+                exporter.change_active_sheet(sheet_name)
+                row = 2
+                column = 1
+                exporter.write_header(sorted_headers_export, wider_header_columns, row, column)
+                intefaces_data = all_results_aggregation[host][1].result['interfaces_counters']
+                for interface in sorted(intefaces_data):
+                    interface_dict = intefaces_data[interface]
+                    interface_dict['interface'] = interface
+                    exporter.write_data(sorted_headers_export, [interface_dict], row, column)
+                    row += 1
+            exporter.save_xlsx_file()
+        else:
+            print("Export failed - more in nornir.log")
 
     def export_device_configuration(self, task: Task) -> None:
         """

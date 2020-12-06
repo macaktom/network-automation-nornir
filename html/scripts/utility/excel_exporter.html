@@ -28,84 +28,181 @@
 </summary>
 <pre><code class="python">from pathlib import Path
 from typing import List, Dict
-
-from nornir.core.task import AggregatedResult, Result, Task
-from nornir_napalm.plugins.tasks import napalm_get
 from openpyxl import Workbook
 from openpyxl.styles import Alignment
 from openpyxl.utils import get_column_letter
-import datetime
 
 
 class ExcelExporter:
+    &#34;&#34;&#34;
+    Třida pro exportování dat do formátu .xlsx.
 
+    Args:
+        workbook (Workbook): objekt openpyxl knihovny reprezentující sešit.
+        sheet_title (str): název výchozího listu
+        dest_file (Path): argument metody, obsahující cestu k exportovanému .xlsx souboru.
+
+    Attributes:
+         workbook (Workbook): instanční proměnná, reprezentující sešit v tabulkovém procesoru.
+         dest_file (Path): argument metody, obsahující cestu k exportovanému .xlsx souboru.
+         sheets (List[Worksheet]): listy tabulkového procesoru, které jsou obsaženy v daném sešitě.
+         active_sheet (Worksheet): instanční proměnná reprezentující aktivní list
+
+    &#34;&#34;&#34;
     def __init__(self, workbook: Workbook, sheet_title: str, dest_file: Path):
         self._workbook = workbook
         self._dest_file = dest_file
-        self.sheets = []
+        self._sheets = []
         self._setup_export(sheet_title)
 
     def _create_parent_folders(self, folder_path: Path) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro vytvoření všech nadřazených složek k definované instanční proměnné dest_file.
+        Složky jsou vytvořeny pouze tehdy, pokud nebyly dříve uživatelem vytvořeny.
+
+        Args:
+            folder_path (Path): cesta obsahující všechny nadřazené složky, které jsou nutné pro nalezení výsledného .txt souboru
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         folder_path.mkdir(parents=True, exist_ok=True)
 
     def _check_file_dest(self) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda, která zkontroluje, jestli je k instanční proměnné dest_file přiřazena validní cesta k .xlsx souboru.
+        Dodatečně vytvoří požadované nadřazené složky, pokud už nejsou vytvořené za pomocí metody _create_parent_folders.
+
+        Raises:
+            ValueError: Výjimka, která nastane pokud atribut dest_file není validní cestou k .xlsx souboru.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         if self._dest_file.suffix == &#39;.xlsx&#39;:
             self._create_parent_folders(self._dest_file.parent)
         else:
             raise ValueError(&#34;Not valid filepath or extension&#34;)
 
-    def _write_data(self, lst_data: List[Dict[str, str]], sorted_headers: List[str], row_start: int,
-                    column_start: int) -&gt; None:
-        current_column = column_start
-        for host_data in lst_data:
-            row_start += 1
-            for header in sorted_headers:
-                if host_data[header] is None or host_data[header] == &#34;None&#34; or host_data[header] == &#34;&#34;:
-                    self.active_sheet.cell(row=row_start, column=current_column).value = &#34;-&#34;
-                else:
-                    self.active_sheet.cell(row=row_start, column=current_column).value = host_data[header]
-                self.active_sheet.cell(row=row_start, column=current_column).alignment = Alignment(horizontal=&#39;center&#39;,
-                                                                                          vertical=&#39;center&#39;)
-                current_column += 1
-            current_column = column_start
+    def write_data(self, sorted_headers: List[str], lst_data: List[Dict[str, str]], row_start: int = 2,
+                   column_start: int = 1) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zápis dat do aktivního listu.
 
-    def _write_header(self, headers: List[str], row_start: int, column_start: int) -&gt; None:
-        for header in headers:
-            self.active_sheet.cell(row=row_start, column=column_start).value = header
-            self.active_sheet.cell(row=row_start, column=column_start).alignment = Alignment(horizontal=&#39;center&#39;,
-                                                                                    vertical=&#39;center&#39;)
-            if header.lower() == &#34;os_version&#34; or header.lower() == &#34;fqdn&#34;:
-                self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 40
-            else:
-                self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 15
-            column_start += 1
+        Args:
+            sorted_headers (List[str]): seřazená hlavička tabulky, určující pořadí zápisu.
+            lst_data (List[Dict[str, str]]): data určená k exportu.
+            row_start (int): počáteční řádek zápisu. Defaultní hodnota je 2.
+            column_start (int): počáteční sloupec zápisu. Defaultní hodnota je 1.
 
-    def export_to_xlsx(self, sorted_headers: List[str], data: List[Dict[str, str]], row_start: int = 2,
-                       column_start: int = 2) -&gt; None:
+        Returns:
+            None
+        &#34;&#34;&#34;
         if row_start &gt; 0 and column_start &gt; 0:
-            self._write_header(sorted_headers, row_start, column_start)
-            self._write_data(data, sorted_headers, row_start, column_start)
-            self._workbook.save(self._dest_file)
+            current_column = column_start
+            for data in lst_data:
+                row_start += 1
+                for header in sorted_headers:
+                    if data[header] is None or data[header] == &#34;None&#34; or data[header] == &#34;&#34;:
+                        self.active_sheet.cell(row=row_start, column=current_column).value = &#34;-&#34;
+                    else:
+                        self.active_sheet.cell(row=row_start, column=current_column).value = data[header]
+                    self.active_sheet.cell(row=row_start, column=current_column).alignment = Alignment(
+                        horizontal=&#39;center&#39;,
+                        vertical=&#39;center&#39;)
+                    current_column += 1
+                current_column = column_start
         else:
-            print(&#34;Data were not exported - check specified row_start and column_start (both must be &gt; 0).&#34;)
+            print(&#34;Error with writing data - check specified row_start and column_start (both must be &gt; 0).&#34;)
+
+    def write_header(self, sorted_headers: List[str], wider_header_columns: List[str], row_start: int = 2,
+                     column_start: int = 1) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zápis hlavičky tabulky do aktivního listu.
+
+        Args:
+            sorted_headers (List[str]): seřazená hlavička tabulky
+            wider_header_columns (List[str]): list nadpisů, který určuje, jaké sloupce mají být širší.
+            row_start (int): počáteční řádek zápisu. Defaultní hodnota je 2.
+            column_start (int): počáteční sloupec zápisu. Defaultní hodnota je 1.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        if row_start &gt; 0 and column_start &gt; 0:
+            for header in sorted_headers:
+                self.active_sheet.cell(row=row_start, column=column_start).value = header
+                self.active_sheet.cell(row=row_start, column=column_start).alignment = Alignment(horizontal=&#39;center&#39;,
+                                                                                                 vertical=&#39;center&#39;)
+                if header in wider_header_columns:
+                    self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 40
+                else:
+                    self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 15
+                column_start += 1
+        else:
+            print(&#34;Error with writing header - check specified row_start and column_start (both must be &gt; 0).&#34;)
+
+    def save_xlsx_file(self) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro uložení/vytvoření .xlsx souboru. Lokace souboru je definována atributem dest_file.
+
+        Raises:
+            Exception: Vyjímka, která nastane, pokud je problém s uložením/vytvořením výsledného .xlsx souboru.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        try:
+            self._workbook.save(self._dest_file)
+            print(f&#34;Export data to {self._dest_file.name} was successful.&#34;)
+        except Exception:
+            print(&#34;Export failed. Error while saving .xslx file.&#34;)
 
     def _setup_export(self, sheet_title: str) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro počáteční nastavení exportu .xlsx souboru (kontrola cesty k souboru, vytvoření defaultního listu, nastavení názvu listu).
+
+        Args:
+            sheet_title (str): název výchozího listu
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         self._check_file_dest()
         ws1 = self._workbook.active
-        self.sheets.append(ws1)
+        self._sheets.append(ws1)
         self.active_sheet = ws1
         ws1.title = sheet_title
 
-    def _change_active_sheet(self, sheet_title: str) -&gt; None:
+    def change_active_sheet(self, sheet_title: str) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda, která nastaví daný list jako aktivní.
+
+        Args:
+            sheet_title (str): název listu
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         if sheet_title:
-            for sheet in self.sheets:
+            for sheet in self._sheets:
                 if sheet.title.lower() == sheet_title.lower():
                     self._workbook.active = sheet
                     self.active_sheet = sheet
 
-    def _create_sheet(self, sheet_title: str) -&gt; None:
-        ws = self._workbook.create_sheet(sheet_title)
-        self.sheets.append(ws)</code></pre>
+    def create_sheet(self, sheet_title: str) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro vytvoření nového listu.
+
+        Args:
+            sheet_title (str): název nového listu
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        if sheet_title not in self._workbook.sheetnames:
+            ws = self._workbook.create_sheet(sheet_title)
+            self._sheets.append(ws)</code></pre>
 </details>
 </section>
 <section>
@@ -122,100 +219,403 @@ class ExcelExporter:
 <span>(</span><span>workbook: openpyxl.workbook.workbook.Workbook, sheet_title: str, dest_file: pathlib.Path)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Třida pro exportování dat do formátu .xlsx.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>workbook</code></strong> :&ensp;<code>Workbook</code></dt>
+<dd>objekt openpyxl knihovny reprezentující sešit.</dd>
+<dt><strong><code>sheet_title</code></strong> :&ensp;<code>str</code></dt>
+<dd>název výchozího listu</dd>
+<dt><strong><code>dest_file</code></strong> :&ensp;<code>Path</code></dt>
+<dd>argument metody, obsahující cestu k exportovanému .xlsx souboru.</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>workbook</code></strong> :&ensp;<code>Workbook</code></dt>
+<dd>instanční proměnná, reprezentující sešit v tabulkovém procesoru.</dd>
+<dt><strong><code>dest_file</code></strong> :&ensp;<code>Path</code></dt>
+<dd>argument metody, obsahující cestu k exportovanému .xlsx souboru.</dd>
+<dt><strong><code>sheets</code></strong> :&ensp;<code>List[Worksheet]</code></dt>
+<dd>listy tabulkového procesoru, které jsou obsaženy v daném sešitě.</dd>
+<dt><strong><code>active_sheet</code></strong> :&ensp;<code>Worksheet</code></dt>
+<dd>instanční proměnná reprezentující aktivní list</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class ExcelExporter:
+    &#34;&#34;&#34;
+    Třida pro exportování dat do formátu .xlsx.
 
+    Args:
+        workbook (Workbook): objekt openpyxl knihovny reprezentující sešit.
+        sheet_title (str): název výchozího listu
+        dest_file (Path): argument metody, obsahující cestu k exportovanému .xlsx souboru.
+
+    Attributes:
+         workbook (Workbook): instanční proměnná, reprezentující sešit v tabulkovém procesoru.
+         dest_file (Path): argument metody, obsahující cestu k exportovanému .xlsx souboru.
+         sheets (List[Worksheet]): listy tabulkového procesoru, které jsou obsaženy v daném sešitě.
+         active_sheet (Worksheet): instanční proměnná reprezentující aktivní list
+
+    &#34;&#34;&#34;
     def __init__(self, workbook: Workbook, sheet_title: str, dest_file: Path):
         self._workbook = workbook
         self._dest_file = dest_file
-        self.sheets = []
+        self._sheets = []
         self._setup_export(sheet_title)
 
     def _create_parent_folders(self, folder_path: Path) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro vytvoření všech nadřazených složek k definované instanční proměnné dest_file.
+        Složky jsou vytvořeny pouze tehdy, pokud nebyly dříve uživatelem vytvořeny.
+
+        Args:
+            folder_path (Path): cesta obsahující všechny nadřazené složky, které jsou nutné pro nalezení výsledného .txt souboru
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         folder_path.mkdir(parents=True, exist_ok=True)
 
     def _check_file_dest(self) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda, která zkontroluje, jestli je k instanční proměnné dest_file přiřazena validní cesta k .xlsx souboru.
+        Dodatečně vytvoří požadované nadřazené složky, pokud už nejsou vytvořené za pomocí metody _create_parent_folders.
+
+        Raises:
+            ValueError: Výjimka, která nastane pokud atribut dest_file není validní cestou k .xlsx souboru.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         if self._dest_file.suffix == &#39;.xlsx&#39;:
             self._create_parent_folders(self._dest_file.parent)
         else:
             raise ValueError(&#34;Not valid filepath or extension&#34;)
 
-    def _write_data(self, lst_data: List[Dict[str, str]], sorted_headers: List[str], row_start: int,
-                    column_start: int) -&gt; None:
-        current_column = column_start
-        for host_data in lst_data:
-            row_start += 1
-            for header in sorted_headers:
-                if host_data[header] is None or host_data[header] == &#34;None&#34; or host_data[header] == &#34;&#34;:
-                    self.active_sheet.cell(row=row_start, column=current_column).value = &#34;-&#34;
-                else:
-                    self.active_sheet.cell(row=row_start, column=current_column).value = host_data[header]
-                self.active_sheet.cell(row=row_start, column=current_column).alignment = Alignment(horizontal=&#39;center&#39;,
-                                                                                          vertical=&#39;center&#39;)
-                current_column += 1
-            current_column = column_start
+    def write_data(self, sorted_headers: List[str], lst_data: List[Dict[str, str]], row_start: int = 2,
+                   column_start: int = 1) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zápis dat do aktivního listu.
 
-    def _write_header(self, headers: List[str], row_start: int, column_start: int) -&gt; None:
-        for header in headers:
-            self.active_sheet.cell(row=row_start, column=column_start).value = header
-            self.active_sheet.cell(row=row_start, column=column_start).alignment = Alignment(horizontal=&#39;center&#39;,
-                                                                                    vertical=&#39;center&#39;)
-            if header.lower() == &#34;os_version&#34; or header.lower() == &#34;fqdn&#34;:
-                self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 40
-            else:
-                self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 15
-            column_start += 1
+        Args:
+            sorted_headers (List[str]): seřazená hlavička tabulky, určující pořadí zápisu.
+            lst_data (List[Dict[str, str]]): data určená k exportu.
+            row_start (int): počáteční řádek zápisu. Defaultní hodnota je 2.
+            column_start (int): počáteční sloupec zápisu. Defaultní hodnota je 1.
 
-    def export_to_xlsx(self, sorted_headers: List[str], data: List[Dict[str, str]], row_start: int = 2,
-                       column_start: int = 2) -&gt; None:
+        Returns:
+            None
+        &#34;&#34;&#34;
         if row_start &gt; 0 and column_start &gt; 0:
-            self._write_header(sorted_headers, row_start, column_start)
-            self._write_data(data, sorted_headers, row_start, column_start)
-            self._workbook.save(self._dest_file)
+            current_column = column_start
+            for data in lst_data:
+                row_start += 1
+                for header in sorted_headers:
+                    if data[header] is None or data[header] == &#34;None&#34; or data[header] == &#34;&#34;:
+                        self.active_sheet.cell(row=row_start, column=current_column).value = &#34;-&#34;
+                    else:
+                        self.active_sheet.cell(row=row_start, column=current_column).value = data[header]
+                    self.active_sheet.cell(row=row_start, column=current_column).alignment = Alignment(
+                        horizontal=&#39;center&#39;,
+                        vertical=&#39;center&#39;)
+                    current_column += 1
+                current_column = column_start
         else:
-            print(&#34;Data were not exported - check specified row_start and column_start (both must be &gt; 0).&#34;)
+            print(&#34;Error with writing data - check specified row_start and column_start (both must be &gt; 0).&#34;)
+
+    def write_header(self, sorted_headers: List[str], wider_header_columns: List[str], row_start: int = 2,
+                     column_start: int = 1) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro zápis hlavičky tabulky do aktivního listu.
+
+        Args:
+            sorted_headers (List[str]): seřazená hlavička tabulky
+            wider_header_columns (List[str]): list nadpisů, který určuje, jaké sloupce mají být širší.
+            row_start (int): počáteční řádek zápisu. Defaultní hodnota je 2.
+            column_start (int): počáteční sloupec zápisu. Defaultní hodnota je 1.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        if row_start &gt; 0 and column_start &gt; 0:
+            for header in sorted_headers:
+                self.active_sheet.cell(row=row_start, column=column_start).value = header
+                self.active_sheet.cell(row=row_start, column=column_start).alignment = Alignment(horizontal=&#39;center&#39;,
+                                                                                                 vertical=&#39;center&#39;)
+                if header in wider_header_columns:
+                    self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 40
+                else:
+                    self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 15
+                column_start += 1
+        else:
+            print(&#34;Error with writing header - check specified row_start and column_start (both must be &gt; 0).&#34;)
+
+    def save_xlsx_file(self) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro uložení/vytvoření .xlsx souboru. Lokace souboru je definována atributem dest_file.
+
+        Raises:
+            Exception: Vyjímka, která nastane, pokud je problém s uložením/vytvořením výsledného .xlsx souboru.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        try:
+            self._workbook.save(self._dest_file)
+            print(f&#34;Export data to {self._dest_file.name} was successful.&#34;)
+        except Exception:
+            print(&#34;Export failed. Error while saving .xslx file.&#34;)
 
     def _setup_export(self, sheet_title: str) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro počáteční nastavení exportu .xlsx souboru (kontrola cesty k souboru, vytvoření defaultního listu, nastavení názvu listu).
+
+        Args:
+            sheet_title (str): název výchozího listu
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         self._check_file_dest()
         ws1 = self._workbook.active
-        self.sheets.append(ws1)
+        self._sheets.append(ws1)
         self.active_sheet = ws1
         ws1.title = sheet_title
 
-    def _change_active_sheet(self, sheet_title: str) -&gt; None:
+    def change_active_sheet(self, sheet_title: str) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda, která nastaví daný list jako aktivní.
+
+        Args:
+            sheet_title (str): název listu
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         if sheet_title:
-            for sheet in self.sheets:
+            for sheet in self._sheets:
                 if sheet.title.lower() == sheet_title.lower():
                     self._workbook.active = sheet
                     self.active_sheet = sheet
 
-    def _create_sheet(self, sheet_title: str) -&gt; None:
-        ws = self._workbook.create_sheet(sheet_title)
-        self.sheets.append(ws)</code></pre>
+    def create_sheet(self, sheet_title: str) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro vytvoření nového listu.
+
+        Args:
+            sheet_title (str): název nového listu
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        if sheet_title not in self._workbook.sheetnames:
+            ws = self._workbook.create_sheet(sheet_title)
+            self._sheets.append(ws)</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
-<dt id="scripts.utility.excel_exporter.ExcelExporter.export_to_xlsx"><code class="name flex">
-<span>def <span class="ident">export_to_xlsx</span></span>(<span>self, sorted_headers: List[str], data: List[Dict[str, str]], row_start: int = 2, column_start: int = 2) ‑> NoneType</span>
+<dt id="scripts.utility.excel_exporter.ExcelExporter.change_active_sheet"><code class="name flex">
+<span>def <span class="ident">change_active_sheet</span></span>(<span>self, sheet_title: str) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Metoda, která nastaví daný list jako aktivní.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>sheet_title</code></strong> :&ensp;<code>str</code></dt>
+<dd>název listu</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def export_to_xlsx(self, sorted_headers: List[str], data: List[Dict[str, str]], row_start: int = 2,
-                   column_start: int = 2) -&gt; None:
-    if row_start &gt; 0 and column_start &gt; 0:
-        self._write_header(sorted_headers, row_start, column_start)
-        self._write_data(data, sorted_headers, row_start, column_start)
+<pre><code class="python">def change_active_sheet(self, sheet_title: str) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda, která nastaví daný list jako aktivní.
+
+    Args:
+        sheet_title (str): název listu
+
+    Returns:
+        None
+    &#34;&#34;&#34;
+    if sheet_title:
+        for sheet in self._sheets:
+            if sheet.title.lower() == sheet_title.lower():
+                self._workbook.active = sheet
+                self.active_sheet = sheet</code></pre>
+</details>
+</dd>
+<dt id="scripts.utility.excel_exporter.ExcelExporter.create_sheet"><code class="name flex">
+<span>def <span class="ident">create_sheet</span></span>(<span>self, sheet_title: str) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Metoda pro vytvoření nového listu.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>sheet_title</code></strong> :&ensp;<code>str</code></dt>
+<dd>název nového listu</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_sheet(self, sheet_title: str) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda pro vytvoření nového listu.
+
+    Args:
+        sheet_title (str): název nového listu
+
+    Returns:
+        None
+    &#34;&#34;&#34;
+    if sheet_title not in self._workbook.sheetnames:
+        ws = self._workbook.create_sheet(sheet_title)
+        self._sheets.append(ws)</code></pre>
+</details>
+</dd>
+<dt id="scripts.utility.excel_exporter.ExcelExporter.save_xlsx_file"><code class="name flex">
+<span>def <span class="ident">save_xlsx_file</span></span>(<span>self) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Metoda pro uložení/vytvoření .xlsx souboru. Lokace souboru je definována atributem dest_file.</p>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>Exception</code></dt>
+<dd>Vyjímka, která nastane, pokud je problém s uložením/vytvořením výsledného .xlsx souboru.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save_xlsx_file(self) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda pro uložení/vytvoření .xlsx souboru. Lokace souboru je definována atributem dest_file.
+
+    Raises:
+        Exception: Vyjímka, která nastane, pokud je problém s uložením/vytvořením výsledného .xlsx souboru.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
+    try:
         self._workbook.save(self._dest_file)
+        print(f&#34;Export data to {self._dest_file.name} was successful.&#34;)
+    except Exception:
+        print(&#34;Export failed. Error while saving .xslx file.&#34;)</code></pre>
+</details>
+</dd>
+<dt id="scripts.utility.excel_exporter.ExcelExporter.write_data"><code class="name flex">
+<span>def <span class="ident">write_data</span></span>(<span>self, sorted_headers: List[str], lst_data: List[Dict[str, str]], row_start: int = 2, column_start: int = 1) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Metoda pro zápis dat do aktivního listu.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>sorted_headers</code></strong> :&ensp;<code>List[str]</code></dt>
+<dd>seřazená hlavička tabulky, určující pořadí zápisu.</dd>
+<dt><strong><code>lst_data</code></strong> :&ensp;<code>List[Dict[str, str]]</code></dt>
+<dd>data určená k exportu.</dd>
+<dt><strong><code>row_start</code></strong> :&ensp;<code>int</code></dt>
+<dd>počáteční řádek zápisu. Defaultní hodnota je 2.</dd>
+<dt><strong><code>column_start</code></strong> :&ensp;<code>int</code></dt>
+<dd>počáteční sloupec zápisu. Defaultní hodnota je 1.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def write_data(self, sorted_headers: List[str], lst_data: List[Dict[str, str]], row_start: int = 2,
+               column_start: int = 1) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda pro zápis dat do aktivního listu.
+
+    Args:
+        sorted_headers (List[str]): seřazená hlavička tabulky, určující pořadí zápisu.
+        lst_data (List[Dict[str, str]]): data určená k exportu.
+        row_start (int): počáteční řádek zápisu. Defaultní hodnota je 2.
+        column_start (int): počáteční sloupec zápisu. Defaultní hodnota je 1.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
+    if row_start &gt; 0 and column_start &gt; 0:
+        current_column = column_start
+        for data in lst_data:
+            row_start += 1
+            for header in sorted_headers:
+                if data[header] is None or data[header] == &#34;None&#34; or data[header] == &#34;&#34;:
+                    self.active_sheet.cell(row=row_start, column=current_column).value = &#34;-&#34;
+                else:
+                    self.active_sheet.cell(row=row_start, column=current_column).value = data[header]
+                self.active_sheet.cell(row=row_start, column=current_column).alignment = Alignment(
+                    horizontal=&#39;center&#39;,
+                    vertical=&#39;center&#39;)
+                current_column += 1
+            current_column = column_start
     else:
-        print(&#34;Data were not exported - check specified row_start and column_start (both must be &gt; 0).&#34;)</code></pre>
+        print(&#34;Error with writing data - check specified row_start and column_start (both must be &gt; 0).&#34;)</code></pre>
+</details>
+</dd>
+<dt id="scripts.utility.excel_exporter.ExcelExporter.write_header"><code class="name flex">
+<span>def <span class="ident">write_header</span></span>(<span>self, sorted_headers: List[str], wider_header_columns: List[str], row_start: int = 2, column_start: int = 1) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Metoda pro zápis hlavičky tabulky do aktivního listu.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>sorted_headers</code></strong> :&ensp;<code>List[str]</code></dt>
+<dd>seřazená hlavička tabulky</dd>
+<dt><strong><code>wider_header_columns</code></strong> :&ensp;<code>List[str]</code></dt>
+<dd>list nadpisů, který určuje, jaké sloupce mají být širší.</dd>
+<dt><strong><code>row_start</code></strong> :&ensp;<code>int</code></dt>
+<dd>počáteční řádek zápisu. Defaultní hodnota je 2.</dd>
+<dt><strong><code>column_start</code></strong> :&ensp;<code>int</code></dt>
+<dd>počáteční sloupec zápisu. Defaultní hodnota je 1.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def write_header(self, sorted_headers: List[str], wider_header_columns: List[str], row_start: int = 2,
+                 column_start: int = 1) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda pro zápis hlavičky tabulky do aktivního listu.
+
+    Args:
+        sorted_headers (List[str]): seřazená hlavička tabulky
+        wider_header_columns (List[str]): list nadpisů, který určuje, jaké sloupce mají být širší.
+        row_start (int): počáteční řádek zápisu. Defaultní hodnota je 2.
+        column_start (int): počáteční sloupec zápisu. Defaultní hodnota je 1.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
+    if row_start &gt; 0 and column_start &gt; 0:
+        for header in sorted_headers:
+            self.active_sheet.cell(row=row_start, column=column_start).value = header
+            self.active_sheet.cell(row=row_start, column=column_start).alignment = Alignment(horizontal=&#39;center&#39;,
+                                                                                             vertical=&#39;center&#39;)
+            if header in wider_header_columns:
+                self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 40
+            else:
+                self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 15
+            column_start += 1
+    else:
+        print(&#34;Error with writing header - check specified row_start and column_start (both must be &gt; 0).&#34;)</code></pre>
 </details>
 </dd>
 </dl>
@@ -239,7 +639,11 @@ class ExcelExporter:
 <li>
 <h4><code><a title="scripts.utility.excel_exporter.ExcelExporter" href="#scripts.utility.excel_exporter.ExcelExporter">ExcelExporter</a></code></h4>
 <ul class="">
-<li><code><a title="scripts.utility.excel_exporter.ExcelExporter.export_to_xlsx" href="#scripts.utility.excel_exporter.ExcelExporter.export_to_xlsx">export_to_xlsx</a></code></li>
+<li><code><a title="scripts.utility.excel_exporter.ExcelExporter.change_active_sheet" href="#scripts.utility.excel_exporter.ExcelExporter.change_active_sheet">change_active_sheet</a></code></li>
+<li><code><a title="scripts.utility.excel_exporter.ExcelExporter.create_sheet" href="#scripts.utility.excel_exporter.ExcelExporter.create_sheet">create_sheet</a></code></li>
+<li><code><a title="scripts.utility.excel_exporter.ExcelExporter.save_xlsx_file" href="#scripts.utility.excel_exporter.ExcelExporter.save_xlsx_file">save_xlsx_file</a></code></li>
+<li><code><a title="scripts.utility.excel_exporter.ExcelExporter.write_data" href="#scripts.utility.excel_exporter.ExcelExporter.write_data">write_data</a></code></li>
+<li><code><a title="scripts.utility.excel_exporter.ExcelExporter.write_header" href="#scripts.utility.excel_exporter.ExcelExporter.write_header">write_header</a></code></li>
 </ul>
 </li>
 </ul>

@@ -29,7 +29,7 @@
 <pre><code class="python">import datetime
 import re
 from typing import Tuple, List, Dict
-
+import copy
 from nornir.core.task import AggregatedResult, MultiResult
 
 
@@ -39,36 +39,34 @@ class NetworkInfoParser:
     nestrukturovaného stringu atd.).
     &#34;&#34;&#34;
 
-    def parse_interfaces_packet_counters_data(self, aggregated_dict_result: AggregatedResult) -&gt; Tuple[
-        List[str], List[Dict[str, str]]]:
+    def parse_interfaces_packet_counters_data(self, aggregated_dict_result: AggregatedResult) -&gt; None:
         &#34;&#34;&#34;
-        Metoda, která zparsuje statistiky týkající se přijímaní a vysílaní paketů pro jednotlivá rozhraní síťových zařízení (ty které jsou podporovány
+        Metoda, která zparsuje statistiky týkající se přijímání a vysílání paketů pro jednotlivá rozhraní síťových zařízení (ty které jsou podporovány
         knihovnou NAPALM).
 
         Args:
             aggregated_dict_result (AggregatedResult): objekt, který seskupuje data z více nornir úkolů (v tomto případě pouze jednoho tasku). AggregatedResult si lze představit jako slovník, jejichž klíčem jsou
-                                                       jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotlivých tasků.
+                                                       jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotlivých tasků. Tento objekt bude zparsován a modifikován.
 
         Returns:
-            Vrací tuple, který obsahuje seřazené nadpisy pro export do Excelu (sorted_headers_export) a samotné data (data).\n
-            sorted_headers_export (List[str]): list seřazených nadpisů.\n
-            data (List[Dict[str, str]]): - list slovníků, přičemž každý slovník obsahuje základní údaje daného síťového prvku.
+            None
         &#34;&#34;&#34;
-        data = []
-        interface_data = {}
-        sorted_headers_export = [&#34;interface&#34;, &#34;rx_broadcast_packets&#34;, &#34;rx_discards&#34;, &#34;rx_errors&#34;,
-                                 &#34;rx_multicast_packets&#34;, &#34;rx_octets&#34;, &#34;rx_unicast_packets&#34;, &#34;tx_broadcast_packets&#34;,
-                                 &#34;tx_discards&#34;, &#34;tx_errors&#34;, &#34;tx_multicast_packets&#34;, &#34;tx_octets&#34;, &#34;tx_unicast_packets&#34;]
+        dict_rename = {&#34;rx_broadcast_packets&#34;: &#34;rx_broadcast&#34;, &#34;rx_multicast_packets&#34;: &#34;rx_multicast&#34;,
+                       &#34;rx_unicast_packets&#34;: &#34;rx_unicast&#34;, &#34;tx_broadcast_packets&#34;: &#34;tx_broadcast&#34;,
+                       &#34;tx_multicast_packets&#34;: &#34;tx_multicast&#34;, &#34;tx_unicast_packets&#34;: &#34;tx_unicast&#34;}
         if aggregated_dict_result:
             for host in aggregated_dict_result:
-                data_dict = aggregated_dict_result[host][1].result[&#39;interfaces_counters&#39;]
-                data.append(data_dict)
-            print(data)
-            return sorted_headers_export, data
+                interfaces_data = aggregated_dict_result[host][1].result[&#39;interfaces_counters&#39;]
+                for interface in interfaces_data:
+                    interface_dict = interfaces_data[interface]
+                    interface_dict[&#39;interface&#39;] = interface
+                    for key in dict_rename:
+                        rename_value = dict_rename[key]
+                        interface_dict[rename_value] = interface_dict.pop(key)
 
-    def parse_facts_data(self, aggregated_dict_result: AggregatedResult) -&gt; Tuple[List[str], List[Dict[str, str]]]:
+    def get_parsed_facts_data(self, aggregated_dict_result: AggregatedResult) -&gt; List[Dict[str, str]]:
         &#34;&#34;&#34;
-        Metoda, která zparsuje základní údaje o zařízení (pro zařízení všech výrobců, které jsou podporování
+        Metoda, která zparsuje základní údaje o zařízení (pro zařízení všech výrobců, které jsou podporovány
         knihovnou NAPALM).
 
         Args:
@@ -77,27 +75,22 @@ class NetworkInfoParser:
                                                        jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotlivých tasků
 
         Returns:
-            Vrací tuple, který obsahuje seřazené nadpisy pro export do Excelu (sorted_headers_export) a samotné data (data).\n
-            sorted_headers_export (List[str]): list seřazených nadpisů.\n
-            data (List[Dict[str, str]]): - list slovníků, přičemž každý slovník obsahuje základní údaje daného síťového prvku.
+            Vrací list slovníků data.\n
+            data (List[Dict[str, str]]): list slovníků, přičemž každý slovník obsahuje základní údaje o daném síťovém prvku.
         &#34;&#34;&#34;
         data = []
-        sorted_headers_export = [&#34;hostname&#34;, &#34;FQDN&#34;, &#34;vendor&#34;, &#34;serial_number&#34;, &#34;os_version&#34;, &#34;uptime&#34;, &#34;connection&#34;]
         if aggregated_dict_result:
             for host in aggregated_dict_result:
                 data_dict = aggregated_dict_result[host][1].result[&#39;facts&#39;]
                 data_dict[&#39;connection&#39;] = &#34;OK&#34; if aggregated_dict_result[host][2].result else &#34;Failed&#34;
                 data_dict[&#39;uptime&#39;] = str(datetime.timedelta(seconds=data_dict[&#39;uptime&#39;]))
-                data_dict[&#34;FQDN&#34;] = data_dict[&#34;fqdn&#34;]
-                del data_dict[&#34;fqdn&#34;]
-                del data_dict[&#34;interface_list&#34;]
+                data_dict[&#34;FQDN&#34;] = data_dict.pop(&#34;fqdn&#34;)
                 version = data_dict[&#39;os_version&#39;]
                 if data_dict[&#39;vendor&#39;].lower() == &#34;cisco&#34;:
                     parsed_version = version.split(&#34;,&#34;)[1].strip()
                     data_dict[&#39;os_version&#39;] = parsed_version
                 data.append(data_dict)
-            print(data)
-            return sorted_headers_export, data
+            return data
 
     def get_parsed_juniper_routes(self, result: MultiResult, ipv6_routes: bool = False) -&gt; str:
         &#34;&#34;&#34;
@@ -109,7 +102,7 @@ class NetworkInfoParser:
             ipv6_routes (bool): Parametr, který definuje, jestli metoda má vrátit string obsahující IPv4 (False) nebo IPv6 (True) směrovací tabulku. Ve výchozím stavu je nastavena na False.
 
         Returns:
-            Vrátí string parsed_data, který obsahuje zparsovanou směrovací tabulku daného Juniper zařízení.
+            Vrátí string parsed_data, který obsahuje zparsovanou směrovací tabulku daného Juniper routeru.
         &#34;&#34;&#34;
 
         result_string = result[0].result
@@ -171,36 +164,34 @@ nestrukturovaného stringu atd.).</p></div>
     nestrukturovaného stringu atd.).
     &#34;&#34;&#34;
 
-    def parse_interfaces_packet_counters_data(self, aggregated_dict_result: AggregatedResult) -&gt; Tuple[
-        List[str], List[Dict[str, str]]]:
+    def parse_interfaces_packet_counters_data(self, aggregated_dict_result: AggregatedResult) -&gt; None:
         &#34;&#34;&#34;
-        Metoda, která zparsuje statistiky týkající se přijímaní a vysílaní paketů pro jednotlivá rozhraní síťových zařízení (ty které jsou podporovány
+        Metoda, která zparsuje statistiky týkající se přijímání a vysílání paketů pro jednotlivá rozhraní síťových zařízení (ty které jsou podporovány
         knihovnou NAPALM).
 
         Args:
             aggregated_dict_result (AggregatedResult): objekt, který seskupuje data z více nornir úkolů (v tomto případě pouze jednoho tasku). AggregatedResult si lze představit jako slovník, jejichž klíčem jsou
-                                                       jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotlivých tasků.
+                                                       jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotlivých tasků. Tento objekt bude zparsován a modifikován.
 
         Returns:
-            Vrací tuple, který obsahuje seřazené nadpisy pro export do Excelu (sorted_headers_export) a samotné data (data).\n
-            sorted_headers_export (List[str]): list seřazených nadpisů.\n
-            data (List[Dict[str, str]]): - list slovníků, přičemž každý slovník obsahuje základní údaje daného síťového prvku.
+            None
         &#34;&#34;&#34;
-        data = []
-        interface_data = {}
-        sorted_headers_export = [&#34;interface&#34;, &#34;rx_broadcast_packets&#34;, &#34;rx_discards&#34;, &#34;rx_errors&#34;,
-                                 &#34;rx_multicast_packets&#34;, &#34;rx_octets&#34;, &#34;rx_unicast_packets&#34;, &#34;tx_broadcast_packets&#34;,
-                                 &#34;tx_discards&#34;, &#34;tx_errors&#34;, &#34;tx_multicast_packets&#34;, &#34;tx_octets&#34;, &#34;tx_unicast_packets&#34;]
+        dict_rename = {&#34;rx_broadcast_packets&#34;: &#34;rx_broadcast&#34;, &#34;rx_multicast_packets&#34;: &#34;rx_multicast&#34;,
+                       &#34;rx_unicast_packets&#34;: &#34;rx_unicast&#34;, &#34;tx_broadcast_packets&#34;: &#34;tx_broadcast&#34;,
+                       &#34;tx_multicast_packets&#34;: &#34;tx_multicast&#34;, &#34;tx_unicast_packets&#34;: &#34;tx_unicast&#34;}
         if aggregated_dict_result:
             for host in aggregated_dict_result:
-                data_dict = aggregated_dict_result[host][1].result[&#39;interfaces_counters&#39;]
-                data.append(data_dict)
-            print(data)
-            return sorted_headers_export, data
+                interfaces_data = aggregated_dict_result[host][1].result[&#39;interfaces_counters&#39;]
+                for interface in interfaces_data:
+                    interface_dict = interfaces_data[interface]
+                    interface_dict[&#39;interface&#39;] = interface
+                    for key in dict_rename:
+                        rename_value = dict_rename[key]
+                        interface_dict[rename_value] = interface_dict.pop(key)
 
-    def parse_facts_data(self, aggregated_dict_result: AggregatedResult) -&gt; Tuple[List[str], List[Dict[str, str]]]:
+    def get_parsed_facts_data(self, aggregated_dict_result: AggregatedResult) -&gt; List[Dict[str, str]]:
         &#34;&#34;&#34;
-        Metoda, která zparsuje základní údaje o zařízení (pro zařízení všech výrobců, které jsou podporování
+        Metoda, která zparsuje základní údaje o zařízení (pro zařízení všech výrobců, které jsou podporovány
         knihovnou NAPALM).
 
         Args:
@@ -209,27 +200,22 @@ nestrukturovaného stringu atd.).</p></div>
                                                        jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotlivých tasků
 
         Returns:
-            Vrací tuple, který obsahuje seřazené nadpisy pro export do Excelu (sorted_headers_export) a samotné data (data).\n
-            sorted_headers_export (List[str]): list seřazených nadpisů.\n
-            data (List[Dict[str, str]]): - list slovníků, přičemž každý slovník obsahuje základní údaje daného síťového prvku.
+            Vrací list slovníků data.\n
+            data (List[Dict[str, str]]): list slovníků, přičemž každý slovník obsahuje základní údaje o daném síťovém prvku.
         &#34;&#34;&#34;
         data = []
-        sorted_headers_export = [&#34;hostname&#34;, &#34;FQDN&#34;, &#34;vendor&#34;, &#34;serial_number&#34;, &#34;os_version&#34;, &#34;uptime&#34;, &#34;connection&#34;]
         if aggregated_dict_result:
             for host in aggregated_dict_result:
                 data_dict = aggregated_dict_result[host][1].result[&#39;facts&#39;]
                 data_dict[&#39;connection&#39;] = &#34;OK&#34; if aggregated_dict_result[host][2].result else &#34;Failed&#34;
                 data_dict[&#39;uptime&#39;] = str(datetime.timedelta(seconds=data_dict[&#39;uptime&#39;]))
-                data_dict[&#34;FQDN&#34;] = data_dict[&#34;fqdn&#34;]
-                del data_dict[&#34;fqdn&#34;]
-                del data_dict[&#34;interface_list&#34;]
+                data_dict[&#34;FQDN&#34;] = data_dict.pop(&#34;fqdn&#34;)
                 version = data_dict[&#39;os_version&#39;]
                 if data_dict[&#39;vendor&#39;].lower() == &#34;cisco&#34;:
                     parsed_version = version.split(&#34;,&#34;)[1].strip()
                     data_dict[&#39;os_version&#39;] = parsed_version
                 data.append(data_dict)
-            print(data)
-            return sorted_headers_export, data
+            return data
 
     def get_parsed_juniper_routes(self, result: MultiResult, ipv6_routes: bool = False) -&gt; str:
         &#34;&#34;&#34;
@@ -241,7 +227,7 @@ nestrukturovaného stringu atd.).</p></div>
             ipv6_routes (bool): Parametr, který definuje, jestli metoda má vrátit string obsahující IPv4 (False) nebo IPv6 (True) směrovací tabulku. Ve výchozím stavu je nastavena na False.
 
         Returns:
-            Vrátí string parsed_data, který obsahuje zparsovanou směrovací tabulku daného Juniper zařízení.
+            Vrátí string parsed_data, který obsahuje zparsovanou směrovací tabulku daného Juniper routeru.
         &#34;&#34;&#34;
 
         result_string = result[0].result
@@ -279,6 +265,55 @@ nestrukturovaného stringu atd.).</p></div>
 </details>
 <h3>Methods</h3>
 <dl>
+<dt id="scripts.utility.network_info_parser.NetworkInfoParser.get_parsed_facts_data"><code class="name flex">
+<span>def <span class="ident">get_parsed_facts_data</span></span>(<span>self, aggregated_dict_result: nornir.core.task.AggregatedResult) ‑> List[Dict[str, str]]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Metoda, která zparsuje základní údaje o zařízení (pro zařízení všech výrobců, které jsou podporovány
+knihovnou NAPALM).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>aggregated_dict_result</code></strong> :&ensp;<code>AggregatedResult</code></dt>
+<dd>Objekt, který seskupuje data z více nornir úkolů (stav
+připojení + základní údaje o zařízení). AggregatedResult si lze představit jako slovník, jejichž klíčem jsou
+jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotlivých tasků</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Vrací list slovníků data.</p>
+<p>data (List[Dict[str, str]]): list slovníků, přičemž každý slovník obsahuje základní údaje o daném síťovém prvku.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_parsed_facts_data(self, aggregated_dict_result: AggregatedResult) -&gt; List[Dict[str, str]]:
+    &#34;&#34;&#34;
+    Metoda, která zparsuje základní údaje o zařízení (pro zařízení všech výrobců, které jsou podporovány
+    knihovnou NAPALM).
+
+    Args:
+        aggregated_dict_result (AggregatedResult): Objekt, který seskupuje data z více nornir úkolů (stav
+                                                   připojení + základní údaje o zařízení). AggregatedResult si lze představit jako slovník, jejichž klíčem jsou
+                                                   jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotlivých tasků
+
+    Returns:
+        Vrací list slovníků data.\n
+        data (List[Dict[str, str]]): list slovníků, přičemž každý slovník obsahuje základní údaje o daném síťovém prvku.
+    &#34;&#34;&#34;
+    data = []
+    if aggregated_dict_result:
+        for host in aggregated_dict_result:
+            data_dict = aggregated_dict_result[host][1].result[&#39;facts&#39;]
+            data_dict[&#39;connection&#39;] = &#34;OK&#34; if aggregated_dict_result[host][2].result else &#34;Failed&#34;
+            data_dict[&#39;uptime&#39;] = str(datetime.timedelta(seconds=data_dict[&#39;uptime&#39;]))
+            data_dict[&#34;FQDN&#34;] = data_dict.pop(&#34;fqdn&#34;)
+            version = data_dict[&#39;os_version&#39;]
+            if data_dict[&#39;vendor&#39;].lower() == &#34;cisco&#34;:
+                parsed_version = version.split(&#34;,&#34;)[1].strip()
+                data_dict[&#39;os_version&#39;] = parsed_version
+            data.append(data_dict)
+        return data</code></pre>
+</details>
+</dd>
 <dt id="scripts.utility.network_info_parser.NetworkInfoParser.get_parsed_juniper_routes"><code class="name flex">
 <span>def <span class="ident">get_parsed_juniper_routes</span></span>(<span>self, result: nornir.core.task.MultiResult, ipv6_routes: bool = False) ‑> str</span>
 </code></dt>
@@ -293,7 +328,7 @@ oddělí obě tabulky a uživateli vrátí string se směrovací tabulkou, ktero
 <dd>Parametr, který definuje, jestli metoda má vrátit string obsahující IPv4 (False) nebo IPv6 (True) směrovací tabulku. Ve výchozím stavu je nastavena na False.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<p>Vrátí string parsed_data, který obsahuje zparsovanou směrovací tabulku daného Juniper zařízení.</p></div>
+<p>Vrátí string parsed_data, který obsahuje zparsovanou směrovací tabulku daného Juniper routeru.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -308,7 +343,7 @@ oddělí obě tabulky a uživateli vrátí string se směrovací tabulkou, ktero
         ipv6_routes (bool): Parametr, který definuje, jestli metoda má vrátit string obsahující IPv4 (False) nebo IPv6 (True) směrovací tabulku. Ve výchozím stavu je nastavena na False.
 
     Returns:
-        Vrátí string parsed_data, který obsahuje zparsovanou směrovací tabulku daného Juniper zařízení.
+        Vrátí string parsed_data, který obsahuje zparsovanou směrovací tabulku daného Juniper routeru.
     &#34;&#34;&#34;
 
     result_string = result[0].result
@@ -364,107 +399,48 @@ oddělí obě tabulky a uživateli vrátí string se směrovací tabulkou, ktero
     return parsed_result</code></pre>
 </details>
 </dd>
-<dt id="scripts.utility.network_info_parser.NetworkInfoParser.parse_facts_data"><code class="name flex">
-<span>def <span class="ident">parse_facts_data</span></span>(<span>self, aggregated_dict_result: nornir.core.task.AggregatedResult) ‑> Tuple[List[str], List[Dict[str, str]]]</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Metoda, která zparsuje základní údaje o zařízení (pro zařízení všech výrobců, které jsou podporování
-knihovnou NAPALM).</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>aggregated_dict_result</code></strong> :&ensp;<code>AggregatedResult</code></dt>
-<dd>Objekt, který seskupuje data z více nornir úkolů (stav
-připojení + základní údaje o zařízení). AggregatedResult si lze představit jako slovník, jejichž klíčem jsou
-jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotlivých tasků</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<p>Vrací tuple, který obsahuje seřazené nadpisy pro export do Excelu (sorted_headers_export) a samotné data (data).</p>
-<p>sorted_headers_export (List[str]): list seřazených nadpisů.</p>
-<p>data (List[Dict[str, str]]): - list slovníků, přičemž každý slovník obsahuje základní údaje daného síťového prvku.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def parse_facts_data(self, aggregated_dict_result: AggregatedResult) -&gt; Tuple[List[str], List[Dict[str, str]]]:
-    &#34;&#34;&#34;
-    Metoda, která zparsuje základní údaje o zařízení (pro zařízení všech výrobců, které jsou podporování
-    knihovnou NAPALM).
-
-    Args:
-        aggregated_dict_result (AggregatedResult): Objekt, který seskupuje data z více nornir úkolů (stav
-                                                   připojení + základní údaje o zařízení). AggregatedResult si lze představit jako slovník, jejichž klíčem jsou
-                                                   jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotlivých tasků
-
-    Returns:
-        Vrací tuple, který obsahuje seřazené nadpisy pro export do Excelu (sorted_headers_export) a samotné data (data).\n
-        sorted_headers_export (List[str]): list seřazených nadpisů.\n
-        data (List[Dict[str, str]]): - list slovníků, přičemž každý slovník obsahuje základní údaje daného síťového prvku.
-    &#34;&#34;&#34;
-    data = []
-    sorted_headers_export = [&#34;hostname&#34;, &#34;FQDN&#34;, &#34;vendor&#34;, &#34;serial_number&#34;, &#34;os_version&#34;, &#34;uptime&#34;, &#34;connection&#34;]
-    if aggregated_dict_result:
-        for host in aggregated_dict_result:
-            data_dict = aggregated_dict_result[host][1].result[&#39;facts&#39;]
-            data_dict[&#39;connection&#39;] = &#34;OK&#34; if aggregated_dict_result[host][2].result else &#34;Failed&#34;
-            data_dict[&#39;uptime&#39;] = str(datetime.timedelta(seconds=data_dict[&#39;uptime&#39;]))
-            data_dict[&#34;FQDN&#34;] = data_dict[&#34;fqdn&#34;]
-            del data_dict[&#34;fqdn&#34;]
-            del data_dict[&#34;interface_list&#34;]
-            version = data_dict[&#39;os_version&#39;]
-            if data_dict[&#39;vendor&#39;].lower() == &#34;cisco&#34;:
-                parsed_version = version.split(&#34;,&#34;)[1].strip()
-                data_dict[&#39;os_version&#39;] = parsed_version
-            data.append(data_dict)
-        print(data)
-        return sorted_headers_export, data</code></pre>
-</details>
-</dd>
 <dt id="scripts.utility.network_info_parser.NetworkInfoParser.parse_interfaces_packet_counters_data"><code class="name flex">
-<span>def <span class="ident">parse_interfaces_packet_counters_data</span></span>(<span>self, aggregated_dict_result: nornir.core.task.AggregatedResult) ‑> Tuple[List[str], List[Dict[str, str]]]</span>
+<span>def <span class="ident">parse_interfaces_packet_counters_data</span></span>(<span>self, aggregated_dict_result: nornir.core.task.AggregatedResult) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Metoda, která zparsuje statistiky týkající se přijímaní a vysílaní paketů pro jednotlivá rozhraní síťových zařízení (ty které jsou podporovány
+<div class="desc"><p>Metoda, která zparsuje statistiky týkající se přijímání a vysílání paketů pro jednotlivá rozhraní síťových zařízení (ty které jsou podporovány
 knihovnou NAPALM).</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>aggregated_dict_result</code></strong> :&ensp;<code>AggregatedResult</code></dt>
 <dd>objekt, který seskupuje data z více nornir úkolů (v tomto případě pouze jednoho tasku). AggregatedResult si lze představit jako slovník, jejichž klíčem jsou
-jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotlivých tasků.</dd>
+jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotlivých tasků. Tento objekt bude zparsován a modifikován.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<p>Vrací tuple, který obsahuje seřazené nadpisy pro export do Excelu (sorted_headers_export) a samotné data (data).</p>
-<p>sorted_headers_export (List[str]): list seřazených nadpisů.</p>
-<p>data (List[Dict[str, str]]): - list slovníků, přičemž každý slovník obsahuje základní údaje daného síťového prvku.</p></div>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def parse_interfaces_packet_counters_data(self, aggregated_dict_result: AggregatedResult) -&gt; Tuple[
-    List[str], List[Dict[str, str]]]:
+<pre><code class="python">def parse_interfaces_packet_counters_data(self, aggregated_dict_result: AggregatedResult) -&gt; None:
     &#34;&#34;&#34;
-    Metoda, která zparsuje statistiky týkající se přijímaní a vysílaní paketů pro jednotlivá rozhraní síťových zařízení (ty které jsou podporovány
+    Metoda, která zparsuje statistiky týkající se přijímání a vysílání paketů pro jednotlivá rozhraní síťových zařízení (ty které jsou podporovány
     knihovnou NAPALM).
 
     Args:
         aggregated_dict_result (AggregatedResult): objekt, který seskupuje data z více nornir úkolů (v tomto případě pouze jednoho tasku). AggregatedResult si lze představit jako slovník, jejichž klíčem jsou
-                                                   jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotlivých tasků.
+                                                   jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotlivých tasků. Tento objekt bude zparsován a modifikován.
 
     Returns:
-        Vrací tuple, který obsahuje seřazené nadpisy pro export do Excelu (sorted_headers_export) a samotné data (data).\n
-        sorted_headers_export (List[str]): list seřazených nadpisů.\n
-        data (List[Dict[str, str]]): - list slovníků, přičemž každý slovník obsahuje základní údaje daného síťového prvku.
+        None
     &#34;&#34;&#34;
-    data = []
-    interface_data = {}
-    sorted_headers_export = [&#34;interface&#34;, &#34;rx_broadcast_packets&#34;, &#34;rx_discards&#34;, &#34;rx_errors&#34;,
-                             &#34;rx_multicast_packets&#34;, &#34;rx_octets&#34;, &#34;rx_unicast_packets&#34;, &#34;tx_broadcast_packets&#34;,
-                             &#34;tx_discards&#34;, &#34;tx_errors&#34;, &#34;tx_multicast_packets&#34;, &#34;tx_octets&#34;, &#34;tx_unicast_packets&#34;]
+    dict_rename = {&#34;rx_broadcast_packets&#34;: &#34;rx_broadcast&#34;, &#34;rx_multicast_packets&#34;: &#34;rx_multicast&#34;,
+                   &#34;rx_unicast_packets&#34;: &#34;rx_unicast&#34;, &#34;tx_broadcast_packets&#34;: &#34;tx_broadcast&#34;,
+                   &#34;tx_multicast_packets&#34;: &#34;tx_multicast&#34;, &#34;tx_unicast_packets&#34;: &#34;tx_unicast&#34;}
     if aggregated_dict_result:
         for host in aggregated_dict_result:
-            data_dict = aggregated_dict_result[host][1].result[&#39;interfaces_counters&#39;]
-            data.append(data_dict)
-        print(data)
-        return sorted_headers_export, data</code></pre>
+            interfaces_data = aggregated_dict_result[host][1].result[&#39;interfaces_counters&#39;]
+            for interface in interfaces_data:
+                interface_dict = interfaces_data[interface]
+                interface_dict[&#39;interface&#39;] = interface
+                for key in dict_rename:
+                    rename_value = dict_rename[key]
+                    interface_dict[rename_value] = interface_dict.pop(key)</code></pre>
 </details>
 </dd>
 </dl>
@@ -488,9 +464,9 @@ jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotliv�
 <li>
 <h4><code><a title="scripts.utility.network_info_parser.NetworkInfoParser" href="#scripts.utility.network_info_parser.NetworkInfoParser">NetworkInfoParser</a></code></h4>
 <ul class="">
+<li><code><a title="scripts.utility.network_info_parser.NetworkInfoParser.get_parsed_facts_data" href="#scripts.utility.network_info_parser.NetworkInfoParser.get_parsed_facts_data">get_parsed_facts_data</a></code></li>
 <li><code><a title="scripts.utility.network_info_parser.NetworkInfoParser.get_parsed_juniper_routes" href="#scripts.utility.network_info_parser.NetworkInfoParser.get_parsed_juniper_routes">get_parsed_juniper_routes</a></code></li>
 <li><code><a title="scripts.utility.network_info_parser.NetworkInfoParser.get_parsed_packet_filter_data" href="#scripts.utility.network_info_parser.NetworkInfoParser.get_parsed_packet_filter_data">get_parsed_packet_filter_data</a></code></li>
-<li><code><a title="scripts.utility.network_info_parser.NetworkInfoParser.parse_facts_data" href="#scripts.utility.network_info_parser.NetworkInfoParser.parse_facts_data">parse_facts_data</a></code></li>
 <li><code><a title="scripts.utility.network_info_parser.NetworkInfoParser.parse_interfaces_packet_counters_data" href="#scripts.utility.network_info_parser.NetworkInfoParser.parse_interfaces_packet_counters_data">parse_interfaces_packet_counters_data</a></code></li>
 </ul>
 </li>

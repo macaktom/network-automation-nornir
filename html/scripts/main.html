@@ -27,6 +27,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">import datetime
+from pathlib import Path
 
 from colorama import Fore
 from nornir import InitNornir
@@ -43,7 +44,7 @@ from scripts.utility.network_info_viewer import NetworkUtilityViewer
 # 2) Ty ktere NAPALM nema nebo jsou podporovany pouze u nektereho vendora - print pouze neupraveneho textu do konzole + export .txt
 # Tři druhy metod teď budou (kromě potom Jinja2): GET, SHOW, EXPORT. Show commandy je ted nutne prepsat na GET commandy, vraci Resulty
 
-# TODO pokud bude cas: Export HTML: show_vlans, show_interfaces_basic_info, show_intefaces_ip_info, Excel: mozna show_interfaces_packet_counters
+# TODO pokud bude cas: Export Excel: show_vlans, show_interfaces_basic_info, show_intefaces_ip_info
 
 
 def configure_ipv4_interfaces(task: Task):
@@ -80,17 +81,19 @@ def main() -&gt; None:
     all_devices = nr.filter(F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;))
     viewer = NetworkUtilityViewer()
     exporter = NetworkInfoExporter()
-    #all_devices.run(task=viewer.show_vlans)
-    z = all_devices.run(task=exporter.export_packet_filter_info)
+    dest_path = Path(Path.cwd() / &#39;export&#39; / &#34;excel&#34; / f&#34;packets_counter.xlsx&#34;)
+    exporter.export_device_facts(all_devices, Path(Path.cwd() / &#39;export&#39; / &#34;excel&#34; / f&#34;facts.xlsx&#34;))
+    exporter.export_interfaces_packet_counters(all_devices, dest_path)
+    #exporter.export_interfaces_packet_counters(all_devices, dest_path)
     # print(z[&#39;R1&#39;][1].result[&#39;facts&#39;])
     # print(z[&#39;R1&#39;][2].result)
+    #all_devices.run(task=viewer.show_interfaces_packet_counters, json_out=True)
 
     # exporter_xlsx = ExcelExporter(Workbook(), &#34;Testa&#34;)
-    # z = all_devices.run(task=exporter_xlsx.get_conn_state_and_device_facts)
 
 
-# TODO 3.12 - result.result u parsed metod, dokumentace, dopsat excel exporter, zacit configuration
-# TODO
+# TODO 5.12 - dokumentace, zacit configuration
+
 if __name__ == &#34;__main__&#34;:
     try:
         start = datetime.datetime.now()
@@ -162,8 +165,9 @@ if __name__ == &#34;__main__&#34;:
     all_devices = nr.filter(F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;))
     viewer = NetworkUtilityViewer()
     exporter = NetworkInfoExporter()
-    #all_devices.run(task=viewer.show_vlans)
-    z = all_devices.run(task=exporter.export_packet_filter_info)</code></pre>
+    dest_path = Path(Path.cwd() / &#39;export&#39; / &#34;excel&#34; / f&#34;packets_counter.xlsx&#34;)
+    exporter.export_device_facts(all_devices, Path(Path.cwd() / &#39;export&#39; / &#34;excel&#34; / f&#34;facts.xlsx&#34;))
+    exporter.export_interfaces_packet_counters(all_devices, dest_path)</code></pre>
 </details>
 </dd>
 </dl>

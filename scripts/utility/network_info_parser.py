@@ -1,7 +1,7 @@
 import datetime
 import re
 from typing import Tuple, List, Dict
-
+import copy
 from nornir.core.task import AggregatedResult, MultiResult
 
 
@@ -11,36 +11,34 @@ class NetworkInfoParser:
     nestrukturovaného stringu atd.).
     """
 
-    def parse_interfaces_packet_counters_data(self, aggregated_dict_result: AggregatedResult) -> Tuple[
-        List[str], List[Dict[str, str]]]:
+    def parse_interfaces_packet_counters_data(self, aggregated_dict_result: AggregatedResult) -> None:
         """
-        Metoda, která zparsuje statistiky týkající se přijímaní a vysílaní paketů pro jednotlivá rozhraní síťových zařízení (ty které jsou podporovány
+        Metoda, která zparsuje statistiky týkající se přijímání a vysílání paketů pro jednotlivá rozhraní síťových zařízení (ty které jsou podporovány
         knihovnou NAPALM).
 
         Args:
             aggregated_dict_result (AggregatedResult): objekt, který seskupuje data z více nornir úkolů (v tomto případě pouze jednoho tasku). AggregatedResult si lze představit jako slovník, jejichž klíčem jsou
-                                                       jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotlivých tasků.
+                                                       jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotlivých tasků. Tento objekt bude zparsován a modifikován.
 
         Returns:
-            Vrací tuple, který obsahuje seřazené nadpisy pro export do Excelu (sorted_headers_export) a samotné data (data).\n
-            sorted_headers_export (List[str]): list seřazených nadpisů.\n
-            data (List[Dict[str, str]]): - list slovníků, přičemž každý slovník obsahuje základní údaje daného síťového prvku.
+            None
         """
-        data = []
-        interface_data = {}
-        sorted_headers_export = ["interface", "rx_broadcast_packets", "rx_discards", "rx_errors",
-                                 "rx_multicast_packets", "rx_octets", "rx_unicast_packets", "tx_broadcast_packets",
-                                 "tx_discards", "tx_errors", "tx_multicast_packets", "tx_octets", "tx_unicast_packets"]
+        dict_rename = {"rx_broadcast_packets": "rx_broadcast", "rx_multicast_packets": "rx_multicast",
+                       "rx_unicast_packets": "rx_unicast", "tx_broadcast_packets": "tx_broadcast",
+                       "tx_multicast_packets": "tx_multicast", "tx_unicast_packets": "tx_unicast"}
         if aggregated_dict_result:
             for host in aggregated_dict_result:
-                data_dict = aggregated_dict_result[host][1].result['interfaces_counters']
-                data.append(data_dict)
-            print(data)
-            return sorted_headers_export, data
+                interfaces_data = aggregated_dict_result[host][1].result['interfaces_counters']
+                for interface in interfaces_data:
+                    interface_dict = interfaces_data[interface]
+                    interface_dict['interface'] = interface
+                    for key in dict_rename:
+                        rename_value = dict_rename[key]
+                        interface_dict[rename_value] = interface_dict.pop(key)
 
-    def parse_facts_data(self, aggregated_dict_result: AggregatedResult) -> Tuple[List[str], List[Dict[str, str]]]:
+    def get_parsed_facts_data(self, aggregated_dict_result: AggregatedResult) -> List[Dict[str, str]]:
         """
-        Metoda, která zparsuje základní údaje o zařízení (pro zařízení všech výrobců, které jsou podporování
+        Metoda, která zparsuje základní údaje o zařízení (pro zařízení všech výrobců, které jsou podporovány
         knihovnou NAPALM).
 
         Args:
@@ -49,29 +47,24 @@ class NetworkInfoParser:
                                                        jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotlivých tasků
 
         Returns:
-            Vrací tuple, který obsahuje seřazené nadpisy pro export do Excelu (sorted_headers_export) a samotné data (data).\n
-            sorted_headers_export (List[str]): list seřazených nadpisů.\n
-            data (List[Dict[str, str]]): - list slovníků, přičemž každý slovník obsahuje základní údaje daného síťového prvku.
+            Vrací list slovníků data.\n
+            data (List[Dict[str, str]]): list slovníků, přičemž každý slovník obsahuje základní údaje o daném síťovém prvku.
         """
         data = []
-        sorted_headers_export = ["hostname", "FQDN", "vendor", "serial_number", "os_version", "uptime", "connection"]
         if aggregated_dict_result:
             for host in aggregated_dict_result:
                 data_dict = aggregated_dict_result[host][1].result['facts']
                 data_dict['connection'] = "OK" if aggregated_dict_result[host][2].result else "Failed"
                 data_dict['uptime'] = str(datetime.timedelta(seconds=data_dict['uptime']))
-                data_dict["FQDN"] = data_dict["fqdn"]
-                del data_dict["fqdn"]
-                del data_dict["interface_list"]
+                data_dict["FQDN"] = data_dict.pop("fqdn")
                 version = data_dict['os_version']
                 if data_dict['vendor'].lower() == "cisco":
                     parsed_version = version.split(",")[1].strip()
                     data_dict['os_version'] = parsed_version
                 data.append(data_dict)
-            print(data)
-            return sorted_headers_export, data
+            return data
 
-    def get_parsed_juniper_routes(self, result: AggregatedResult, ipv6_routes: bool = False) -> str:
+    def get_parsed_juniper_routes(self, result: MultiResult, ipv6_routes: bool = False) -> str:
         """
         Metoda, která zparsuje string obsahující IPv4 i IPv6 směrovací tabulku (pouze u Juniper routerů). Metoda
         oddělí obě tabulky a uživateli vrátí string se směrovací tabulkou, kterou právě potřebuje (dle nastaveného argumentu ipv6_routes).
@@ -81,7 +74,7 @@ class NetworkInfoParser:
             ipv6_routes (bool): Parametr, který definuje, jestli metoda má vrátit string obsahující IPv4 (False) nebo IPv6 (True) směrovací tabulku. Ve výchozím stavu je nastavena na False.
 
         Returns:
-            Vrátí string parsed_data, který obsahuje zparsovanou směrovací tabulku daného Juniper zařízení.
+            Vrátí string parsed_data, který obsahuje zparsovanou směrovací tabulku daného Juniper routeru.
         """
 
         result_string = result[0].result

@@ -16,7 +16,7 @@ from scripts.utility.network_info_viewer import NetworkUtilityViewer
 # 2) Ty ktere NAPALM nema nebo jsou podporovany pouze u nektereho vendora - print pouze neupraveneho textu do konzole + export .txt
 # Tři druhy metod teď budou (kromě potom Jinja2): GET, SHOW, EXPORT. Show commandy je ted nutne prepsat na GET commandy, vraci Resulty
 
-# TODO pokud bude cas: Export HTML: show_vlans, show_interfaces_basic_info, show_intefaces_ip_info, Excel: mozna show_interfaces_packet_counters
+# TODO pokud bude cas: Export Excel: show_vlans, show_interfaces_basic_info, show_intefaces_ip_info
 
 
 def configure_ipv4_interfaces(task: Task):
@@ -53,17 +53,18 @@ def main() -> None:
     all_devices = nr.filter(F(dev_type="router") | F(dev_type="L3_switch"))
     viewer = NetworkUtilityViewer()
     exporter = NetworkInfoExporter()
-    dest_path = Path(Path.cwd() / 'export' / "excel" / f"new.xlsx")
-    #z = all_devices.run(task=exporter.export_packet_filter_info)
-    exporter.export_device_facts(all_devices, dest_path)
+    dest_path = Path(Path.cwd() / 'export' / "excel" / f"packets_counter.xlsx")
+    exporter.export_device_facts(all_devices, Path(Path.cwd() / 'export' / "excel" / f"facts.xlsx"))
+    exporter.export_interfaces_packet_counters(all_devices, dest_path)
+    #exporter.export_interfaces_packet_counters(all_devices, dest_path)
     # print(z['R1'][1].result['facts'])
     # print(z['R1'][2].result)
+    #all_devices.run(task=viewer.show_interfaces_packet_counters, json_out=True)
 
     # exporter_xlsx = ExcelExporter(Workbook(), "Testa")
-    # z = all_devices.run(task=exporter_xlsx.get_conn_state_and_device_facts)
 
 
-# TODO 4.12 - result.result u parsed metod, dokumentace, dopsat excel exporter, zacit configuration
+# TODO 5.12 - dokumentace, zacit configuration
 
 if __name__ == "__main__":
     try:
