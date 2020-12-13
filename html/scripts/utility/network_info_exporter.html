@@ -29,6 +29,7 @@
 <pre><code class="python">import json
 from pathlib import Path
 
+from colorama import Fore
 from nornir.core import Nornir
 from nornir.core.exceptions import NornirSubTaskError
 from nornir.core.task import Task, MultiResult, AggregatedResult
@@ -72,7 +73,7 @@ class NetworkInfoExporter:
             exporter.write_data(sorted_headers_export, parsed_data)
             exporter.save_xlsx_file()
         else:
-            print(&#34;Export failed - more in nornir.log&#34;)
+            print(f&#34;{Fore.RED}Export failed - more in nornir.log&#34;)
 
     def export_interfaces_packet_counters(self, nornir_devices: Nornir, dest_file_path: Path) -&gt; None:
         &#34;&#34;&#34;
@@ -112,7 +113,7 @@ class NetworkInfoExporter:
                     row += 1
             exporter.save_xlsx_file()
         else:
-            print(&#34;Export failed - more in nornir.log&#34;)
+            print(f&#34;{Fore.RED}Export failed - more in nornir.log&#34;)
 
     def export_device_configuration(self, task: Task) -&gt; None:
         &#34;&#34;&#34;
@@ -134,7 +135,7 @@ class NetworkInfoExporter:
             exporter = TextFileExporter(file_path, running_configuration)
             exporter.export_to_file()
         else:
-            print(f&#34;Export failed for host {task.host.name} more in nornir.log&#34;)
+            print(f&#34;{Fore.RED}Export failed for host {task.host.name} more in nornir.log&#34;)
 
     def export_ipv4_routes(self, task: Task) -&gt; None:
         &#34;&#34;&#34;
@@ -172,9 +173,9 @@ class NetworkInfoExporter:
                 exporter = TextFileExporter(file_path, ipv4_routes)
                 exporter.export_to_file()
             else:
-                print(f&#34;{task.host.name}: No IPv4 routes are defined.&#34;)
+                print(f&#34;{Fore.RED}{task.host.name}: No IPv4 routes are defined.&#34;)
         else:
-            print(f&#34;Export failed for host {task.host.name} more in nornir.log&#34;)
+            print(f&#34;{Fore.RED}Export failed for host {task.host.name} more in nornir.log&#34;)
 
     def export_ipv6_routes(self, task: Task) -&gt; None:
         &#34;&#34;&#34;
@@ -212,9 +213,9 @@ class NetworkInfoExporter:
                 exporter = TextFileExporter(file_path, ipv6_routes)
                 exporter.export_to_file()
             else:
-                print(f&#34;{task.host.name}: No IPv6 routes are defined.&#34;)
+                print(f&#34;{Fore.RED}{task.host.name}: No IPv6 routes are defined.&#34;)
         else:
-            print(f&#34;Export failed for host {task.host.name} more in nornir.log&#34;)
+            print(f&#34;{Fore.RED}Export failed for host {task.host.name} more in nornir.log&#34;)
 
     def export_packet_filter_info(self, task: Task) -&gt; None:
         &#34;&#34;&#34;
@@ -250,9 +251,9 @@ class NetworkInfoExporter:
                 exporter = TextFileExporter(file_path, packet_filter_info)
                 exporter.export_to_file()
             else:
-                print(f&#34;{task.host.name}: No packet filter is defined.&#34;)
+                print(f&#34;{Fore.RED}{task.host.name}: No packet filter is defined.&#34;)
         else:
-            print(f&#34;Export failed for host {task.host.name} more in nornir.log&#34;)</code></pre>
+            print(f&#34;{Fore.RED}Export failed for host {task.host.name} more in nornir.log&#34;)</code></pre>
 </details>
 </section>
 <section>
@@ -303,7 +304,7 @@ class NetworkInfoExporter:
             exporter.write_data(sorted_headers_export, parsed_data)
             exporter.save_xlsx_file()
         else:
-            print(&#34;Export failed - more in nornir.log&#34;)
+            print(f&#34;{Fore.RED}Export failed - more in nornir.log&#34;)
 
     def export_interfaces_packet_counters(self, nornir_devices: Nornir, dest_file_path: Path) -&gt; None:
         &#34;&#34;&#34;
@@ -343,7 +344,7 @@ class NetworkInfoExporter:
                     row += 1
             exporter.save_xlsx_file()
         else:
-            print(&#34;Export failed - more in nornir.log&#34;)
+            print(f&#34;{Fore.RED}Export failed - more in nornir.log&#34;)
 
     def export_device_configuration(self, task: Task) -&gt; None:
         &#34;&#34;&#34;
@@ -365,7 +366,7 @@ class NetworkInfoExporter:
             exporter = TextFileExporter(file_path, running_configuration)
             exporter.export_to_file()
         else:
-            print(f&#34;Export failed for host {task.host.name} more in nornir.log&#34;)
+            print(f&#34;{Fore.RED}Export failed for host {task.host.name} more in nornir.log&#34;)
 
     def export_ipv4_routes(self, task: Task) -&gt; None:
         &#34;&#34;&#34;
@@ -403,9 +404,9 @@ class NetworkInfoExporter:
                 exporter = TextFileExporter(file_path, ipv4_routes)
                 exporter.export_to_file()
             else:
-                print(f&#34;{task.host.name}: No IPv4 routes are defined.&#34;)
+                print(f&#34;{Fore.RED}{task.host.name}: No IPv4 routes are defined.&#34;)
         else:
-            print(f&#34;Export failed for host {task.host.name} more in nornir.log&#34;)
+            print(f&#34;{Fore.RED}Export failed for host {task.host.name} more in nornir.log&#34;)
 
     def export_ipv6_routes(self, task: Task) -&gt; None:
         &#34;&#34;&#34;
@@ -443,9 +444,9 @@ class NetworkInfoExporter:
                 exporter = TextFileExporter(file_path, ipv6_routes)
                 exporter.export_to_file()
             else:
-                print(f&#34;{task.host.name}: No IPv6 routes are defined.&#34;)
+                print(f&#34;{Fore.RED}{task.host.name}: No IPv6 routes are defined.&#34;)
         else:
-            print(f&#34;Export failed for host {task.host.name} more in nornir.log&#34;)
+            print(f&#34;{Fore.RED}Export failed for host {task.host.name} more in nornir.log&#34;)
 
     def export_packet_filter_info(self, task: Task) -&gt; None:
         &#34;&#34;&#34;
@@ -481,9 +482,9 @@ class NetworkInfoExporter:
                 exporter = TextFileExporter(file_path, packet_filter_info)
                 exporter.export_to_file()
             else:
-                print(f&#34;{task.host.name}: No packet filter is defined.&#34;)
+                print(f&#34;{Fore.RED}{task.host.name}: No packet filter is defined.&#34;)
         else:
-            print(f&#34;Export failed for host {task.host.name} more in nornir.log&#34;)</code></pre>
+            print(f&#34;{Fore.RED}Export failed for host {task.host.name} more in nornir.log&#34;)</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
@@ -524,7 +525,7 @@ Export je proveden paralelně. Výsledná cesta je ./export/running_configuratio
         exporter = TextFileExporter(file_path, running_configuration)
         exporter.export_to_file()
     else:
-        print(f&#34;Export failed for host {task.host.name} more in nornir.log&#34;)</code></pre>
+        print(f&#34;{Fore.RED}Export failed for host {task.host.name} more in nornir.log&#34;)</code></pre>
 </details>
 </dd>
 <dt id="scripts.utility.network_info_exporter.NetworkInfoExporter.export_device_facts"><code class="name flex">
@@ -570,7 +571,7 @@ Export je proveden paralelně. Výsledná cesta je ./export/running_configuratio
         exporter.write_data(sorted_headers_export, parsed_data)
         exporter.save_xlsx_file()
     else:
-        print(&#34;Export failed - more in nornir.log&#34;)</code></pre>
+        print(f&#34;{Fore.RED}Export failed - more in nornir.log&#34;)</code></pre>
 </details>
 </dd>
 <dt id="scripts.utility.network_info_exporter.NetworkInfoExporter.export_interfaces_packet_counters"><code class="name flex">
@@ -629,7 +630,7 @@ Export je proveden paralelně. Výsledná cesta je ./export/running_configuratio
                 row += 1
         exporter.save_xlsx_file()
     else:
-        print(&#34;Export failed - more in nornir.log&#34;)</code></pre>
+        print(f&#34;{Fore.RED}Export failed - more in nornir.log&#34;)</code></pre>
 </details>
 </dd>
 <dt id="scripts.utility.network_info_exporter.NetworkInfoExporter.export_ipv4_routes"><code class="name flex">
@@ -692,9 +693,9 @@ export na nepodporovaných zařízeních.</dd>
             exporter = TextFileExporter(file_path, ipv4_routes)
             exporter.export_to_file()
         else:
-            print(f&#34;{task.host.name}: No IPv4 routes are defined.&#34;)
+            print(f&#34;{Fore.RED}{task.host.name}: No IPv4 routes are defined.&#34;)
     else:
-        print(f&#34;Export failed for host {task.host.name} more in nornir.log&#34;)</code></pre>
+        print(f&#34;{Fore.RED}Export failed for host {task.host.name} more in nornir.log&#34;)</code></pre>
 </details>
 </dd>
 <dt id="scripts.utility.network_info_exporter.NetworkInfoExporter.export_ipv6_routes"><code class="name flex">
@@ -757,9 +758,9 @@ export na nepodporovaných zařízeních.</dd>
             exporter = TextFileExporter(file_path, ipv6_routes)
             exporter.export_to_file()
         else:
-            print(f&#34;{task.host.name}: No IPv6 routes are defined.&#34;)
+            print(f&#34;{Fore.RED}{task.host.name}: No IPv6 routes are defined.&#34;)
     else:
-        print(f&#34;Export failed for host {task.host.name} more in nornir.log&#34;)</code></pre>
+        print(f&#34;{Fore.RED}Export failed for host {task.host.name} more in nornir.log&#34;)</code></pre>
 </details>
 </dd>
 <dt id="scripts.utility.network_info_exporter.NetworkInfoExporter.export_packet_filter_info"><code class="name flex">
@@ -820,9 +821,9 @@ export na nepodporovaných zařízeních.</dd>
             exporter = TextFileExporter(file_path, packet_filter_info)
             exporter.export_to_file()
         else:
-            print(f&#34;{task.host.name}: No packet filter is defined.&#34;)
+            print(f&#34;{Fore.RED}{task.host.name}: No packet filter is defined.&#34;)
     else:
-        print(f&#34;Export failed for host {task.host.name} more in nornir.log&#34;)</code></pre>
+        print(f&#34;{Fore.RED}Export failed for host {task.host.name} more in nornir.log&#34;)</code></pre>
 </details>
 </dd>
 </dl>

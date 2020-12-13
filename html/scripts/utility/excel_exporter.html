@@ -28,6 +28,8 @@
 </summary>
 <pre><code class="python">from pathlib import Path
 from typing import List, Dict
+
+from colorama import Fore
 from openpyxl import Workbook
 from openpyxl.styles import Alignment
 from openpyxl.utils import get_column_letter
@@ -72,7 +74,7 @@ class ExcelExporter:
         try:
             folder_path.mkdir(parents=True, exist_ok=True)
         except OSError:
-            print(f&#34;Error: Creating directories for specified path {folder_path} failed.&#34;)
+            print(f&#34;{Fore.RED}Error: Creating directories for specified path {folder_path} failed.&#34;)
 
     def _check_file_dest(self) -&gt; None:
         &#34;&#34;&#34;
@@ -119,7 +121,7 @@ class ExcelExporter:
                     current_column += 1
                 current_column = column_start
         else:
-            print(&#34;Error with writing data - check specified row_start and column_start (both must be &gt; 0).&#34;)
+            print(f&#34;{Fore.RED}Error with writing data - check specified row_start and column_start (both must be &gt; 0).&#34;)
 
     def write_header(self, sorted_headers: List[str], wider_header_columns: List[str], row_start: int = 2,
                      column_start: int = 1) -&gt; None:
@@ -146,7 +148,7 @@ class ExcelExporter:
                     self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 15
                 column_start += 1
         else:
-            print(&#34;Error with writing header - check specified row_start and column_start (both must be &gt; 0).&#34;)
+            print(f&#34;{Fore.RED}Error with writing header - check specified row_start and column_start (both must be &gt; 0).&#34;)
 
     def save_xlsx_file(self) -&gt; None:
         &#34;&#34;&#34;
@@ -162,7 +164,7 @@ class ExcelExporter:
             self._workbook.save(self._dest_file)
             print(f&#34;Export data to {self._dest_file.name} was successful.&#34;)
         except Exception:
-            print(&#34;Export failed. Error while saving .xslx file.&#34;)
+            print(f&#34;{Fore.RED}Export failed. Error while saving .xslx file.&#34;)
 
     def _setup_export(self, sheet_title: str) -&gt; None:
         &#34;&#34;&#34;
@@ -289,7 +291,7 @@ class ExcelExporter:
         try:
             folder_path.mkdir(parents=True, exist_ok=True)
         except OSError:
-            print(f&#34;Error: Creating directories for specified path {folder_path} failed.&#34;)
+            print(f&#34;{Fore.RED}Error: Creating directories for specified path {folder_path} failed.&#34;)
 
     def _check_file_dest(self) -&gt; None:
         &#34;&#34;&#34;
@@ -336,7 +338,7 @@ class ExcelExporter:
                     current_column += 1
                 current_column = column_start
         else:
-            print(&#34;Error with writing data - check specified row_start and column_start (both must be &gt; 0).&#34;)
+            print(f&#34;{Fore.RED}Error with writing data - check specified row_start and column_start (both must be &gt; 0).&#34;)
 
     def write_header(self, sorted_headers: List[str], wider_header_columns: List[str], row_start: int = 2,
                      column_start: int = 1) -&gt; None:
@@ -363,7 +365,7 @@ class ExcelExporter:
                     self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 15
                 column_start += 1
         else:
-            print(&#34;Error with writing header - check specified row_start and column_start (both must be &gt; 0).&#34;)
+            print(f&#34;{Fore.RED}Error with writing header - check specified row_start and column_start (both must be &gt; 0).&#34;)
 
     def save_xlsx_file(self) -&gt; None:
         &#34;&#34;&#34;
@@ -379,7 +381,7 @@ class ExcelExporter:
             self._workbook.save(self._dest_file)
             print(f&#34;Export data to {self._dest_file.name} was successful.&#34;)
         except Exception:
-            print(&#34;Export failed. Error while saving .xslx file.&#34;)
+            print(f&#34;{Fore.RED}Export failed. Error while saving .xslx file.&#34;)
 
     def _setup_export(self, sheet_title: str) -&gt; None:
         &#34;&#34;&#34;
@@ -523,7 +525,7 @@ class ExcelExporter:
         self._workbook.save(self._dest_file)
         print(f&#34;Export data to {self._dest_file.name} was successful.&#34;)
     except Exception:
-        print(&#34;Export failed. Error while saving .xslx file.&#34;)</code></pre>
+        print(f&#34;{Fore.RED}Export failed. Error while saving .xslx file.&#34;)</code></pre>
 </details>
 </dd>
 <dt id="scripts.utility.excel_exporter.ExcelExporter.write_data"><code class="name flex">
@@ -577,7 +579,7 @@ class ExcelExporter:
                 current_column += 1
             current_column = column_start
     else:
-        print(&#34;Error with writing data - check specified row_start and column_start (both must be &gt; 0).&#34;)</code></pre>
+        print(f&#34;{Fore.RED}Error with writing data - check specified row_start and column_start (both must be &gt; 0).&#34;)</code></pre>
 </details>
 </dd>
 <dt id="scripts.utility.excel_exporter.ExcelExporter.write_header"><code class="name flex">
@@ -627,7 +629,7 @@ class ExcelExporter:
                 self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 15
             column_start += 1
     else:
-        print(&#34;Error with writing header - check specified row_start and column_start (both must be &gt; 0).&#34;)</code></pre>
+        print(f&#34;{Fore.RED}Error with writing header - check specified row_start and column_start (both must be &gt; 0).&#34;)</code></pre>
 </details>
 </dd>
 </dl>

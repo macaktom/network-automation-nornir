@@ -28,6 +28,8 @@
 </summary>
 <pre><code class="python">from datetime import datetime, date
 from pathlib import Path
+
+from colorama import Fore
 from nornir import InitNornir
 from nornir.core import Nornir, Task
 from nornir.core.filter import F
@@ -71,7 +73,7 @@ class BackupConfiguration:
         try:
             folder_path.mkdir(parents=True, exist_ok=True)
         except OSError:
-            print(f&#34;Error: Creating directories for specified path {folder_path} failed.&#34;)
+            print(f&#34;{Fore.RED}Error: Creating directories for specified path {folder_path} failed.&#34;)
 
     def backup_device_running_configuration(self, task: Task) -&gt; None:
         &#34;&#34;&#34;
@@ -92,9 +94,9 @@ class BackupConfiguration:
             if not res.failed:
                 print(f&#34;Backup of running configuration was successful for host {task.host.name}.&#34;)
             else:
-                print(f&#34;Backup of running configuration failed for host {task.host.name} - more info in nornir.log&#34;)
+                print(f&#34;{Fore.RED}Backup of running configuration failed for host {task.host.name} - more info in nornir.log&#34;)
         else:
-            print(f&#34;Backup of running configuration failed for host {task.host.name} - more info in nornir.log&#34;)
+            print(f&#34;{Fore.RED}Backup of running configuration failed for host {task.host.name} - more info in nornir.log&#34;)
 
 
 if __name__ == &#39;__main__&#39;:
@@ -173,7 +175,7 @@ if __name__ == &#39;__main__&#39;:
         try:
             folder_path.mkdir(parents=True, exist_ok=True)
         except OSError:
-            print(f&#34;Error: Creating directories for specified path {folder_path} failed.&#34;)
+            print(f&#34;{Fore.RED}Error: Creating directories for specified path {folder_path} failed.&#34;)
 
     def backup_device_running_configuration(self, task: Task) -&gt; None:
         &#34;&#34;&#34;
@@ -194,9 +196,9 @@ if __name__ == &#39;__main__&#39;:
             if not res.failed:
                 print(f&#34;Backup of running configuration was successful for host {task.host.name}.&#34;)
             else:
-                print(f&#34;Backup of running configuration failed for host {task.host.name} - more info in nornir.log&#34;)
+                print(f&#34;{Fore.RED}Backup of running configuration failed for host {task.host.name} - more info in nornir.log&#34;)
         else:
-            print(f&#34;Backup of running configuration failed for host {task.host.name} - more info in nornir.log&#34;)</code></pre>
+            print(f&#34;{Fore.RED}Backup of running configuration failed for host {task.host.name} - more info in nornir.log&#34;)</code></pre>
 </details>
 <h3>Class variables</h3>
 <dl>
@@ -242,9 +244,9 @@ if __name__ == &#39;__main__&#39;:
         if not res.failed:
             print(f&#34;Backup of running configuration was successful for host {task.host.name}.&#34;)
         else:
-            print(f&#34;Backup of running configuration failed for host {task.host.name} - more info in nornir.log&#34;)
+            print(f&#34;{Fore.RED}Backup of running configuration failed for host {task.host.name} - more info in nornir.log&#34;)
     else:
-        print(f&#34;Backup of running configuration failed for host {task.host.name} - more info in nornir.log&#34;)</code></pre>
+        print(f&#34;{Fore.RED}Backup of running configuration failed for host {task.host.name} - more info in nornir.log&#34;)</code></pre>
 </details>
 </dd>
 </dl>
