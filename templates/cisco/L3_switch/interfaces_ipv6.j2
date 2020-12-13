@@ -1,15 +1,18 @@
-{% for int, int_dict in interfaces_ipv6.items() | sort -%}
-    interface {{ int }}
-    description {{ int_dict.description }}
-    {% if int_dict.routed_port %}
-    no switchport
-    {% endif %}
-    ipv6 enable
-    {% for network in int_dict.networks %}
-    {% if network.eui_format_auto %}
-    ipv6 address {{ network.net }}{{ network.prefix_length }} eui-64
-     {% else %}
-    ipv6 address {{ network.net }}{{ network.prefix_length }}
-    {% endif %}
-    {% endfor %}
+{% for int, int_dict in interfaces_ipv6.items() | sort %}
+interface {{ int }}
+ description {{ int_dict.description }}
+{% if int_dict.routed_port %}
+ no switchport
+{% endif %}
+ ipv6 enable
+{% for network in int_dict.networks %}
+{% if network.eui_format_auto %}
+ ipv6 address {{ network.net }}{{ network.prefix_length }} eui-64
+{% else %}
+ ipv6 address {{ network.net }}{{ network.prefix_length }}
+{% endif %}
 {% endfor %}
+ no shutdown
+!
+{% endfor %}
+end

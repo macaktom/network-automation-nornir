@@ -29,6 +29,7 @@ nornir-jinja2 = "*"
 prettytable = "*"
 openpyxl = "*"
 pdoc3 = "*"
+jinja2 = "*"
 
 [requires]
 python_version = "3.8"

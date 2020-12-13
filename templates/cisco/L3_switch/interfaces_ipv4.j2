@@ -1,8 +1,11 @@
-{% for int, int_dict in interfaces_ipv4.items() | sort -%}
-    interface {{ int }}
-    {% if int_dict.routed_port %}
-    no switchport
-    {% endif %}
-    description {{ int_dict.description }}
-    ip address {{ int_dict.net }} {{ int_dict.mask }}
+{% for int, int_dict in interfaces_ipv4.items() | sort %}
+interface {{ int }}
+{% if int_dict.routed_port %}
+ no switchport
+{% endif %}
+ description {{ int_dict.description }}
+ ip address {{ int_dict.net }} {{ int_dict.mask }}
+ no shutdown
+!
 {% endfor %}
+end

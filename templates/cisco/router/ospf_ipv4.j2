@@ -1,19 +1,23 @@
 router ospf {{ ospf_config.process }}
-router-id {{ ospf_config.router_id }}
-{% for interface in ospf_config.passive_interfaces -%}
-    passive-interface {{ interface }}
+ router-id {{ ospf_config.router_id }}
+{% for interface in ospf_config.passive_interfaces %}
+ passive-interface {{ interface }}
 {% endfor %}
-{% for net in ospf_config.networks -%}
-    network {{ net.ip }} {{ net.wildcard }} area {{ net.area_number }}
+{% for net in ospf_config.networks %}
+ network {{ net.ip }} {{ net.wildcard }} area {{ net.area_number }}
 {% endfor %}
-{% if ospf_config.redistribute_static -%}
-    redistribute static subnets
+{% if ospf_config.redistribute is defined%}
+{% if ospf_config.redistribute.static %}
+ redistribute static subnets
 {% endif %}
-{% if ospf_config.redistribute_eigrp %}
-    {% for AS_number in ospf_config.redistribute_eigrp_AS_numbers -%}
-        redistribute eigrp {{ AS_number }} subnets
-    {% endfor %}
+{% if ospf_config.redistribute.eigrp is defined %}
+{% for AS_number in ospf_config.redistribute.eigrp.AS_numbers %}
+ redistribute eigrp {{ AS_number }} subnets
+{% endfor %}
 {% endif %}
-{% if ospf_config.distribute_default -%}
-    default-information originate always
+{% if ospf_config.redistribute.default %}
+ default-information originate always
 {% endif %}
+{% endif %}
+!
+end

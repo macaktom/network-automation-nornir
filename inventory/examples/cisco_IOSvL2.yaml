@@ -65,7 +65,7 @@ data:
     redistribute_static: True
     redistribute_ospf: True
     redistribute_ospf_processes: [ 1, 2, 3, 4 ]
-  access_list_config: # Named ACL konfigurace standard + extended, lze pouze u ROUTED (no switchport) rozhraní
+  packet_filter_config: # Named ACL konfigurace standard + extended, lze pouze u ROUTED (no switchport) rozhraní
     ADMIN-ACL:
       type: extended
       rules:
@@ -82,6 +82,16 @@ data:
       interfaces:
         - name: GigabitEthernet 0/3
           acl_direction: in
+  nat_overload_config: # source NAT typu PAT
+    access_list_number: 1
+    source_network:
+      ip: 192.168.0.0
+      wild_card: 0.0.0.255
+    interface_types:
+      inside:
+        name: GigabitEthernet 0/1
+      outside:
+        name: GigabitEthernet 0/2
   interfaces_ipv6: # konfigurace routing portů + VLAN - IPv6
     GigabitEthernet 0/1:
       description: popis
@@ -123,7 +133,7 @@ data:
     redistribute_static: True
     redistribute_ospf: True
     redistribute_ospf_processes: [ 1, 2 ]
-  access_list_ipv6_config: # Named ACL konfigurace - IPv6, lze pouze u ROUTED (no switchport) rozhraní
+  packet_filter_ipv6_config: # Named ACL konfigurace - IPv6, lze pouze u ROUTED (no switchport) rozhraní
     ACLName:
       rules:
         - deny tcp host 2001:DB8:e0bb::2 any eq telnet

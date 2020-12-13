@@ -1,0 +1,10 @@
+access-list {{ nat_overload_config.access_list_number }} permit {{ nat_overload_config.source_network.ip }} {{ nat_overload_config.source_network.wild_card }}
+!
+ip nat inside source list {{ nat_overload_config.access_list_number }} interface {{ nat_overload_config.interface_types.outside.routed_port }} overload
+!
+{% for type, int_dict in nat_overload_config.interface_types.items() %}
+interface {{ int_dict.routed_port }}
+ ip nat {{ type }}
+!
+{% endfor %}
+end

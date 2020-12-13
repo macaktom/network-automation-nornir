@@ -1,3 +1,4 @@
+from nornir.core import task
 from nornir.core.task import AggregatedResult, Result, Task, MultiResult
 from nornir_napalm.plugins.tasks import napalm_get
 
@@ -55,4 +56,8 @@ class NetworkInfoCollector:
 
         """
         result = task.run(task=napalm_get, name="Get interfaces packet counters", getters=["interfaces_counters"])
+        return result
+
+    def get_device_configuration(self, task: Task) -> MultiResult:
+        result = task.run(task=napalm_get, name="Get configuration", getters=["config"])
         return result

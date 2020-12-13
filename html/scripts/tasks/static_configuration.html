@@ -26,10 +26,67 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class StaticConfiguration:
+<pre><code class="python">from nornir.core import Task
+from nornir_jinja2.plugins.tasks import template_file
+from nornir_napalm.plugins.tasks import napalm_configure
+
+
+class StaticRoutingConfiguration:
     &#34;&#34;&#34;
     Třída pro konfiguraci statického směrování (IPv4 i IPv6).
-    &#34;&#34;&#34;</code></pre>
+    &#34;&#34;&#34;
+
+    def configure_static_routing_ipv4(self, task: Task, dry_run: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro konfiguraci IPv4 statického směrování.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+                            (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        r = task.run(task=template_file,
+                     name=&#34;IPv4 Static Routing Template Loading&#34;,
+                     template=&#34;static_ipv4.j2&#34;,
+                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                     static_routing_config=task.host[&#34;static_routing_config&#34;])
+
+        task.host[&#34;ipv4_static&#34;] = r.result
+
+        task.run(task=napalm_configure,
+                 name=&#34;Loading IPv4 Static Routing Configuration on the device&#34;,
+                 replace=False,
+                 configuration=task.host[&#34;ipv4_static&#34;],
+                 dry_run=dry_run)
+
+    def configure_static_routing_ipv6(self, task: Task, dry_run: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro konfiguraci IPv6 statického směrování.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+                            (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        r = task.run(task=template_file,
+                     name=&#34;IPv6 Static Routing Template Loading&#34;,
+                     template=&#34;static_ipv6.j2&#34;,
+                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                     static_routing_ipv6_config=task.host[&#34;static_routing_ipv6_config&#34;])
+
+        task.host[&#34;ipv6_static&#34;] = r.result
+
+        task.run(task=napalm_configure,
+                 name=&#34;Loading IPv6 Static Routing Configuration on the device&#34;,
+                 replace=False,
+                 configuration=task.host[&#34;ipv6_static&#34;],
+                 dry_run=dry_run)</code></pre>
 </details>
 </section>
 <section>
@@ -41,8 +98,8 @@
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="scripts.tasks.static_configuration.StaticConfiguration"><code class="flex name class">
-<span>class <span class="ident">StaticConfiguration</span></span>
+<dt id="scripts.tasks.static_configuration.StaticRoutingConfiguration"><code class="flex name class">
+<span>class <span class="ident">StaticRoutingConfiguration</span></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Třída pro konfiguraci statického směrování (IPv4 i IPv6).</p></div>
@@ -50,11 +107,158 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class StaticConfiguration:
+<pre><code class="python">class StaticRoutingConfiguration:
     &#34;&#34;&#34;
     Třída pro konfiguraci statického směrování (IPv4 i IPv6).
-    &#34;&#34;&#34;</code></pre>
+    &#34;&#34;&#34;
+
+    def configure_static_routing_ipv4(self, task: Task, dry_run: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro konfiguraci IPv4 statického směrování.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+                            (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        r = task.run(task=template_file,
+                     name=&#34;IPv4 Static Routing Template Loading&#34;,
+                     template=&#34;static_ipv4.j2&#34;,
+                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                     static_routing_config=task.host[&#34;static_routing_config&#34;])
+
+        task.host[&#34;ipv4_static&#34;] = r.result
+
+        task.run(task=napalm_configure,
+                 name=&#34;Loading IPv4 Static Routing Configuration on the device&#34;,
+                 replace=False,
+                 configuration=task.host[&#34;ipv4_static&#34;],
+                 dry_run=dry_run)
+
+    def configure_static_routing_ipv6(self, task: Task, dry_run: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro konfiguraci IPv6 statického směrování.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+                            (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        r = task.run(task=template_file,
+                     name=&#34;IPv6 Static Routing Template Loading&#34;,
+                     template=&#34;static_ipv6.j2&#34;,
+                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                     static_routing_ipv6_config=task.host[&#34;static_routing_ipv6_config&#34;])
+
+        task.host[&#34;ipv6_static&#34;] = r.result
+
+        task.run(task=napalm_configure,
+                 name=&#34;Loading IPv6 Static Routing Configuration on the device&#34;,
+                 replace=False,
+                 configuration=task.host[&#34;ipv6_static&#34;],
+                 dry_run=dry_run)</code></pre>
 </details>
+<h3>Methods</h3>
+<dl>
+<dt id="scripts.tasks.static_configuration.StaticRoutingConfiguration.configure_static_routing_ipv4"><code class="name flex">
+<span>def <span class="ident">configure_static_routing_ipv4</span></span>(<span>self, task: nornir.core.task.Task, dry_run: bool = False) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Metoda pro konfiguraci IPv4 statického směrování.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+<dt><strong><code>dry_run</code></strong> :&ensp;<code>bool</code></dt>
+<dd>argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+(obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def configure_static_routing_ipv4(self, task: Task, dry_run: bool = False) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda pro konfiguraci IPv4 statického směrování.
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+        dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+                        (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
+    r = task.run(task=template_file,
+                 name=&#34;IPv4 Static Routing Template Loading&#34;,
+                 template=&#34;static_ipv4.j2&#34;,
+                 path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                 static_routing_config=task.host[&#34;static_routing_config&#34;])
+
+    task.host[&#34;ipv4_static&#34;] = r.result
+
+    task.run(task=napalm_configure,
+             name=&#34;Loading IPv4 Static Routing Configuration on the device&#34;,
+             replace=False,
+             configuration=task.host[&#34;ipv4_static&#34;],
+             dry_run=dry_run)</code></pre>
+</details>
+</dd>
+<dt id="scripts.tasks.static_configuration.StaticRoutingConfiguration.configure_static_routing_ipv6"><code class="name flex">
+<span>def <span class="ident">configure_static_routing_ipv6</span></span>(<span>self, task: nornir.core.task.Task, dry_run: bool = False) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Metoda pro konfiguraci IPv6 statického směrování.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+<dt><strong><code>dry_run</code></strong> :&ensp;<code>bool</code></dt>
+<dd>argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+(obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def configure_static_routing_ipv6(self, task: Task, dry_run: bool = False) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda pro konfiguraci IPv6 statického směrování.
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+        dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+                        (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
+    r = task.run(task=template_file,
+                 name=&#34;IPv6 Static Routing Template Loading&#34;,
+                 template=&#34;static_ipv6.j2&#34;,
+                 path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                 static_routing_ipv6_config=task.host[&#34;static_routing_ipv6_config&#34;])
+
+    task.host[&#34;ipv6_static&#34;] = r.result
+
+    task.run(task=napalm_configure,
+             name=&#34;Loading IPv6 Static Routing Configuration on the device&#34;,
+             replace=False,
+             configuration=task.host[&#34;ipv6_static&#34;],
+             dry_run=dry_run)</code></pre>
+</details>
+</dd>
+</dl>
 </dd>
 </dl>
 </section>
@@ -73,7 +277,11 @@
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="scripts.tasks.static_configuration.StaticConfiguration" href="#scripts.tasks.static_configuration.StaticConfiguration">StaticConfiguration</a></code></h4>
+<h4><code><a title="scripts.tasks.static_configuration.StaticRoutingConfiguration" href="#scripts.tasks.static_configuration.StaticRoutingConfiguration">StaticRoutingConfiguration</a></code></h4>
+<ul class="">
+<li><code><a title="scripts.tasks.static_configuration.StaticRoutingConfiguration.configure_static_routing_ipv4" href="#scripts.tasks.static_configuration.StaticRoutingConfiguration.configure_static_routing_ipv4">configure_static_routing_ipv4</a></code></li>
+<li><code><a title="scripts.tasks.static_configuration.StaticRoutingConfiguration.configure_static_routing_ipv6" href="#scripts.tasks.static_configuration.StaticRoutingConfiguration.configure_static_routing_ipv6">configure_static_routing_ipv6</a></code></li>
+</ul>
 </li>
 </ul>
 </li>

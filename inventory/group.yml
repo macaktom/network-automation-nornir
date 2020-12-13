@@ -8,6 +8,12 @@ cisco_group:
       extras:
         optional_args:
           secret: "cisco"
+          auto_file_prompt: True
+          #global_delay_factor: 2
+    netmiko:
+      extras:
+        secret: "cisco"
+        #lobal_delay_factor: 2
 
 junos_group:
   platform: "junos"

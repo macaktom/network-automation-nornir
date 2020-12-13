@@ -1,6 +1,6 @@
-{% for int, int_dict in interfaces_ipv4.items() | sort -%}
-    set interfaces {{ int }} description {{ int_dict.description }}
-    {% for unit in int_dict.units -%}
-        set interfaces {{ int }} unit {{ unit.number }} family inet address {{ unit.net }}{{ unit.prefix_length }}
-    {% endfor %}
+{% for int, int_dict in interfaces_ipv4.items() | sort %}
+set interfaces {{ int }} description {{ int_dict.description }}
+{% for unit in int_dict.units %}
+set interfaces {{ int }} unit {{ unit.number }} family inet address {{ unit.net }}{{ unit.prefix_length }}
+{% endfor %}
 {% endfor %}

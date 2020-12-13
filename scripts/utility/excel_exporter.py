@@ -1,5 +1,7 @@
 from pathlib import Path
 from typing import List, Dict
+
+from colorama import Fore
 from openpyxl import Workbook
 from openpyxl.styles import Alignment
 from openpyxl.utils import get_column_letter
@@ -35,10 +37,16 @@ class ExcelExporter:
         Args:
             folder_path (Path): cesta obsahující všechny nadřazené složky, které jsou nutné pro nalezení výsledného .txt souboru
 
+        Raises:
+            OSError: Výjimka, která nastane pokud došlo k chybě při vytváření složek z definované cesty folder_path.
+
         Returns:
             None
         """
-        folder_path.mkdir(parents=True, exist_ok=True)
+        try:
+            folder_path.mkdir(parents=True, exist_ok=True)
+        except OSError:
+            print(f"{Fore.RED}Error: Creating directories for specified path {folder_path} failed.")
 
     def _check_file_dest(self) -> None:
         """
@@ -54,7 +62,7 @@ class ExcelExporter:
         if self._dest_file.suffix == '.xlsx':
             self._create_parent_folders(self._dest_file.parent)
         else:
-            raise ValueError("Not valid filepath or extension")
+            raise ValueError("Not valid filepath or extension.")
 
     def write_data(self, sorted_headers: List[str], lst_data: List[Dict[str, str]], row_start: int = 2,
                    column_start: int = 1) -> None:
@@ -85,7 +93,7 @@ class ExcelExporter:
                     current_column += 1
                 current_column = column_start
         else:
-            print("Error with writing data - check specified row_start and column_start (both must be > 0).")
+            print(f"{Fore.RED}Error with writing data - check specified row_start and column_start (both must be > 0).")
 
     def write_header(self, sorted_headers: List[str], wider_header_columns: List[str], row_start: int = 2,
                      column_start: int = 1) -> None:
@@ -107,12 +115,12 @@ class ExcelExporter:
                 self.active_sheet.cell(row=row_start, column=column_start).alignment = Alignment(horizontal='center',
                                                                                                  vertical='center')
                 if header in wider_header_columns:
-                    self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 40
+                    self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 30
                 else:
                     self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 15
                 column_start += 1
         else:
-            print("Error with writing header - check specified row_start and column_start (both must be > 0).")
+            print(f"{Fore.RED}Error with writing header - check specified row_start and column_start (both must be > 0).")
 
     def save_xlsx_file(self) -> None:
         """
@@ -128,7 +136,7 @@ class ExcelExporter:
             self._workbook.save(self._dest_file)
             print(f"Export data to {self._dest_file.name} was successful.")
         except Exception:
-            print("Export failed. Error while saving .xslx file.")
+            print(f"{Fore.RED}Export failed. Error while saving .xslx file.")
 
     def _setup_export(self, sheet_title: str) -> None:
         """

@@ -28,13 +28,22 @@
 </summary>
 <pre><code class="python">import datetime
 from pathlib import Path
+from pprint import pprint
 
 from colorama import Fore
 from nornir import InitNornir
-from nornir.core import Task
+from nornir.core import Task, Nornir
 from nornir.core.filter import F
 from nornir_jinja2.plugins.tasks import template_file
 from nornir_napalm.plugins.tasks import napalm_configure
+from nornir_utils.plugins.functions import print_result
+
+from scripts.tasks.eigrp_configuration import EIGRPConfiguration
+from scripts.tasks.interfaces_configuration import InterfacesConfiguration
+from scripts.tasks.nat_configuration import NATConfiguration
+from scripts.tasks.ospf_configuration import OSPFConfiguration
+from scripts.tasks.packet_filter_configuration import PacketFilterConfiguration
+from scripts.tasks.static_configuration import StaticRoutingConfiguration
 from scripts.utility.network_info_exporter import NetworkInfoExporter
 from scripts.utility.network_info_viewer import NetworkUtilityViewer
 
@@ -46,9 +55,22 @@ from scripts.utility.network_info_viewer import NetworkUtilityViewer
 
 # TODO pokud bude cas: Export Excel: show_vlans, show_interfaces_basic_info, show_intefaces_ip_info
 
+def std_print(agg_result):
+    print()
+    for k, multi_result in agg_result.items():
+        print(&#34;-&#34; * 50)
+        print(k)
+        for result_obj in multi_result:
+            if isinstance(result_obj.result, str):
+                print(result_obj.result)
+            else:
+                pprint(result_obj.result)
+        print(&#34;-&#34; * 50)
+        print()
+    print()
+
 
 def configure_ipv4_interfaces(task: Task):
-
     r = task.run(task=template_file,
                  name=&#34;IPv4 Intefaces Configuration&#34;,
                  template=&#34;interfaces_ipv4.j2&#34;,
@@ -65,6 +87,11 @@ def configure_ipv4_interfaces(task: Task):
              configuration=task.host[&#34;ipv4_interfaces&#34;])
 
 
+def configure_devices(nornir_devices: Nornir, task_func: callable, task_name: str, dry_run: bool) -&gt; None:
+    result = nornir_devices.run(task=task_func, name=task_name, dry_run=dry_run)
+    print_result(result)
+
+
 def main() -&gt; None:
     &#34;&#34;&#34;
     Hlavní funkce skriptu, která se zavolá po spuštění skriptu main.py
@@ -76,32 +103,63 @@ def main() -&gt; None:
     nr = InitNornir(
         config_file=&#34;config.yml&#34;)  # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný task - více o chybě v nornir.log
     routers = nr.filter(F(dev_type=&#34;router&#34;))
+    juniper_devices = nr.filter(F(groups__contains=&#34;junos_group&#34;))
     l3_switches = nr.filter(F(dev_type=&#34;L3_switch&#34;))
+    cisco_router = nr.filter(F(groups__contains=&#34;cisco_group&#34;) &amp; F(dev_type=&#34;router&#34;))
     l3_cisco = nr.filter(F(groups__contains=&#34;cisco_group&#34;) &amp; F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;))
     all_devices = nr.filter(F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;))
     viewer = NetworkUtilityViewer()
     exporter = NetworkInfoExporter()
-    dest_path = Path(Path.cwd() / &#39;export&#39; / &#34;excel&#34; / f&#34;packets_counter.xlsx&#34;)
-    exporter.export_device_facts(all_devices, Path(Path.cwd() / &#39;export&#39; / &#34;excel&#34; / f&#34;facts.xlsx&#34;))
-    exporter.export_interfaces_packet_counters(all_devices, dest_path)
-    #exporter.export_interfaces_packet_counters(all_devices, dest_path)
+    ospf_config = OSPFConfiguration()
+    eigrp_config = EIGRPConfiguration()
+    static_routing_config = StaticRoutingConfiguration()
+    interfaces_configuration = InterfacesConfiguration()
+    packet_filter = PacketFilterConfiguration()
+    nat_config = NATConfiguration()
+    all_devices.run(task=viewer.show_device_facts)
+
+    # configure_devices(l3_cisco, static_routing_config.configure_static_routing_ipv4, &#34;Static routing config&#34;, False)
+    # configure_devices(l3_cisco, ospf_config.configure_ospf, &#34;OSPFv2 config&#34;, False)
+    # configure_devices(l3_cisco, eigrp_config.configure_eigrp_ipv4, &#34;EIGRP config&#34;, False)
+    # configure_devices(l3_switches, interfaces_configuration.configure_switching_interfaces, &#34;Switching interfaces config&#34;, False)
+    # configure_devices(l3_cisco, packet_filter.configure_ipv4_packet_filters, &#34;IPv4 packet filter config&#34;, False)
+    # configure_devices(l3_cisco, nat_config.configure_source_nat_overload, &#34;NAT Overload config&#34;, False)
+    # configure_devices(cisco_router, ospf_config.configure_ospfv3, &#34;OSPFv3 config&#34;, False)
+    # configure_devices(l3_cisco, eigrp_config.configure_eigrp_ipv6, &#34;EIGRP IPV6 config&#34;, False)
+    #configure_devices(cisco_router, interfaces_configuration.configure_ipv4_interfaces, &#34;IPv4 interfaces config&#34;, True)
+    # configure_devices(cisco_router, interfaces_configuration.configure_ipv6_interfaces, &#34;IPv6 interfaces config&#34;, True)
+    # configure_devices(cisco_router, static_routing_config.configure_static_routing_ipv6, &#34;IPv6 Static Routing config&#34;, True)
+    # configure_devices(cisco_router, packet_filter.configure_ipv6_packet_filters, &#34;IPv6 packet filter config&#34;, True)
+
+    # configure_devices(juniper_devices, static_routing_config.configure_static_routing_ipv4, &#34;Static routing config&#34;, False)
+    # configure_devices(juniper_devices, ospf_config.configure_ospf, &#34;OSPFv2 config&#34;, False)
+    # configure_devices(juniper_devices, ospf_config.configure_ospfv3, &#34;OSPFv3 config&#34;, False)
+    # configure_devices(juniper_devices, static_routing_config.configure_static_routing_ipv6, &#34;IPv6 Static Routing config&#34;, False)
+    # configure_devices(juniper_devices, interfaces_configuration.configure_ipv4_interfaces, &#34;IPv4 interfaces config&#34;, False)
+    # configure_devices(juniper_devices, interfaces_configuration.configure_ipv6_interfaces, &#34;IPv6 interfaces config&#34;, False)
+    #configure_devices(juniper_devices, packet_filter.configure_ipv4_packet_filters, &#34;IPv4 packet filter config&#34;, False)
+    #configure_devices(juniper_devices, packet_filter.configure_ipv6_packet_filters, &#34;IPv6 packet filter config&#34;, False)
+
+    #configure_devices(juniper_devices, nat_config.configure_source_nat_overload, &#34;NAT Overload config&#34;, True)
+    #all_devices.run(task=exporter.export_device_configuration)
+    #all_devices.run(task=exporter.export_packet_filter_info)
+
+    # dest_path = Path(Path.cwd() / &#39;export&#39; / &#34;excel&#34; / f&#34;packets_counter.xlsx&#34;)
+    # exporter.export_device_facts(all_devices, Path(Path.cwd() / &#39;export&#39; / &#34;excel&#34; / f&#34;facts.xlsx&#34;))
+    # exporter.export_interfaces_packet_counters(all_devices, dest_path)
+    # exporter.export_interfaces_packet_counters(all_devices, dest_path)
     # print(z[&#39;R1&#39;][1].result[&#39;facts&#39;])
     # print(z[&#39;R1&#39;][2].result)
-    #all_devices.run(task=viewer.show_interfaces_packet_counters, json_out=True)
+    # all_devices.run(task=viewer.show_interfaces_packet_counters, json_out=True)
 
     # exporter_xlsx = ExcelExporter(Workbook(), &#34;Testa&#34;)
 
 
-# TODO 5.12 - dokumentace, zacit configuration
-
+# TODO 13.12 - backup conf a restore, Vault, zmensit pocet CISCO templatu (task.host podminky v conf), odzkouset mergovani (hlavne L3 switch), Juniper NAT Overload nebo PAT, zmenit yaml soubory + komentare
 if __name__ == &#34;__main__&#34;:
-    try:
-        start = datetime.datetime.now()
-        main()
-        print(&#34;Time elapsed: &#34; + str((datetime.datetime.now() - start)))
-    except Exception as err:
-        print(f&#39;{Fore.RED}Error occured during script execution!!!&#39;)
-        print(err)</code></pre>
+    start = datetime.datetime.now()
+    main()
+    print(&#34;Time elapsed: &#34; + str((datetime.datetime.now() - start)))</code></pre>
 </details>
 </section>
 <section>
@@ -111,6 +169,20 @@ if __name__ == &#34;__main__&#34;:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
+<dt id="scripts.main.configure_devices"><code class="name flex">
+<span>def <span class="ident">configure_devices</span></span>(<span>nornir_devices: nornir.core.Nornir, task_func: <built-in function callable>, task_name: str, dry_run: bool) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def configure_devices(nornir_devices: Nornir, task_func: callable, task_name: str, dry_run: bool) -&gt; None:
+    result = nornir_devices.run(task=task_func, name=task_name, dry_run=dry_run)
+    print_result(result)</code></pre>
+</details>
+</dd>
 <dt id="scripts.main.configure_ipv4_interfaces"><code class="name flex">
 <span>def <span class="ident">configure_ipv4_interfaces</span></span>(<span>task: nornir.core.task.Task)</span>
 </code></dt>
@@ -121,7 +193,6 @@ if __name__ == &#34;__main__&#34;:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def configure_ipv4_interfaces(task: Task):
-
     r = task.run(task=template_file,
                  name=&#34;IPv4 Intefaces Configuration&#34;,
                  template=&#34;interfaces_ipv4.j2&#34;,
@@ -160,14 +231,44 @@ if __name__ == &#34;__main__&#34;:
     nr = InitNornir(
         config_file=&#34;config.yml&#34;)  # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný task - více o chybě v nornir.log
     routers = nr.filter(F(dev_type=&#34;router&#34;))
+    juniper_devices = nr.filter(F(groups__contains=&#34;junos_group&#34;))
     l3_switches = nr.filter(F(dev_type=&#34;L3_switch&#34;))
+    cisco_router = nr.filter(F(groups__contains=&#34;cisco_group&#34;) &amp; F(dev_type=&#34;router&#34;))
     l3_cisco = nr.filter(F(groups__contains=&#34;cisco_group&#34;) &amp; F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;))
     all_devices = nr.filter(F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;))
     viewer = NetworkUtilityViewer()
     exporter = NetworkInfoExporter()
-    dest_path = Path(Path.cwd() / &#39;export&#39; / &#34;excel&#34; / f&#34;packets_counter.xlsx&#34;)
-    exporter.export_device_facts(all_devices, Path(Path.cwd() / &#39;export&#39; / &#34;excel&#34; / f&#34;facts.xlsx&#34;))
-    exporter.export_interfaces_packet_counters(all_devices, dest_path)</code></pre>
+    ospf_config = OSPFConfiguration()
+    eigrp_config = EIGRPConfiguration()
+    static_routing_config = StaticRoutingConfiguration()
+    interfaces_configuration = InterfacesConfiguration()
+    packet_filter = PacketFilterConfiguration()
+    nat_config = NATConfiguration()
+    all_devices.run(task=viewer.show_device_facts)</code></pre>
+</details>
+</dd>
+<dt id="scripts.main.std_print"><code class="name flex">
+<span>def <span class="ident">std_print</span></span>(<span>agg_result)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def std_print(agg_result):
+    print()
+    for k, multi_result in agg_result.items():
+        print(&#34;-&#34; * 50)
+        print(k)
+        for result_obj in multi_result:
+            if isinstance(result_obj.result, str):
+                print(result_obj.result)
+            else:
+                pprint(result_obj.result)
+        print(&#34;-&#34; * 50)
+        print()
+    print()</code></pre>
 </details>
 </dd>
 </dl>
@@ -188,8 +289,10 @@ if __name__ == &#34;__main__&#34;:
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
+<li><code><a title="scripts.main.configure_devices" href="#scripts.main.configure_devices">configure_devices</a></code></li>
 <li><code><a title="scripts.main.configure_ipv4_interfaces" href="#scripts.main.configure_ipv4_interfaces">configure_ipv4_interfaces</a></code></li>
 <li><code><a title="scripts.main.main" href="#scripts.main.main">main</a></code></li>
+<li><code><a title="scripts.main.std_print" href="#scripts.main.std_print">std_print</a></code></li>
 </ul>
 </li>
 </ul>

@@ -53,7 +53,7 @@ data:
     redistribute_static: True
     redistribute_ospf: True
     redistribute_ospf_processes: [1, 2, 3, 4]
-  access_list_config: # Named ACL konfigurace standard + extended
+  packet_filter_config: # Named ACL konfigurace standard + extended
     ADMIN-ACL:
       type: extended
       rules:
@@ -72,8 +72,8 @@ data:
       interfaces:
         - name: FastEthernet 0/1
           acl_direction: out
-  nat_config: # source NAT typu PAT
-    access_list_name: NATACL
+  nat_overload_config: # source NAT typu PAT
+    access_list_number: 1
     source_network:
       ip: 192.168.0.0
       wild_card: 0.0.0.255
@@ -135,7 +135,7 @@ data:
     redistribute_static: True
     redistribute_ospf: True
     redistribute_ospf_processes: [1, 2]
-  access_list_ipv6_config: # Named ACL konfigurace - IPv6
+  packet_filter_ipv6_config: # Named ACL konfigurace - IPv6
     ACLName:
       rules:
         - deny tcp host 2001:db8:e0bb::2 any eq telnet

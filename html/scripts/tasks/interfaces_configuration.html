@@ -26,11 +26,101 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class InterfacesConfiguration:
+<pre><code class="python">from nornir.core import Task
+from nornir.core.exceptions import NornirSubTaskError
+from nornir.core.task import Result, MultiResult
+from nornir_jinja2.plugins.tasks import template_file
+from nornir_napalm.plugins.tasks import napalm_configure
+
+
+class InterfacesConfiguration:
     &#34;&#34;&#34;
     Třída pro konfiguraci jednotlivých rozhraní daných zařízení (např: přidělení IPv4, IPv6 adres, popisu,
     konfigurace switchovaných a routovaných portů).
-    &#34;&#34;&#34;</code></pre>
+    &#34;&#34;&#34;
+
+    def configure_ipv4_interfaces(self, task: Task, dry_run: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro konfiguraci IPv4 rozhraní.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+                            (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        result = task.run(task=template_file,
+                          name=&#34;IPv4 Intefaces Configuration&#34;,
+                          template=&#34;interfaces_ipv4.j2&#34;,
+                          path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                          interfaces_ipv4=task.host[&#34;interfaces_ipv4&#34;])
+
+        task.host[&#34;ipv4_interfaces&#34;] = result.result
+
+        task.run(task=napalm_configure,
+                 name=&#34;Loading IPv4 interfaces Configuration on the device&#34;,
+                 replace=False,
+                 configuration=task.host[&#34;ipv4_interfaces&#34;],
+                 dry_run=dry_run)
+
+    def configure_ipv6_interfaces(self, task: Task, dry_run: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro konfiguraci IPv6 rozhraní.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+                            (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        r = task.run(task=template_file,
+                     name=&#34;IPv6 Intefaces Configuration&#34;,
+                     template=&#34;interfaces_ipv6.j2&#34;,
+                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                     interfaces_ipv6=task.host[&#34;interfaces_ipv6&#34;])
+
+        task.host[&#34;ipv6_interfaces&#34;] = r.result
+
+        task.run(task=napalm_configure,
+                 name=&#34;Loading IPv6 interfaces Configuration on the device&#34;,
+                 replace=False,
+                 configuration=task.host[&#34;ipv6_interfaces&#34;],
+                 dry_run=dry_run)
+
+    def configure_switching_interfaces(self, task: Task, dry_run: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro konfiguraci přepínacích portů.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+                            (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        if task.host[&#34;dev_type&#34;] == &#34;L3_switch&#34; or task.host[&#34;dev_type&#34;] == &#34;switch&#34;:
+
+            interfaces_result = task.run(task=template_file,
+                                         name=&#34;Switching Intefaces Configuration&#34;,
+                                         template=&#34;switching_interfaces.j2&#34;,
+                                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                                         switching_interfaces=task.host[&#34;switching_interfaces&#34;],
+                                         vlans_config=task.host[&#34;vlans_config&#34;])
+
+            task.host[&#34;switching_interfaces_config&#34;] = interfaces_result.result
+
+            task.run(task=napalm_configure,
+                     name=&#34;Loading Switching Interfaces Configuration on the device&#34;,
+                     replace=False,
+                     configuration=task.host[&#34;switching_interfaces_config&#34;],
+                     dry_run=dry_run)
+        else:
+            raise NornirSubTaskError(&#34;Invalid device type. Only switches are supported.&#34;, task)</code></pre>
 </details>
 </section>
 <section>
@@ -56,8 +146,237 @@ konfigurace switchovaných a routovaných portů).</p></div>
     &#34;&#34;&#34;
     Třída pro konfiguraci jednotlivých rozhraní daných zařízení (např: přidělení IPv4, IPv6 adres, popisu,
     konfigurace switchovaných a routovaných portů).
-    &#34;&#34;&#34;</code></pre>
+    &#34;&#34;&#34;
+
+    def configure_ipv4_interfaces(self, task: Task, dry_run: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro konfiguraci IPv4 rozhraní.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+                            (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        result = task.run(task=template_file,
+                          name=&#34;IPv4 Intefaces Configuration&#34;,
+                          template=&#34;interfaces_ipv4.j2&#34;,
+                          path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                          interfaces_ipv4=task.host[&#34;interfaces_ipv4&#34;])
+
+        task.host[&#34;ipv4_interfaces&#34;] = result.result
+
+        task.run(task=napalm_configure,
+                 name=&#34;Loading IPv4 interfaces Configuration on the device&#34;,
+                 replace=False,
+                 configuration=task.host[&#34;ipv4_interfaces&#34;],
+                 dry_run=dry_run)
+
+    def configure_ipv6_interfaces(self, task: Task, dry_run: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro konfiguraci IPv6 rozhraní.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+                            (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        r = task.run(task=template_file,
+                     name=&#34;IPv6 Intefaces Configuration&#34;,
+                     template=&#34;interfaces_ipv6.j2&#34;,
+                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                     interfaces_ipv6=task.host[&#34;interfaces_ipv6&#34;])
+
+        task.host[&#34;ipv6_interfaces&#34;] = r.result
+
+        task.run(task=napalm_configure,
+                 name=&#34;Loading IPv6 interfaces Configuration on the device&#34;,
+                 replace=False,
+                 configuration=task.host[&#34;ipv6_interfaces&#34;],
+                 dry_run=dry_run)
+
+    def configure_switching_interfaces(self, task: Task, dry_run: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro konfiguraci přepínacích portů.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+                            (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        if task.host[&#34;dev_type&#34;] == &#34;L3_switch&#34; or task.host[&#34;dev_type&#34;] == &#34;switch&#34;:
+
+            interfaces_result = task.run(task=template_file,
+                                         name=&#34;Switching Intefaces Configuration&#34;,
+                                         template=&#34;switching_interfaces.j2&#34;,
+                                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                                         switching_interfaces=task.host[&#34;switching_interfaces&#34;],
+                                         vlans_config=task.host[&#34;vlans_config&#34;])
+
+            task.host[&#34;switching_interfaces_config&#34;] = interfaces_result.result
+
+            task.run(task=napalm_configure,
+                     name=&#34;Loading Switching Interfaces Configuration on the device&#34;,
+                     replace=False,
+                     configuration=task.host[&#34;switching_interfaces_config&#34;],
+                     dry_run=dry_run)
+        else:
+            raise NornirSubTaskError(&#34;Invalid device type. Only switches are supported.&#34;, task)</code></pre>
 </details>
+<h3>Methods</h3>
+<dl>
+<dt id="scripts.tasks.interfaces_configuration.InterfacesConfiguration.configure_ipv4_interfaces"><code class="name flex">
+<span>def <span class="ident">configure_ipv4_interfaces</span></span>(<span>self, task: nornir.core.task.Task, dry_run: bool = False) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Metoda pro konfiguraci IPv4 rozhraní.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+<dt><strong><code>dry_run</code></strong> :&ensp;<code>bool</code></dt>
+<dd>argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+(obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def configure_ipv4_interfaces(self, task: Task, dry_run: bool = False) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda pro konfiguraci IPv4 rozhraní.
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+        dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+                        (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
+    result = task.run(task=template_file,
+                      name=&#34;IPv4 Intefaces Configuration&#34;,
+                      template=&#34;interfaces_ipv4.j2&#34;,
+                      path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                      interfaces_ipv4=task.host[&#34;interfaces_ipv4&#34;])
+
+    task.host[&#34;ipv4_interfaces&#34;] = result.result
+
+    task.run(task=napalm_configure,
+             name=&#34;Loading IPv4 interfaces Configuration on the device&#34;,
+             replace=False,
+             configuration=task.host[&#34;ipv4_interfaces&#34;],
+             dry_run=dry_run)</code></pre>
+</details>
+</dd>
+<dt id="scripts.tasks.interfaces_configuration.InterfacesConfiguration.configure_ipv6_interfaces"><code class="name flex">
+<span>def <span class="ident">configure_ipv6_interfaces</span></span>(<span>self, task: nornir.core.task.Task, dry_run: bool = False) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Metoda pro konfiguraci IPv6 rozhraní.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+<dt><strong><code>dry_run</code></strong> :&ensp;<code>bool</code></dt>
+<dd>argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+(obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def configure_ipv6_interfaces(self, task: Task, dry_run: bool = False) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda pro konfiguraci IPv6 rozhraní.
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+        dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+                        (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
+    r = task.run(task=template_file,
+                 name=&#34;IPv6 Intefaces Configuration&#34;,
+                 template=&#34;interfaces_ipv6.j2&#34;,
+                 path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                 interfaces_ipv6=task.host[&#34;interfaces_ipv6&#34;])
+
+    task.host[&#34;ipv6_interfaces&#34;] = r.result
+
+    task.run(task=napalm_configure,
+             name=&#34;Loading IPv6 interfaces Configuration on the device&#34;,
+             replace=False,
+             configuration=task.host[&#34;ipv6_interfaces&#34;],
+             dry_run=dry_run)</code></pre>
+</details>
+</dd>
+<dt id="scripts.tasks.interfaces_configuration.InterfacesConfiguration.configure_switching_interfaces"><code class="name flex">
+<span>def <span class="ident">configure_switching_interfaces</span></span>(<span>self, task: nornir.core.task.Task, dry_run: bool = False) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Metoda pro konfiguraci přepínacích portů.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+<dt><strong><code>dry_run</code></strong> :&ensp;<code>bool</code></dt>
+<dd>argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+(obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def configure_switching_interfaces(self, task: Task, dry_run: bool = False) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda pro konfiguraci přepínacích portů.
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+        dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+                        (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
+    if task.host[&#34;dev_type&#34;] == &#34;L3_switch&#34; or task.host[&#34;dev_type&#34;] == &#34;switch&#34;:
+
+        interfaces_result = task.run(task=template_file,
+                                     name=&#34;Switching Intefaces Configuration&#34;,
+                                     template=&#34;switching_interfaces.j2&#34;,
+                                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                                     switching_interfaces=task.host[&#34;switching_interfaces&#34;],
+                                     vlans_config=task.host[&#34;vlans_config&#34;])
+
+        task.host[&#34;switching_interfaces_config&#34;] = interfaces_result.result
+
+        task.run(task=napalm_configure,
+                 name=&#34;Loading Switching Interfaces Configuration on the device&#34;,
+                 replace=False,
+                 configuration=task.host[&#34;switching_interfaces_config&#34;],
+                 dry_run=dry_run)
+    else:
+        raise NornirSubTaskError(&#34;Invalid device type. Only switches are supported.&#34;, task)</code></pre>
+</details>
+</dd>
+</dl>
 </dd>
 </dl>
 </section>
@@ -77,6 +396,11 @@ konfigurace switchovaných a routovaných portů).</p></div>
 <ul>
 <li>
 <h4><code><a title="scripts.tasks.interfaces_configuration.InterfacesConfiguration" href="#scripts.tasks.interfaces_configuration.InterfacesConfiguration">InterfacesConfiguration</a></code></h4>
+<ul class="">
+<li><code><a title="scripts.tasks.interfaces_configuration.InterfacesConfiguration.configure_ipv4_interfaces" href="#scripts.tasks.interfaces_configuration.InterfacesConfiguration.configure_ipv4_interfaces">configure_ipv4_interfaces</a></code></li>
+<li><code><a title="scripts.tasks.interfaces_configuration.InterfacesConfiguration.configure_ipv6_interfaces" href="#scripts.tasks.interfaces_configuration.InterfacesConfiguration.configure_ipv6_interfaces">configure_ipv6_interfaces</a></code></li>
+<li><code><a title="scripts.tasks.interfaces_configuration.InterfacesConfiguration.configure_switching_interfaces" href="#scripts.tasks.interfaces_configuration.InterfacesConfiguration.configure_switching_interfaces">configure_switching_interfaces</a></code></li>
+</ul>
 </li>
 </ul>
 </li>

@@ -26,10 +26,68 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class OSPFConfiguration:
+<pre><code class="python">from nornir.core import Task
+from nornir_jinja2.plugins.tasks import template_file
+from nornir_napalm.plugins.tasks import napalm_configure
+from nornir_utils.plugins.functions import print_result
+
+
+class OSPFConfiguration:
     &#34;&#34;&#34;
     Třída pro konfiguraci OSPF a OSPFv3.
-    &#34;&#34;&#34;</code></pre>
+    &#34;&#34;&#34;
+
+    def configure_ospf(self, task: Task, dry_run: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro konfiguraci OSPFv2.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+                            (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        r = task.run(task=template_file,
+                     name=&#34;OSPF Template Loading&#34;,
+                     template=&#34;ospf_ipv4.j2&#34;,
+                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                     ospf_config=task.host[&#34;ospf_config&#34;])
+
+        task.host[&#34;ipv4_ospf&#34;] = r.result
+
+        task.run(task=napalm_configure,
+                 name=&#34;Loading OSPFv3 Configuration on the device&#34;,
+                 replace=False,
+                 configuration=task.host[&#34;ipv4_ospf&#34;],
+                 dry_run=dry_run)
+
+    def configure_ospfv3(self, task: Task, dry_run: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro konfiguraci OSPFv3.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+                            (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        r = task.run(task=template_file,
+                     name=&#34;OSPF Template Loading&#34;,
+                     template=&#34;ospfv3.j2&#34;,
+                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                     ospfv3_config=task.host[&#34;ospfv3_config&#34;])
+
+        task.host[&#34;ipv6_ospf&#34;] = r.result
+
+        task.run(task=napalm_configure,
+                 name=&#34;Loading OSPFv3 Configuration on the device&#34;,
+                 replace=False,
+                 configuration=task.host[&#34;ipv6_ospf&#34;],
+                 dry_run=dry_run)</code></pre>
 </details>
 </section>
 <section>
@@ -53,8 +111,155 @@
 <pre><code class="python">class OSPFConfiguration:
     &#34;&#34;&#34;
     Třída pro konfiguraci OSPF a OSPFv3.
-    &#34;&#34;&#34;</code></pre>
+    &#34;&#34;&#34;
+
+    def configure_ospf(self, task: Task, dry_run: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro konfiguraci OSPFv2.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+                            (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        r = task.run(task=template_file,
+                     name=&#34;OSPF Template Loading&#34;,
+                     template=&#34;ospf_ipv4.j2&#34;,
+                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                     ospf_config=task.host[&#34;ospf_config&#34;])
+
+        task.host[&#34;ipv4_ospf&#34;] = r.result
+
+        task.run(task=napalm_configure,
+                 name=&#34;Loading OSPFv3 Configuration on the device&#34;,
+                 replace=False,
+                 configuration=task.host[&#34;ipv4_ospf&#34;],
+                 dry_run=dry_run)
+
+    def configure_ospfv3(self, task: Task, dry_run: bool = False) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda pro konfiguraci OSPFv3.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+                            (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        r = task.run(task=template_file,
+                     name=&#34;OSPF Template Loading&#34;,
+                     template=&#34;ospfv3.j2&#34;,
+                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                     ospfv3_config=task.host[&#34;ospfv3_config&#34;])
+
+        task.host[&#34;ipv6_ospf&#34;] = r.result
+
+        task.run(task=napalm_configure,
+                 name=&#34;Loading OSPFv3 Configuration on the device&#34;,
+                 replace=False,
+                 configuration=task.host[&#34;ipv6_ospf&#34;],
+                 dry_run=dry_run)</code></pre>
 </details>
+<h3>Methods</h3>
+<dl>
+<dt id="scripts.tasks.ospf_configuration.OSPFConfiguration.configure_ospf"><code class="name flex">
+<span>def <span class="ident">configure_ospf</span></span>(<span>self, task: nornir.core.task.Task, dry_run: bool = False) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Metoda pro konfiguraci OSPFv2.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+<dt><strong><code>dry_run</code></strong> :&ensp;<code>bool</code></dt>
+<dd>argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+(obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def configure_ospf(self, task: Task, dry_run: bool = False) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda pro konfiguraci OSPFv2.
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+        dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+                        (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
+    r = task.run(task=template_file,
+                 name=&#34;OSPF Template Loading&#34;,
+                 template=&#34;ospf_ipv4.j2&#34;,
+                 path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                 ospf_config=task.host[&#34;ospf_config&#34;])
+
+    task.host[&#34;ipv4_ospf&#34;] = r.result
+
+    task.run(task=napalm_configure,
+             name=&#34;Loading OSPFv3 Configuration on the device&#34;,
+             replace=False,
+             configuration=task.host[&#34;ipv4_ospf&#34;],
+             dry_run=dry_run)</code></pre>
+</details>
+</dd>
+<dt id="scripts.tasks.ospf_configuration.OSPFConfiguration.configure_ospfv3"><code class="name flex">
+<span>def <span class="ident">configure_ospfv3</span></span>(<span>self, task: nornir.core.task.Task, dry_run: bool = False) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Metoda pro konfiguraci OSPFv3.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+<dt><strong><code>dry_run</code></strong> :&ensp;<code>bool</code></dt>
+<dd>argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+(obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def configure_ospfv3(self, task: Task, dry_run: bool = False) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda pro konfiguraci OSPFv3.
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+        dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+                        (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
+    r = task.run(task=template_file,
+                 name=&#34;OSPF Template Loading&#34;,
+                 template=&#34;ospfv3.j2&#34;,
+                 path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                 ospfv3_config=task.host[&#34;ospfv3_config&#34;])
+
+    task.host[&#34;ipv6_ospf&#34;] = r.result
+
+    task.run(task=napalm_configure,
+             name=&#34;Loading OSPFv3 Configuration on the device&#34;,
+             replace=False,
+             configuration=task.host[&#34;ipv6_ospf&#34;],
+             dry_run=dry_run)</code></pre>
+</details>
+</dd>
+</dl>
 </dd>
 </dl>
 </section>
@@ -74,6 +279,10 @@
 <ul>
 <li>
 <h4><code><a title="scripts.tasks.ospf_configuration.OSPFConfiguration" href="#scripts.tasks.ospf_configuration.OSPFConfiguration">OSPFConfiguration</a></code></h4>
+<ul class="">
+<li><code><a title="scripts.tasks.ospf_configuration.OSPFConfiguration.configure_ospf" href="#scripts.tasks.ospf_configuration.OSPFConfiguration.configure_ospf">configure_ospf</a></code></li>
+<li><code><a title="scripts.tasks.ospf_configuration.OSPFConfiguration.configure_ospfv3" href="#scripts.tasks.ospf_configuration.OSPFConfiguration.configure_ospfv3">configure_ospfv3</a></code></li>
+</ul>
 </li>
 </ul>
 </li>

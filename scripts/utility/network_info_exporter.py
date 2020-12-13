@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+from colorama import Fore
 from nornir.core import Nornir
 from nornir.core.exceptions import NornirSubTaskError
 from nornir.core.task import Task, MultiResult, AggregatedResult
@@ -44,7 +45,7 @@ class NetworkInfoExporter:
             exporter.write_data(sorted_headers_export, parsed_data)
             exporter.save_xlsx_file()
         else:
-            print("Export failed - more in nornir.log")
+            print(f"{Fore.RED}Export failed - more in nornir.log")
 
     def export_interfaces_packet_counters(self, nornir_devices: Nornir, dest_file_path: Path) -> None:
         """
@@ -84,7 +85,7 @@ class NetworkInfoExporter:
                     row += 1
             exporter.save_xlsx_file()
         else:
-            print("Export failed - more in nornir.log")
+            print(f"{Fore.RED}Export failed - more in nornir.log")
 
     def export_device_configuration(self, task: Task) -> None:
         """
@@ -98,15 +99,15 @@ class NetworkInfoExporter:
             None
 
         """
-        result = task.run(task=napalm_get, name="Get running configuration", getters=["config"])
+        collector = NetworkInfoCollector()
+        result = collector.get_device_configuration(task)
         if not result.failed:
             running_configuration = result[0].result["config"]['running'].strip()
-            host = result[0].host
-            file_path = Path(Path.cwd() / 'export' / "running_configuration" / f"{host}.txt")
+            file_path = Path(Path.cwd() / 'export' / "running_configuration" / f"{task.host.name}.txt")
             exporter = TextFileExporter(file_path, running_configuration)
             exporter.export_to_file()
         else:
-            print("Export failed - more in nornir.log")
+            print(f"{Fore.RED}Export failed for host {task.host.name} more in nornir.log")
 
     def export_ipv4_routes(self, task: Task) -> None:
         """
@@ -136,18 +137,17 @@ class NetworkInfoExporter:
         result = task.run(task=netmiko_send_command, name="Get IP routes", command_string=command)
         if not result.failed:
             ipv4_routes = result[0].result
-            host = result[0].host
             if task.host['vendor'] == "juniper":
                 parser = NetworkInfoParser()
                 ipv4_routes = parser.get_parsed_juniper_routes(result)
             if ipv4_routes != "":
-                file_path = Path(Path.cwd() / 'export' / "ip_routes" / f"{host}_ipv4.txt")
+                file_path = Path(Path.cwd() / 'export' / "ip_routes" / f"{task.host.name}_ipv4.txt")
                 exporter = TextFileExporter(file_path, ipv4_routes)
                 exporter.export_to_file()
             else:
-                print(f"{host}: No IPv4 routes are defined.")
+                print(f"{Fore.RED}{task.host.name}: No IPv4 routes are defined.")
         else:
-            print("Export failed - more in nornir.log")
+            print(f"{Fore.RED}Export failed for host {task.host.name} more in nornir.log")
 
     def export_ipv6_routes(self, task: Task) -> None:
         """
@@ -177,18 +177,17 @@ class NetworkInfoExporter:
         result = task.run(task=netmiko_send_command, name="Get IP routes", command_string=command)
         if not result.failed:
             ipv6_routes = result[0].result
-            host = result[0].host
             if task.host['vendor'] == "juniper":
                 parser = NetworkInfoParser()
                 ipv6_routes = parser.get_parsed_juniper_routes(result, ipv6_routes=True)
             if ipv6_routes != "":
-                file_path = Path(Path.cwd() / 'export' / "ip_routes" / f"{host}_ipv6.txt")
+                file_path = Path(Path.cwd() / 'export' / "ip_routes" / f"{task.host.name}_ipv6.txt")
                 exporter = TextFileExporter(file_path, ipv6_routes)
                 exporter.export_to_file()
             else:
-                print(f"{host}: No IPv6 routes are defined.")
+                print(f"{Fore.RED}{task.host.name}: No IPv6 routes are defined.")
         else:
-            print("Export failed - more in nornir.log")
+            print(f"{Fore.RED}Export failed for host {task.host.name} more in nornir.log")
 
     def export_packet_filter_info(self, task: Task) -> None:
         """
@@ -219,12 +218,11 @@ class NetworkInfoExporter:
         if not result.failed:
             parser = NetworkInfoParser()
             packet_filter_info = parser.get_parsed_packet_filter_data(task.host['vendor'], result)
-            host = result[0].host
             if packet_filter_info != "":
-                file_path = Path(Path.cwd() / 'export' / "packet_filter" / f"{host}.txt")
+                file_path = Path(Path.cwd() / 'export' / "packet_filter" / f"{task.host.name}.txt")
                 exporter = TextFileExporter(file_path, packet_filter_info)
                 exporter.export_to_file()
             else:
-                print(f"{host}: No packet filter is defined.")
+                print(f"{Fore.RED}{task.host.name}: No packet filter is defined.")
         else:
-            print("Export failed - more in nornir.log")
+            print(f"{Fore.RED}Export failed for host {task.host.name} more in nornir.log")
