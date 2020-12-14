@@ -41,24 +41,6 @@ def std_print(agg_result):
         print()
     print()
 
-
-def configure_ipv4_interfaces(task: Task):
-    r = task.run(task=template_file,
-                 name="IPv4 Intefaces Configuration",
-                 template="interfaces_ipv4.j2",
-                 path=f"templates/{task.host['vendor']}/{task.host['dev_type']}",
-                 interfaces_ipv4=task.host["interfaces_ipv4"])
-
-    # Save the compiled configuration into a host variable
-    task.host["ipv4_interfaces"] = r.result
-
-    # Deploy that configuration to the device using NAPALM
-    task.run(task=napalm_configure,
-             name="Loading Configuration on the device",
-             replace=False,
-             configuration=task.host["ipv4_interfaces"])
-
-
 def configure_devices(nornir_devices: Nornir, task_func: callable, task_name: str, dry_run: bool) -> None:
     result = nornir_devices.run(task=task_func, name=task_name, dry_run=dry_run)
     print_result(result)
@@ -129,8 +111,8 @@ def main() -> None:
     # exporter_xlsx = ExcelExporter(Workbook(), "Testa")
 
 
-# TODO 13.12 - Vault, zmensit pocet CISCO templatu (task.host podminky v conf), odzkouset mergovani (hlavne L3 switch), Juniper NAT Overload nebo PAT,
-# TODO Podivat se na folder path a file path napr u export excel - staticke promenne, zmenit yaml soubory + komentare
+# TODO 14.12 - zakladni delete - interfacy, routing procesy atd. Vault, zmensit pocet CISCO templatu (task.host podminky v conf), odzkouset mergovani (hlavne L3 switch), Juniper NAT Overload nebo PAT
+# TODO Podivat se na folder path a file path napr u export excel - staticke promenne, class variables v pdocs, zmenit yaml soubory + komentare
 if __name__ == "__main__":
     start = datetime.datetime.now()
     main()
