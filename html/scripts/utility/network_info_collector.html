@@ -26,8 +26,7 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from nornir.core import task
-from nornir.core.task import AggregatedResult, Result, Task, MultiResult
+<pre><code class="python">from nornir.core.task import AggregatedResult, Result, Task, MultiResult
 from nornir_napalm.plugins.tasks import napalm_get
 
 
@@ -37,10 +36,11 @@ class NetworkInfoCollector:
     které je definováno v Task objektu).
     &#34;&#34;&#34;
 
-    def _get_conn_state_result(self, task: Task) -&gt; Result:
+    def get_conn_state_result(self, task: Task) -&gt; Result:
         &#34;&#34;&#34;
         Metoda, která vrácí informaci o stavu připojení k danému síťovému zařízení.
         Nornir tuto metodu volá paralelně pro síťová zařízení definována v Nornir objektu (pomocí něho se volá tato metoda).
+        Pro připojení používá NAPALM connection objekt (tzn. nevyužívá nornir_napalm plugin, ale přímo napalm knihovnu).
 
         Args:
             task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
@@ -49,8 +49,8 @@ class NetworkInfoCollector:
             Result objekt, který obsahuje informace o stavu připojení k danému síťovému zařízení a o úspěchu provedeného nornir úkolu.
 
         &#34;&#34;&#34;
-        napalm = task.host.get_connection(&#34;napalm&#34;, task.nornir.config)
-        result = napalm.is_alive()
+        napalm = task.host.get_connection(&#34;napalm&#34;, task.nornir.config) # NAPALM connection objekt, který není omezen pouze na NAPALM get metody jako u napalm_get tasku.
+        result: MultiResult = napalm.is_alive()
         return Result(host=task.host, result=result)
 
     def get_conn_state_and_device_facts(self, task: Task) -&gt; MultiResult:
@@ -66,28 +66,8 @@ class NetworkInfoCollector:
             AggregatedResult si lze představit jako slovník, jejichž klíčem jsou jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotlivých tasků.
 
         &#34;&#34;&#34;
-        result = task.run(task=napalm_get, name=&#34;Get device basic facts&#34;, getters=[&#34;facts&#34;])
-        result += task.run(task=self._get_conn_state_result, name=&#34;Get conn status&#34;)
-        return result
-
-    def get_interfaces_packet_counters(self, task: Task) -&gt; MultiResult:
-        &#34;&#34;&#34;
-        Metoda, která vrací statistiky týkající se přijímání a vysílání paketů pro jednotlivá rozhraní síťových zařízení.
-
-        Args:
-            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir ůkoly (funkce).
-
-        Returns:
-            Metoda vrací pro konkrétního hosta MultiResult objekt (speciální nornir objekt připomínající Python list, který obsahuje Result objekty s výsledky jednotlivých tasků).
-            Pokud více hostů zavolá tuto metodu, tak se výsledky seskupí do jednoho AggregatedResult objektu obsahující výsledky všech hostů.
-            AggregatedResult si lze představit jako slovník, jejichž klíčem jsou jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotlivých tasků.
-
-        &#34;&#34;&#34;
-        result = task.run(task=napalm_get, name=&#34;Get interfaces packet counters&#34;, getters=[&#34;interfaces_counters&#34;])
-        return result
-
-    def get_device_configuration(self, task: Task) -&gt; MultiResult:
-        result = task.run(task=napalm_get, name=&#34;Get configuration&#34;, getters=[&#34;config&#34;])
+        result: MultiResult = task.run(task=napalm_get, name=&#34;Get device basic facts&#34;, getters=[&#34;facts&#34;])
+        result += task.run(task=self.get_conn_state_result, name=&#34;Get conn status&#34;) # sloučení dvou MultiResult objektů do jednoho MultiResult objektu (reprezentováno jako List[Result]).
         return result</code></pre>
 </details>
 </section>
@@ -116,10 +96,11 @@ které je definováno v Task objektu).</p></div>
     které je definováno v Task objektu).
     &#34;&#34;&#34;
 
-    def _get_conn_state_result(self, task: Task) -&gt; Result:
+    def get_conn_state_result(self, task: Task) -&gt; Result:
         &#34;&#34;&#34;
         Metoda, která vrácí informaci o stavu připojení k danému síťovému zařízení.
         Nornir tuto metodu volá paralelně pro síťová zařízení definována v Nornir objektu (pomocí něho se volá tato metoda).
+        Pro připojení používá NAPALM connection objekt (tzn. nevyužívá nornir_napalm plugin, ale přímo napalm knihovnu).
 
         Args:
             task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
@@ -128,8 +109,8 @@ které je definováno v Task objektu).</p></div>
             Result objekt, který obsahuje informace o stavu připojení k danému síťovému zařízení a o úspěchu provedeného nornir úkolu.
 
         &#34;&#34;&#34;
-        napalm = task.host.get_connection(&#34;napalm&#34;, task.nornir.config)
-        result = napalm.is_alive()
+        napalm = task.host.get_connection(&#34;napalm&#34;, task.nornir.config) # NAPALM connection objekt, který není omezen pouze na NAPALM get metody jako u napalm_get tasku.
+        result: MultiResult = napalm.is_alive()
         return Result(host=task.host, result=result)
 
     def get_conn_state_and_device_facts(self, task: Task) -&gt; MultiResult:
@@ -145,28 +126,8 @@ které je definováno v Task objektu).</p></div>
             AggregatedResult si lze představit jako slovník, jejichž klíčem jsou jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotlivých tasků.
 
         &#34;&#34;&#34;
-        result = task.run(task=napalm_get, name=&#34;Get device basic facts&#34;, getters=[&#34;facts&#34;])
-        result += task.run(task=self._get_conn_state_result, name=&#34;Get conn status&#34;)
-        return result
-
-    def get_interfaces_packet_counters(self, task: Task) -&gt; MultiResult:
-        &#34;&#34;&#34;
-        Metoda, která vrací statistiky týkající se přijímání a vysílání paketů pro jednotlivá rozhraní síťových zařízení.
-
-        Args:
-            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir ůkoly (funkce).
-
-        Returns:
-            Metoda vrací pro konkrétního hosta MultiResult objekt (speciální nornir objekt připomínající Python list, který obsahuje Result objekty s výsledky jednotlivých tasků).
-            Pokud více hostů zavolá tuto metodu, tak se výsledky seskupí do jednoho AggregatedResult objektu obsahující výsledky všech hostů.
-            AggregatedResult si lze představit jako slovník, jejichž klíčem jsou jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotlivých tasků.
-
-        &#34;&#34;&#34;
-        result = task.run(task=napalm_get, name=&#34;Get interfaces packet counters&#34;, getters=[&#34;interfaces_counters&#34;])
-        return result
-
-    def get_device_configuration(self, task: Task) -&gt; MultiResult:
-        result = task.run(task=napalm_get, name=&#34;Get configuration&#34;, getters=[&#34;config&#34;])
+        result: MultiResult = task.run(task=napalm_get, name=&#34;Get device basic facts&#34;, getters=[&#34;facts&#34;])
+        result += task.run(task=self.get_conn_state_result, name=&#34;Get conn status&#34;) # sloučení dvou MultiResult objektů do jednoho MultiResult objektu (reprezentováno jako List[Result]).
         return result</code></pre>
 </details>
 <h3>Methods</h3>
@@ -202,58 +163,45 @@ AggregatedResult si lze představit jako slovník, jejichž klíčem jsou jednot
         AggregatedResult si lze představit jako slovník, jejichž klíčem jsou jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotlivých tasků.
 
     &#34;&#34;&#34;
-    result = task.run(task=napalm_get, name=&#34;Get device basic facts&#34;, getters=[&#34;facts&#34;])
-    result += task.run(task=self._get_conn_state_result, name=&#34;Get conn status&#34;)
+    result: MultiResult = task.run(task=napalm_get, name=&#34;Get device basic facts&#34;, getters=[&#34;facts&#34;])
+    result += task.run(task=self.get_conn_state_result, name=&#34;Get conn status&#34;) # sloučení dvou MultiResult objektů do jednoho MultiResult objektu (reprezentováno jako List[Result]).
     return result</code></pre>
 </details>
 </dd>
-<dt id="scripts.utility.network_info_collector.NetworkInfoCollector.get_device_configuration"><code class="name flex">
-<span>def <span class="ident">get_device_configuration</span></span>(<span>self, task: nornir.core.task.Task) ‑> nornir.core.task.MultiResult</span>
+<dt id="scripts.utility.network_info_collector.NetworkInfoCollector.get_conn_state_result"><code class="name flex">
+<span>def <span class="ident">get_conn_state_result</span></span>(<span>self, task: nornir.core.task.Task) ‑> nornir.core.task.Result</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_device_configuration(self, task: Task) -&gt; MultiResult:
-    result = task.run(task=napalm_get, name=&#34;Get configuration&#34;, getters=[&#34;config&#34;])
-    return result</code></pre>
-</details>
-</dd>
-<dt id="scripts.utility.network_info_collector.NetworkInfoCollector.get_interfaces_packet_counters"><code class="name flex">
-<span>def <span class="ident">get_interfaces_packet_counters</span></span>(<span>self, task: nornir.core.task.Task) ‑> nornir.core.task.MultiResult</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Metoda, která vrací statistiky týkající se přijímání a vysílání paketů pro jednotlivá rozhraní síťových zařízení.</p>
+<div class="desc"><p>Metoda, která vrácí informaci o stavu připojení k danému síťovému zařízení.
+Nornir tuto metodu volá paralelně pro síťová zařízení definována v Nornir objektu (pomocí něho se volá tato metoda).
+Pro připojení používá NAPALM connection objekt (tzn. nevyužívá nornir_napalm plugin, ale přímo napalm knihovnu).</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
-<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir ůkoly (funkce).</dd>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<p>Metoda vrací pro konkrétního hosta MultiResult objekt (speciální nornir objekt připomínající Python list, který obsahuje Result objekty s výsledky jednotlivých tasků).
-Pokud více hostů zavolá tuto metodu, tak se výsledky seskupí do jednoho AggregatedResult objektu obsahující výsledky všech hostů.
-AggregatedResult si lze představit jako slovník, jejichž klíčem jsou jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotlivých tasků.</p></div>
+<p>Result objekt, který obsahuje informace o stavu připojení k danému síťovému zařízení a o úspěchu provedeného nornir úkolu.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_interfaces_packet_counters(self, task: Task) -&gt; MultiResult:
+<pre><code class="python">def get_conn_state_result(self, task: Task) -&gt; Result:
     &#34;&#34;&#34;
-    Metoda, která vrací statistiky týkající se přijímání a vysílání paketů pro jednotlivá rozhraní síťových zařízení.
+    Metoda, která vrácí informaci o stavu připojení k danému síťovému zařízení.
+    Nornir tuto metodu volá paralelně pro síťová zařízení definována v Nornir objektu (pomocí něho se volá tato metoda).
+    Pro připojení používá NAPALM connection objekt (tzn. nevyužívá nornir_napalm plugin, ale přímo napalm knihovnu).
 
     Args:
-        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir ůkoly (funkce).
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
 
     Returns:
-        Metoda vrací pro konkrétního hosta MultiResult objekt (speciální nornir objekt připomínající Python list, který obsahuje Result objekty s výsledky jednotlivých tasků).
-        Pokud více hostů zavolá tuto metodu, tak se výsledky seskupí do jednoho AggregatedResult objektu obsahující výsledky všech hostů.
-        AggregatedResult si lze představit jako slovník, jejichž klíčem jsou jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotlivých tasků.
+        Result objekt, který obsahuje informace o stavu připojení k danému síťovému zařízení a o úspěchu provedeného nornir úkolu.
 
     &#34;&#34;&#34;
-    result = task.run(task=napalm_get, name=&#34;Get interfaces packet counters&#34;, getters=[&#34;interfaces_counters&#34;])
-    return result</code></pre>
+    napalm = task.host.get_connection(&#34;napalm&#34;, task.nornir.config) # NAPALM connection objekt, který není omezen pouze na NAPALM get metody jako u napalm_get tasku.
+    result: MultiResult = napalm.is_alive()
+    return Result(host=task.host, result=result)</code></pre>
 </details>
 </dd>
 </dl>
@@ -278,8 +226,7 @@ AggregatedResult si lze představit jako slovník, jejichž klíčem jsou jednot
 <h4><code><a title="scripts.utility.network_info_collector.NetworkInfoCollector" href="#scripts.utility.network_info_collector.NetworkInfoCollector">NetworkInfoCollector</a></code></h4>
 <ul class="">
 <li><code><a title="scripts.utility.network_info_collector.NetworkInfoCollector.get_conn_state_and_device_facts" href="#scripts.utility.network_info_collector.NetworkInfoCollector.get_conn_state_and_device_facts">get_conn_state_and_device_facts</a></code></li>
-<li><code><a title="scripts.utility.network_info_collector.NetworkInfoCollector.get_device_configuration" href="#scripts.utility.network_info_collector.NetworkInfoCollector.get_device_configuration">get_device_configuration</a></code></li>
-<li><code><a title="scripts.utility.network_info_collector.NetworkInfoCollector.get_interfaces_packet_counters" href="#scripts.utility.network_info_collector.NetworkInfoCollector.get_interfaces_packet_counters">get_interfaces_packet_counters</a></code></li>
+<li><code><a title="scripts.utility.network_info_collector.NetworkInfoCollector.get_conn_state_result" href="#scripts.utility.network_info_collector.NetworkInfoCollector.get_conn_state_result">get_conn_state_result</a></code></li>
 </ul>
 </li>
 </ul>

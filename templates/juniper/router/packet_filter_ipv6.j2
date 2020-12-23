@@ -1,6 +1,6 @@
 {% for filter_name, filter_dict in packet_filter_ipv6_config.items() %}
 {% for rule in filter_dict.rules %}
-set firewall family inet6 filter {{ filter_name }} term {{ filter_dict.term_name }} {{ rule }}
+set firewall family inet6 filter {{ filter_name }} term {{ filter_dict.term_name }} {{ rule | trim }}
 {% endfor %}
 {% for interface in filter_dict.interfaces %}
 set interfaces {{ interface.name }} unit {{ interface.unit_number }} family inet6 filter {{ interface.filter_direction }} {{ filter_name }}

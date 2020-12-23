@@ -1,9 +1,0 @@
-set services nat
-
-access list {{ nat_config.access_list_number }} permit {{ nat_config.source_network.ip }} {{ nat_config.source_network.wild_mask }}
-ip nat inside source list {{ nat_config.access_list_number }} interface {{ nat_config.interface_types.outside.name }} overload
-{%- for type, int_dict in nat_config.interface_types.items() %}
-    interface {{ int_dict.name }}
-    ip nat {{ type }}
-    exit
-{%- endfor %}

@@ -28,8 +28,7 @@
 </summary>
 <pre><code class="python">import datetime
 import re
-from typing import Tuple, List, Dict
-import copy
+from typing import List, Dict
 from nornir.core.task import AggregatedResult, MultiResult
 
 
@@ -56,7 +55,7 @@ class NetworkInfoParser:
                        &#34;tx_multicast_packets&#34;: &#34;tx_multicast&#34;, &#34;tx_unicast_packets&#34;: &#34;tx_unicast&#34;}
         if aggregated_dict_result:
             for host in aggregated_dict_result:
-                interfaces_data = aggregated_dict_result[host][1].result[&#39;interfaces_counters&#39;]
+                interfaces_data = aggregated_dict_result[host][0].result[&#39;interfaces_counters&#39;]
                 for interface in interfaces_data:
                     interface_dict = interfaces_data[interface]
                     interface_dict[&#39;interface&#39;] = interface
@@ -181,7 +180,7 @@ nestrukturovaného stringu atd.).</p></div>
                        &#34;tx_multicast_packets&#34;: &#34;tx_multicast&#34;, &#34;tx_unicast_packets&#34;: &#34;tx_unicast&#34;}
         if aggregated_dict_result:
             for host in aggregated_dict_result:
-                interfaces_data = aggregated_dict_result[host][1].result[&#39;interfaces_counters&#39;]
+                interfaces_data = aggregated_dict_result[host][0].result[&#39;interfaces_counters&#39;]
                 for interface in interfaces_data:
                     interface_dict = interfaces_data[interface]
                     interface_dict[&#39;interface&#39;] = interface
@@ -434,7 +433,7 @@ jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotliv�
                    &#34;tx_multicast_packets&#34;: &#34;tx_multicast&#34;, &#34;tx_unicast_packets&#34;: &#34;tx_unicast&#34;}
     if aggregated_dict_result:
         for host in aggregated_dict_result:
-            interfaces_data = aggregated_dict_result[host][1].result[&#39;interfaces_counters&#39;]
+            interfaces_data = aggregated_dict_result[host][0].result[&#39;interfaces_counters&#39;]
             for interface in interfaces_data:
                 interface_dict = interfaces_data[interface]
                 interface_dict[&#39;interface&#39;] = interface

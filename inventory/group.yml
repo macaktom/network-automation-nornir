@@ -9,11 +9,11 @@ cisco_group:
         optional_args:
           secret: "cisco"
           auto_file_prompt: True
-          #global_delay_factor: 2
+          global_delay_factor: 1
     netmiko:
       extras:
         secret: "cisco"
-        #lobal_delay_factor: 2
+        global_delay_factor: 1
 
 junos_group:
   platform: "junos"

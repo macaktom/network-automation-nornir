@@ -65,16 +65,10 @@ class ExcelExporter:
         Args:
             folder_path (Path): cesta obsahující všechny nadřazené složky, které jsou nutné pro nalezení výsledného .txt souboru
 
-        Raises:
-            OSError: Výjimka, která nastane pokud došlo k chybě při vytváření složek z definované cesty folder_path.
-
         Returns:
             None
         &#34;&#34;&#34;
-        try:
-            folder_path.mkdir(parents=True, exist_ok=True)
-        except OSError:
-            print(f&#34;{Fore.RED}Error: Creating directories for specified path {folder_path} failed.&#34;)
+        folder_path.mkdir(parents=True, exist_ok=True)
 
     def _check_file_dest(self) -&gt; None:
         &#34;&#34;&#34;
@@ -103,6 +97,9 @@ class ExcelExporter:
             row_start (int): počáteční řádek zápisu. Defaultní hodnota je 2.
             column_start (int): počáteční sloupec zápisu. Defaultní hodnota je 1.
 
+        Raises:
+            ValueError: Výjimka, která nastane pokud parametry row_start a column_start nejsou větší než 0.
+
         Returns:
             None
         &#34;&#34;&#34;
@@ -121,7 +118,8 @@ class ExcelExporter:
                     current_column += 1
                 current_column = column_start
         else:
-            print(f&#34;{Fore.RED}Error with writing data - check specified row_start and column_start (both must be &gt; 0).&#34;)
+            raise ValueError(f&#34;Error with writing data - check specified row_start and column_start (both &#34;
+                             f&#34;must be &gt; 0).&#34;)
 
     def write_header(self, sorted_headers: List[str], wider_header_columns: List[str], row_start: int = 2,
                      column_start: int = 1) -&gt; None:
@@ -133,6 +131,9 @@ class ExcelExporter:
             wider_header_columns (List[str]): list nadpisů, který určuje, jaké sloupce mají být širší.
             row_start (int): počáteční řádek zápisu. Defaultní hodnota je 2.
             column_start (int): počáteční sloupec zápisu. Defaultní hodnota je 1.
+
+        Raises:
+            ValueError: Výjimka, která nastane pokud parametry row_start a column_start nejsou větší než 0.
 
         Returns:
             None
@@ -148,23 +149,18 @@ class ExcelExporter:
                     self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 15
                 column_start += 1
         else:
-            print(f&#34;{Fore.RED}Error with writing header - check specified row_start and column_start (both must be &gt; 0).&#34;)
+            raise ValueError(f&#34;Error with writing header - check specified row_start and column_start (both &#34;
+                             f&#34;must be &gt; 0).&#34;)
 
     def save_xlsx_file(self) -&gt; None:
         &#34;&#34;&#34;
         Metoda pro uložení/vytvoření .xlsx souboru. Lokace souboru je definována atributem dest_file.
 
-        Raises:
-            Exception: Vyjímka, která nastane, pokud je problém s uložením/vytvořením výsledného .xlsx souboru.
-
         Returns:
             None
         &#34;&#34;&#34;
-        try:
-            self._workbook.save(self._dest_file)
-            print(f&#34;Export data to {self._dest_file.name} was successful.&#34;)
-        except Exception:
-            print(f&#34;{Fore.RED}Export failed. Error while saving .xslx file.&#34;)
+        self._workbook.save(self._dest_file)
+        print(f&#34;{Fore.GREEN}Export data to {self._dest_file.relative_to(Path.cwd())} was successful.&#34;)
 
     def _setup_export(self, sheet_title: str) -&gt; None:
         &#34;&#34;&#34;
@@ -282,16 +278,10 @@ class ExcelExporter:
         Args:
             folder_path (Path): cesta obsahující všechny nadřazené složky, které jsou nutné pro nalezení výsledného .txt souboru
 
-        Raises:
-            OSError: Výjimka, která nastane pokud došlo k chybě při vytváření složek z definované cesty folder_path.
-
         Returns:
             None
         &#34;&#34;&#34;
-        try:
-            folder_path.mkdir(parents=True, exist_ok=True)
-        except OSError:
-            print(f&#34;{Fore.RED}Error: Creating directories for specified path {folder_path} failed.&#34;)
+        folder_path.mkdir(parents=True, exist_ok=True)
 
     def _check_file_dest(self) -&gt; None:
         &#34;&#34;&#34;
@@ -320,6 +310,9 @@ class ExcelExporter:
             row_start (int): počáteční řádek zápisu. Defaultní hodnota je 2.
             column_start (int): počáteční sloupec zápisu. Defaultní hodnota je 1.
 
+        Raises:
+            ValueError: Výjimka, která nastane pokud parametry row_start a column_start nejsou větší než 0.
+
         Returns:
             None
         &#34;&#34;&#34;
@@ -338,7 +331,8 @@ class ExcelExporter:
                     current_column += 1
                 current_column = column_start
         else:
-            print(f&#34;{Fore.RED}Error with writing data - check specified row_start and column_start (both must be &gt; 0).&#34;)
+            raise ValueError(f&#34;Error with writing data - check specified row_start and column_start (both &#34;
+                             f&#34;must be &gt; 0).&#34;)
 
     def write_header(self, sorted_headers: List[str], wider_header_columns: List[str], row_start: int = 2,
                      column_start: int = 1) -&gt; None:
@@ -350,6 +344,9 @@ class ExcelExporter:
             wider_header_columns (List[str]): list nadpisů, který určuje, jaké sloupce mají být širší.
             row_start (int): počáteční řádek zápisu. Defaultní hodnota je 2.
             column_start (int): počáteční sloupec zápisu. Defaultní hodnota je 1.
+
+        Raises:
+            ValueError: Výjimka, která nastane pokud parametry row_start a column_start nejsou větší než 0.
 
         Returns:
             None
@@ -365,23 +362,18 @@ class ExcelExporter:
                     self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 15
                 column_start += 1
         else:
-            print(f&#34;{Fore.RED}Error with writing header - check specified row_start and column_start (both must be &gt; 0).&#34;)
+            raise ValueError(f&#34;Error with writing header - check specified row_start and column_start (both &#34;
+                             f&#34;must be &gt; 0).&#34;)
 
     def save_xlsx_file(self) -&gt; None:
         &#34;&#34;&#34;
         Metoda pro uložení/vytvoření .xlsx souboru. Lokace souboru je definována atributem dest_file.
 
-        Raises:
-            Exception: Vyjímka, která nastane, pokud je problém s uložením/vytvořením výsledného .xlsx souboru.
-
         Returns:
             None
         &#34;&#34;&#34;
-        try:
-            self._workbook.save(self._dest_file)
-            print(f&#34;Export data to {self._dest_file.name} was successful.&#34;)
-        except Exception:
-            print(f&#34;{Fore.RED}Export failed. Error while saving .xslx file.&#34;)
+        self._workbook.save(self._dest_file)
+        print(f&#34;{Fore.GREEN}Export data to {self._dest_file.relative_to(Path.cwd())} was successful.&#34;)
 
     def _setup_export(self, sheet_title: str) -&gt; None:
         &#34;&#34;&#34;
@@ -500,11 +492,6 @@ class ExcelExporter:
 </code></dt>
 <dd>
 <div class="desc"><p>Metoda pro uložení/vytvoření .xlsx souboru. Lokace souboru je definována atributem dest_file.</p>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><code>Exception</code></dt>
-<dd>Vyjímka, která nastane, pokud je problém s uložením/vytvořením výsledného .xlsx souboru.</dd>
-</dl>
 <h2 id="returns">Returns</h2>
 <p>None</p></div>
 <details class="source">
@@ -515,17 +502,11 @@ class ExcelExporter:
     &#34;&#34;&#34;
     Metoda pro uložení/vytvoření .xlsx souboru. Lokace souboru je definována atributem dest_file.
 
-    Raises:
-        Exception: Vyjímka, která nastane, pokud je problém s uložením/vytvořením výsledného .xlsx souboru.
-
     Returns:
         None
     &#34;&#34;&#34;
-    try:
-        self._workbook.save(self._dest_file)
-        print(f&#34;Export data to {self._dest_file.name} was successful.&#34;)
-    except Exception:
-        print(f&#34;{Fore.RED}Export failed. Error while saving .xslx file.&#34;)</code></pre>
+    self._workbook.save(self._dest_file)
+    print(f&#34;{Fore.GREEN}Export data to {self._dest_file.relative_to(Path.cwd())} was successful.&#34;)</code></pre>
 </details>
 </dd>
 <dt id="scripts.utility.excel_exporter.ExcelExporter.write_data"><code class="name flex">
@@ -544,6 +525,11 @@ class ExcelExporter:
 <dt><strong><code>column_start</code></strong> :&ensp;<code>int</code></dt>
 <dd>počáteční sloupec zápisu. Defaultní hodnota je 1.</dd>
 </dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>Výjimka, která nastane pokud parametry row_start a column_start nejsou větší než 0.</dd>
+</dl>
 <h2 id="returns">Returns</h2>
 <p>None</p></div>
 <details class="source">
@@ -560,6 +546,9 @@ class ExcelExporter:
         lst_data (List[Dict[str, str]]): data určená k exportu.
         row_start (int): počáteční řádek zápisu. Defaultní hodnota je 2.
         column_start (int): počáteční sloupec zápisu. Defaultní hodnota je 1.
+
+    Raises:
+        ValueError: Výjimka, která nastane pokud parametry row_start a column_start nejsou větší než 0.
 
     Returns:
         None
@@ -579,7 +568,8 @@ class ExcelExporter:
                 current_column += 1
             current_column = column_start
     else:
-        print(f&#34;{Fore.RED}Error with writing data - check specified row_start and column_start (both must be &gt; 0).&#34;)</code></pre>
+        raise ValueError(f&#34;Error with writing data - check specified row_start and column_start (both &#34;
+                         f&#34;must be &gt; 0).&#34;)</code></pre>
 </details>
 </dd>
 <dt id="scripts.utility.excel_exporter.ExcelExporter.write_header"><code class="name flex">
@@ -598,6 +588,11 @@ class ExcelExporter:
 <dt><strong><code>column_start</code></strong> :&ensp;<code>int</code></dt>
 <dd>počáteční sloupec zápisu. Defaultní hodnota je 1.</dd>
 </dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>Výjimka, která nastane pokud parametry row_start a column_start nejsou větší než 0.</dd>
+</dl>
 <h2 id="returns">Returns</h2>
 <p>None</p></div>
 <details class="source">
@@ -615,6 +610,9 @@ class ExcelExporter:
         row_start (int): počáteční řádek zápisu. Defaultní hodnota je 2.
         column_start (int): počáteční sloupec zápisu. Defaultní hodnota je 1.
 
+    Raises:
+        ValueError: Výjimka, která nastane pokud parametry row_start a column_start nejsou větší než 0.
+
     Returns:
         None
     &#34;&#34;&#34;
@@ -629,7 +627,8 @@ class ExcelExporter:
                 self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 15
             column_start += 1
     else:
-        print(f&#34;{Fore.RED}Error with writing header - check specified row_start and column_start (both must be &gt; 0).&#34;)</code></pre>
+        raise ValueError(f&#34;Error with writing header - check specified row_start and column_start (both &#34;
+                         f&#34;must be &gt; 0).&#34;)</code></pre>
 </details>
 </dd>
 </dl>

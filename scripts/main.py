@@ -1,13 +1,9 @@
 import datetime
 from pathlib import Path
 from pprint import pprint
-
-from colorama import Fore
 from nornir import InitNornir
 from nornir.core import Task, Nornir
 from nornir.core.filter import F
-from nornir_jinja2.plugins.tasks import template_file
-from nornir_napalm.plugins.tasks import napalm_configure
 from nornir_utils.plugins.functions import print_result
 
 from scripts.tasks.eigrp_configuration import EIGRPConfiguration
@@ -16,6 +12,7 @@ from scripts.tasks.nat_configuration import NATConfiguration
 from scripts.tasks.ospf_configuration import OSPFConfiguration
 from scripts.tasks.packet_filter_configuration import PacketFilterConfiguration
 from scripts.tasks.static_configuration import StaticRoutingConfiguration
+from scripts.utility.network_info_collector import NetworkInfoCollector
 from scripts.utility.network_info_exporter import NetworkInfoExporter
 from scripts.utility.network_info_viewer import NetworkUtilityViewer
 
@@ -24,8 +21,6 @@ from scripts.utility.network_info_viewer import NetworkUtilityViewer
 # 1) Ty ktere jsou podporovany NAPALMem u OBOU vendoru (nutne udelat specialni tabulku pro printovani) - lze provest export do JSONu, .txt
 # 2) Ty ktere NAPALM nema nebo jsou podporovany pouze u nektereho vendora - print pouze neupraveneho textu do konzole + export .txt
 # Tři druhy metod teď budou (kromě potom Jinja2): GET, SHOW, EXPORT. Show commandy je ted nutne prepsat na GET commandy, vraci Resulty
-
-# TODO pokud bude cas: Export Excel: show_vlans, show_interfaces_basic_info, show_intefaces_ip_info
 
 def std_print(agg_result):
     print()
@@ -40,6 +35,7 @@ def std_print(agg_result):
         print("-" * 50)
         print()
     print()
+
 
 def configure_devices(nornir_devices: Nornir, task_func: callable, task_name: str, dry_run: bool) -> None:
     result = nornir_devices.run(task=task_func, name=task_name, dry_run=dry_run)
@@ -63,27 +59,27 @@ def main() -> None:
     l3_cisco = nr.filter(F(groups__contains="cisco_group") & F(dev_type="router") | F(dev_type="L3_switch"))
     all_devices = nr.filter(F(dev_type="router") | F(dev_type="L3_switch"))
     viewer = NetworkUtilityViewer()
-    exporter = NetworkInfoExporter()
+    exporter = NetworkInfoExporter(NetworkInfoCollector())
     ospf_config = OSPFConfiguration()
     eigrp_config = EIGRPConfiguration()
     static_routing_config = StaticRoutingConfiguration()
     interfaces_configuration = InterfacesConfiguration()
     packet_filter = PacketFilterConfiguration()
     nat_config = NATConfiguration()
+    #all_devices.run(task=viewer.show_device_configuration)
     #all_devices.run(task=viewer.show_device_facts)
-
     # configure_devices(l3_cisco, static_routing_config.configure_static_routing_ipv4, "Static routing config", False)
-    # configure_devices(l3_cisco, ospf_config.configure_ospf, "OSPFv2 config", False)
+    # configure_devices(all_devices, ospf_config.configure_ospf, "OSPFv2 config", False)
     # configure_devices(l3_cisco, eigrp_config.configure_eigrp_ipv4, "EIGRP config", False)
     # configure_devices(l3_switches, interfaces_configuration.configure_switching_interfaces, "Switching interfaces config", False)
-    # configure_devices(l3_cisco, packet_filter.configure_ipv4_packet_filters, "IPv4 packet filter config", False)
+    #configure_devices(all_devices, packet_filter.configure_ipv4_packet_filters, "IPv4 packet filter config", False)
     # configure_devices(l3_cisco, nat_config.configure_source_nat_overload, "NAT Overload config", False)
     # configure_devices(cisco_router, ospf_config.configure_ospfv3, "OSPFv3 config", False)
     # configure_devices(l3_cisco, eigrp_config.configure_eigrp_ipv6, "EIGRP IPV6 config", False)
-    # configure_devices(cisco_router, interfaces_configuration.configure_ipv4_interfaces, "IPv4 interfaces config", True)
-    # configure_devices(cisco_router, interfaces_configuration.configure_ipv6_interfaces, "IPv6 interfaces config", True)
+    #configure_devices(cisco_router, interfaces_configuration.configure_ipv4_interfaces, "IPv4 interfaces config", True)
+    #configure_devices(all_devices, interfaces_configuration.configure_ipv6_interfaces, "IPv6 interfaces config", False)
     # configure_devices(cisco_router, static_routing_config.configure_static_routing_ipv6, "IPv6 Static Routing config", True)
-    # configure_devices(cisco_router, packet_filter.configure_ipv6_packet_filters, "IPv6 packet filter config", True)
+    #configure_devices(all_devices, packet_filter.configure_ipv6_packet_filters, "IPv6 packet filter config", False)
 
     # configure_devices(juniper_devices, static_routing_config.configure_static_routing_ipv4, "Static routing config", False)
     # configure_devices(juniper_devices, ospf_config.configure_ospf, "OSPFv2 config", False)
@@ -95,14 +91,12 @@ def main() -> None:
     # configure_devices(juniper_devices, packet_filter.configure_ipv6_packet_filters, "IPv6 packet filter config", False)
 
     # configure_devices(juniper_devices, nat_config.configure_source_nat_overload, "NAT Overload config", True)
-    all_devices.run(task=exporter.export_device_configuration)
-    all_devices.run(task=exporter.export_packet_filter_info)
-    all_devices.run(task=exporter.export_ipv4_routes)
-    all_devices.run(task=exporter.export_ipv6_routes)
-
-    dest_path = Path(Path.cwd() / 'export' / "excel" / f"packets_counter.xlsx")
-    exporter.export_device_facts(all_devices, Path(Path.cwd() / 'export' / "excel" / f"facts.xlsx"))
-    exporter.export_interfaces_packet_counters(all_devices, dest_path)
+    #all_devices.run(task=exporter.export_device_configuration)
+    #all_devices.run(task=exporter.export_packet_filter_info)
+    #all_devices.run(task=exporter.export_ipv4_routes)
+    #all_devices.run(task=exporter.export_ipv6_routes)
+    #exporter.export_device_facts(all_devices)
+    #exporter.export_interfaces_packet_counters(all_devices)
 
     # print(z['R1'][1].result['facts'])
     # print(z['R1'][2].result)
@@ -111,8 +105,6 @@ def main() -> None:
     # exporter_xlsx = ExcelExporter(Workbook(), "Testa")
 
 
-# TODO 14.12 - zakladni delete - interfacy, routing procesy atd. Vault, zmensit pocet CISCO templatu (task.host podminky v conf), odzkouset mergovani (hlavne L3 switch), Juniper NAT Overload nebo PAT
-# TODO Podivat se na folder path a file path napr u export excel - staticke promenne, class variables v pdocs, zmenit yaml soubory + komentare
 if __name__ == "__main__":
     start = datetime.datetime.now()
     main()

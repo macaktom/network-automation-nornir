@@ -39,7 +39,7 @@ class RestoreConfiguration:
         """
         try:
             date = task.host["restore_config"]["running_config_date"]
-            file_path = Path(Path.cwd() / 'backups' / "running_configuration" / f"{task.host.name}" / f"{task.host.name}_{str(date)}.txt")
+            file_path = Path(Path.cwd() / 'backups' / "running_configuration" / f"{task.host.name}" / f"{task.host.name}_{str(date)}.conf")
             task.host["restore_running_conf"] = self._get_data_from_file(file_path)
             task.run(task=napalm_configure,
                      name="Loading Running Configuration on the device",
@@ -48,7 +48,10 @@ class RestoreConfiguration:
                      dry_run=dry_run)
         except KeyError as err:
             print(f"{Fore.RED}Device {task.host.name} was not restored - key (restore_config or running_config_date) is not "
-                  f"defined in config.yml for particular device.")
+                  f"defined in config.yml for that device.")
+        except FileNotFoundError as err:
+            print(
+                f"{Fore.RED}Device {task.host.name} was not restored - specified .conf file was not found.")
         except Exception as err:
             print(f"{Fore.RED}Device {task.host.name} was not restored - check nornir.log")
 

@@ -1,9 +1,10 @@
 import json
+from colorama import Fore
 from nornir.core.exceptions import NornirSubTaskError
 from nornir.core.task import MultiResult, Task
 from nornir_napalm.plugins.tasks import napalm_get
 from nornir_netmiko import netmiko_send_command, netmiko_send_config
-from nornir_utils.plugins.functions import print_result
+from nornir_utils.plugins.functions import print_result, print_title
 from scripts.utility.network_info_parser import NetworkInfoParser
 
 
@@ -24,13 +25,14 @@ class NetworkUtilityViewer:
             None
         """
         result = task.run(task=napalm_get, name="Show running configuration", getters=["config"])
-        if result[0].result:
+        if result[0].result and not result.failed:
             result[0].result = result[0].result["config"]['running'].strip()
         self._print_info_default(result)
 
     def show_ntp_info(self, task: Task, json_out: bool = False) -> None:
         """
-        Metoda pro zobrazení NTP (Network Time Protocol) informací.
+        Metoda pro zobrazení NTP (Network Time Protocol) informací (NTP synchronizační statistiky, IP adresy NTP
+        serverů a peerů - zobrazení konfigurace není ještě implementované komunitou, pouze IP adresy).
 
         Args:
             task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
@@ -71,10 +73,6 @@ class NetworkUtilityViewer:
             task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
             json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
 
-        Raises:
-            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
-                                export na nepodporovaných zařízeních (např. NAPALM metoda get_users není podporována obrazem Juniper Olive.
-
         Returns:
             None
         """
@@ -85,7 +83,8 @@ class NetworkUtilityViewer:
             else:
                 self._print_info_default(result)
         else:
-            raise NornirSubTaskError("Not supported for Juniper Olive image.", task)
+            print(f"{Fore.RED}Device {task.host.name}: Method is not supported by Juniper Olive - more in nornir.log.") #NAPALM metoda get_users nepodporuje Juniper Olive (Juniper zařízení řady SRX, MX by měly být podle komunity v pořádku).
+            raise NornirSubTaskError("NAPALM get_users is not supported by Juniper Olive - bad parsing (Juniper SRX and MX devices were tested by community and should be fine).", task)
 
     def show_connection_state(self, task: Task) -> None:
         """
@@ -97,9 +96,10 @@ class NetworkUtilityViewer:
         Returns:
             None
         """
-        napalm = task.host.get_connection("napalm", task.nornir.config)
-        device_status = "OK" if napalm.is_alive()['is_alive'] else "is not OK"
-        print(f"Connection to device {task.host} is {device_status}.")
+        napalm_conn = task.host.get_connection("napalm", task.nornir.config)
+        device_status = "OK" if napalm_conn.is_alive()['is_alive'] else "not OK"
+        text_color = Fore.GREEN if device_status == "OK" else Fore.RED
+        print(f"{text_color}Connection to device {task.host.name} is {device_status}.")
 
     def show_hardware_details(self, task: Task, json_out: bool = False) -> None:
         """
@@ -108,10 +108,6 @@ class NetworkUtilityViewer:
         Args:
             task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
             json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
-
-        Raises:
-            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
-                                export na nepodporovaných zařízeních (např. NAPALM metoda get_environment není podporována obrazem Juniper Olive.
 
         Returns:
             None
@@ -123,7 +119,7 @@ class NetworkUtilityViewer:
             else:
                 self._print_info_default(result)
         else:
-            raise NornirSubTaskError("Command is not supported for Juniper Olive", task)
+            print(f"{Fore.RED}Device {task.host.name}: Method isn't supported by Juniper Olive. - show chassis commands aren't functional.") # příkazy show chassis nejsou podporovány Juniper Olive - tzn. NAPALM metoda get_environment není podporována.
 
     def show_ipv4_routes(self, task: Task) -> None:
         """
@@ -133,8 +129,7 @@ class NetworkUtilityViewer:
             task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
 
         Raises:
-            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
-                                export na nepodporovaných zařízeních (podporuje pouze Juniper a Cisco zařízení).
+            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu (např. nepodporovaný vendor).
 
         Returns:
             None
@@ -161,8 +156,7 @@ class NetworkUtilityViewer:
             task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
 
         Raises:
-            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
-                                export na nepodporovaných zařízeních (podporuje pouze Juniper a Cisco zařízení).
+            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu (např. nepodporovaný vendor).
 
         Returns:
             None
@@ -189,8 +183,7 @@ class NetworkUtilityViewer:
             task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
 
         Raises:
-            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
-                                export na nepodporovaných zařízeních (podporuje pouze Juniper a Cisco zařízení).
+            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu (např. nepodporovaný vendor).
 
         Returns:
             None
@@ -217,10 +210,6 @@ class NetworkUtilityViewer:
             task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
             json_out (bool): Parametr, který určuje, jestli se má pro zobrazení použít JSON string (True) nebo výchozí Nornir funkce (False). Defaultně je nastaven False.
 
-        Raises:
-            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
-                                export na nepodporovaných zařízeních.
-
         Returns:
             None
         """
@@ -231,7 +220,7 @@ class NetworkUtilityViewer:
             else:
                 self._print_info_default(result)
         else:
-            raise NornirSubTaskError("Invalid device type to execute this task. Only switches are allowed", task)
+            print(f"{Fore.RED}Device {task.host.name}: Invalid device type. Only switches and L3_switches are supported.")
 
     def show_device_facts(self, task: Task, json_out: bool = False) -> None:
         """
@@ -310,8 +299,7 @@ class NetworkUtilityViewer:
             ipv6 (bool): Parametr, který definuje, jestli mají být zobrazeni OSPF (False) nebo OSPFv3 (True) sousedé.
 
         Raises:
-            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu nebo pokud provádíte
-                                export na nepodporovaných zařízeních.
+            NornirSubTaskError: Výjimka, která nastane, pokud se objeví chyba v nornir úkolu (např. nepodporovaný vendor).
 
         Returns:
             None
@@ -324,6 +312,7 @@ class NetworkUtilityViewer:
                 command = "show ip ospf neighbor"
         elif task.host['vendor'] == "cisco" and task.host['dev_type'] == "L3_switch":
             if ipv6:
+                print(f"{Fore.RED}Device {task.host.name}: OSPFv3 is not supported for {task.host['image']}.")
                 raise NornirSubTaskError("Function was not implemented for particular device.", task)
             else:
                 command = "show ip ospf neighbor"
@@ -349,7 +338,7 @@ class NetworkUtilityViewer:
             None
         """
         if not result_list.failed:
-            print(f"Device: {result_list.host}")
+            print_title(f"Device {result_list.host}:")
             for result in result_list:
                 print_result(result)
                 print()
@@ -365,6 +354,6 @@ class NetworkUtilityViewer:
              None
          """
         if not result_list.failed:
-            print(f"Device: {result_list.host}")
+            print_title(f"Device {result_list.host}:")
             for result in result_list:
                 print(json.dumps(result.result, sort_keys=True, indent=4))

@@ -1,7 +1,6 @@
 import datetime
 import re
-from typing import Tuple, List, Dict
-import copy
+from typing import List, Dict
 from nornir.core.task import AggregatedResult, MultiResult
 
 
@@ -28,7 +27,7 @@ class NetworkInfoParser:
                        "tx_multicast_packets": "tx_multicast", "tx_unicast_packets": "tx_unicast"}
         if aggregated_dict_result:
             for host in aggregated_dict_result:
-                interfaces_data = aggregated_dict_result[host][1].result['interfaces_counters']
+                interfaces_data = aggregated_dict_result[host][0].result['interfaces_counters']
                 for interface in interfaces_data:
                     interface_dict = interfaces_data[interface]
                     interface_dict['interface'] = interface

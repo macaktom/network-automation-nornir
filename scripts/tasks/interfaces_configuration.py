@@ -1,6 +1,5 @@
 from nornir.core import Task
 from nornir.core.exceptions import NornirSubTaskError
-from nornir.core.task import Result, MultiResult
 from nornir_jinja2.plugins.tasks import template_file
 from nornir_napalm.plugins.tasks import napalm_configure
 

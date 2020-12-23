@@ -26,78 +26,93 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import json
-from pathlib import Path
-
+<pre><code class="python">from pathlib import Path
 from colorama import Fore
 from nornir.core import Nornir
-from nornir.core.exceptions import NornirSubTaskError
+from nornir.core.exceptions import NornirSubTaskError, NornirExecutionError
 from nornir.core.task import Task, MultiResult, AggregatedResult
 from nornir_napalm.plugins.tasks import napalm_get
 from nornir_netmiko import netmiko_send_command, netmiko_send_config
+from nornir_utils.plugins.functions import print_result
 from openpyxl import Workbook
-
 from scripts.utility.excel_exporter import ExcelExporter
 from scripts.utility.network_info_collector import NetworkInfoCollector
 from scripts.utility.network_info_parser import NetworkInfoParser
-from scripts.utility.text_file_exporter import TextFileExporter
+from scripts.utility.text_file_exporter import FileExporter
 
 
 class NetworkInfoExporter:
     &#34;&#34;&#34;
     Třída která umožňuje exportovat data ze síťových zařízení.
+
+    Args:
+        info_collector (NetworkInfoCollector): objekt, který slouží k obdržení komplexních dat ze síťových prvků - např. při paralelním slučování
+                                               několika MultiResult objektů z více Nornir podúloh (subtasků) s jiným typem přístupu k NAPALM knihovně.
+
+
+    Attributes:
+         info_collector (NetworkInfoCollector): objekt, který slouží k obdržení komplexních dat ze síťových prvků - např. při paralelním slučování
+                                               několika MultiResult objektů z více Nornir podúloh (subtasků) s jiným typem přístupu k NAPALM knihovn
+
     &#34;&#34;&#34;
 
-    def export_device_facts(self, nornir_devices: Nornir, dest_file_path: Path) -&gt; None:
+    def __init__(self, info_collector: NetworkInfoCollector):
+        self._info_collector = info_collector
+
+    def export_device_facts(self, nornir_devices: Nornir) -&gt; None:
         &#34;&#34;&#34;
         Export základních údajů jednotlivých zařízení do .xlsx souboru.
 
         Args:
             nornir_devices (Nornir): filtrovaný Nornir objekt umožňující na daných zařízeních volat nornir úkoly.
-            dest_file_path: (Path): cesta k výslednému .xlsx souboru.
 
         Returns:
             None
 
         &#34;&#34;&#34;
-        info_collector = NetworkInfoCollector()
-        all_results_aggregation: AggregatedResult = nornir_devices.run(
-            task=info_collector.get_conn_state_and_device_facts)
+        # TODO 1
         sorted_headers_export = [&#34;hostname&#34;, &#34;FQDN&#34;, &#34;vendor&#34;, &#34;serial_number&#34;, &#34;os_version&#34;, &#34;uptime&#34;, &#34;connection&#34;]
         wider_header_columns = [&#34;os_version&#34;, &#34;FQDN&#34;]
-        if not all_results_aggregation.failed:
+        dest_file_path = Path(Path.cwd() / &#39;export&#39; / &#34;excel&#34; / &#34;facts.xlsx&#34;)
+        try:
+            all_results_aggregation: AggregatedResult = nornir_devices.run(
+                task=self._info_collector.get_conn_state_and_device_facts)
             exporter = ExcelExporter(Workbook(), &#34;Základní informace o zařízeních&#34;, dest_file_path)
             parser = NetworkInfoParser()
             parsed_data = parser.get_parsed_facts_data(all_results_aggregation)
             exporter.write_header(sorted_headers_export, wider_header_columns)
             exporter.write_data(sorted_headers_export, parsed_data)
             exporter.save_xlsx_file()
-        else:
-            print(f&#34;{Fore.RED}Export failed - more in nornir.log&#34;)
+        except (NornirExecutionError, OSError, ValueError) as err:
+            print(f&#34;{Fore.RED}Export device facts to {dest_file_path.name} failed.&#34;)
+            print(err)
 
-    def export_interfaces_packet_counters(self, nornir_devices: Nornir, dest_file_path: Path) -&gt; None:
+
+    def export_interfaces_packet_counters(self, nornir_devices: Nornir) -&gt; None:
         &#34;&#34;&#34;
          Export statistik týkající se přijímání a vysílání paketů pro jednotlivá rozhraní síťových zařízení. Statistiky jsou exportovány do .xslx souboru.
+         Tx_broadcast a tx_multicast nejsou exportovány vůbec (NAPALM momentálně nepodporuje tyto statistiky - \n
+         U vývojáři nedefinovaných regexů vychází vždy daná statistika -1 (platí pro tx_broadcast, tx_multicast a několik paket counterů u Juniper Olive).
 
          Args:
              nornir_devices (Nornir): filtrovaný Nornir objekt umožňující na daných zařízeních volat nornir úkoly.
-             dest_file_path: (Path): cesta k výslednému .xlsx souboru.
 
          Returns:
              None
 
          &#34;&#34;&#34;
-        info_collector = NetworkInfoCollector()
-        all_results_aggregation: AggregatedResult = nornir_devices.run(
-            task=info_collector.get_interfaces_packet_counters)
         sorted_headers_export = [&#34;interface&#34;, &#34;rx_broadcast&#34;, &#34;rx_discards&#34;, &#34;rx_errors&#34;,
-                                 &#34;rx_multicast&#34;, &#34;rx_octets&#34;, &#34;rx_unicast&#34;, &#34;tx_broadcast&#34;,
-                                 &#34;tx_discards&#34;, &#34;tx_errors&#34;, &#34;tx_multicast&#34;, &#34;tx_octets&#34;, &#34;tx_unicast&#34;]
+                                 &#34;rx_multicast&#34;, &#34;rx_octets&#34;, &#34;rx_unicast&#34;,
+                                 &#34;tx_discards&#34;, &#34;tx_errors&#34;, &#34;tx_octets&#34;, &#34;tx_unicast&#34;]
         wider_header_columns = [&#34;interface&#34;]
-        if not all_results_aggregation.failed:
+        dest_file_path = Path(Path.cwd() / &#39;export&#39; / &#34;excel&#34; / f&#34;packets_counter.xlsx&#34;)
+        try:
+            all_results_aggregation: AggregatedResult = nornir_devices.run(
+                task=napalm_get, name=&#34;Get interfaces packet counters&#34;, getters=[&#34;interfaces_counters&#34;])
             parser = NetworkInfoParser()
             parser.parse_interfaces_packet_counters_data(all_results_aggregation)
-            exporter = ExcelExporter(Workbook(), list(all_results_aggregation.keys())[0], dest_file_path)
+            first_host = list(all_results_aggregation.keys())[0]
+            exporter = ExcelExporter(Workbook(), first_host, dest_file_path)
             for host in all_results_aggregation:
                 sheet_name = host
                 exporter.create_sheet(sheet_name)
@@ -105,20 +120,26 @@ class NetworkInfoExporter:
                 row = 2
                 column = 1
                 exporter.write_header(sorted_headers_export, wider_header_columns, row, column)
-                intefaces_data = all_results_aggregation[host][1].result[&#39;interfaces_counters&#39;]
-                for interface in sorted(intefaces_data):
-                    interface_dict = intefaces_data[interface]
+                interfaces_data = all_results_aggregation[host][0].result[&#39;interfaces_counters&#39;]
+                host_interfaces_lst = []
+                for interface in sorted(interfaces_data):
+                    interface_dict = interfaces_data[interface]
                     interface_dict[&#39;interface&#39;] = interface
-                    exporter.write_data(sorted_headers_export, [interface_dict], row, column)
-                    row += 1
+                    host_interfaces_lst.append(interface_dict)
+                exporter.write_data(sorted_headers_export, host_interfaces_lst, row, column)
             exporter.save_xlsx_file()
-        else:
-            print(f&#34;{Fore.RED}Export failed - more in nornir.log&#34;)
+        except (ValueError, NornirExecutionError) as err:
+            print(f&#34;{Fore.RED}Export interfaces packet counters to {dest_file_path.name} failed.&#34;)
+            print(err)
+        except OSError as err:
+            print(f&#34;{Fore.RED}Export interfaces packet counters to {dest_file_path.name} failed.&#34;)
+            print(f&#34;{Fore.RED}Error: Creating directories for specified path {dest_file_path.parent} failed.&#34;)
+
 
     def export_device_configuration(self, task: Task) -&gt; None:
         &#34;&#34;&#34;
-        Export současné (running) konfigurace síťových prvků do .txt souborů.
-        Export je proveden paralelně. Výsledná cesta je ./export/running_configuration/{konkrétní host}.txt (při spuštění skriptu na GNU/Linux).
+        Export současné (running) konfigurace síťových prvků do .conf souborů.
+        Export je proveden paralelně. Výsledná cesta je ./export/running_configuration/{konkrétní host}.conf (při spuštění skriptu na GNU/Linux).
 
         Args:
             task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
@@ -127,12 +148,11 @@ class NetworkInfoExporter:
             None
 
         &#34;&#34;&#34;
-        collector = NetworkInfoCollector()
-        result = collector.get_device_configuration(task)
+        result = task.run(task=napalm_get, name=&#34;Get configuration&#34;, getters=[&#34;config&#34;])
         if not result.failed:
             running_configuration = result[0].result[&#34;config&#34;][&#39;running&#39;].strip()
-            file_path = Path(Path.cwd() / &#39;export&#39; / &#34;running_configuration&#34; / f&#34;{task.host.name}.txt&#34;)
-            exporter = TextFileExporter(file_path, running_configuration)
+            file_path = Path(Path.cwd() / &#39;export&#39; / &#34;running_configuration&#34; / f&#34;{task.host.name}.conf&#34;)
+            exporter = FileExporter(file_path, running_configuration)
             exporter.export_to_file()
         else:
             print(f&#34;{Fore.RED}Export failed for host {task.host.name} more in nornir.log&#34;)
@@ -161,7 +181,8 @@ class NetworkInfoExporter:
         elif task.host[&#39;vendor&#39;] == &#34;juniper&#34; and task.host[&#39;dev_type&#39;] == &#34;router&#34;:
             command = &#34;show route&#34;
         else:
-            raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
+            print(f&#34;{Fore.RED}Export failed for host {task.host.name} - not implemented for that vendor.&#34;)
+            raise NornirSubTaskError(f&#34;Function was not implemented for vendor {task.host.name}.&#34;, task)
         result = task.run(task=netmiko_send_command, name=&#34;Get IP routes&#34;, command_string=command)
         if not result.failed:
             ipv4_routes = result[0].result
@@ -170,7 +191,7 @@ class NetworkInfoExporter:
                 ipv4_routes = parser.get_parsed_juniper_routes(result)
             if ipv4_routes != &#34;&#34;:
                 file_path = Path(Path.cwd() / &#39;export&#39; / &#34;ip_routes&#34; / f&#34;{task.host.name}_ipv4.txt&#34;)
-                exporter = TextFileExporter(file_path, ipv4_routes)
+                exporter = FileExporter(file_path, ipv4_routes)
                 exporter.export_to_file()
             else:
                 print(f&#34;{Fore.RED}{task.host.name}: No IPv4 routes are defined.&#34;)
@@ -201,7 +222,8 @@ class NetworkInfoExporter:
         elif task.host[&#39;vendor&#39;] == &#34;juniper&#34; and task.host[&#39;dev_type&#39;] == &#34;router&#34;:
             command = &#34;show route&#34;
         else:
-            raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
+            print(f&#34;{Fore.RED}Export failed for host {task.host.name} - not implemented for that vendor.&#34;)
+            raise NornirSubTaskError(f&#34;Function was not implemented for vendor {task.host.name}.&#34;, task)
         result = task.run(task=netmiko_send_command, name=&#34;Get IP routes&#34;, command_string=command)
         if not result.failed:
             ipv6_routes = result[0].result
@@ -210,7 +232,7 @@ class NetworkInfoExporter:
                 ipv6_routes = parser.get_parsed_juniper_routes(result, ipv6_routes=True)
             if ipv6_routes != &#34;&#34;:
                 file_path = Path(Path.cwd() / &#39;export&#39; / &#34;ip_routes&#34; / f&#34;{task.host.name}_ipv6.txt&#34;)
-                exporter = TextFileExporter(file_path, ipv6_routes)
+                exporter = FileExporter(file_path, ipv6_routes)
                 exporter.export_to_file()
             else:
                 print(f&#34;{Fore.RED}{task.host.name}: No IPv6 routes are defined.&#34;)
@@ -241,14 +263,15 @@ class NetworkInfoExporter:
         elif task.host[&#39;vendor&#39;] == &#34;juniper&#34; and task.host[&#39;dev_type&#39;] == &#34;router&#34;:
             command = &#34;show firewall&#34;
         else:
-            raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
+            print(f&#34;{Fore.RED}Export failed for host {task.host.name} - not implemented for that vendor.&#34;)
+            raise NornirSubTaskError(f&#34;Function was not implemented for vendor {task.host.name}.&#34;, task)
         result = task.run(task=netmiko_send_config, name=&#34;Get packet filters info&#34;, config_commands=[command])
         if not result.failed:
             parser = NetworkInfoParser()
             packet_filter_info = parser.get_parsed_packet_filter_data(task.host[&#39;vendor&#39;], result)
             if packet_filter_info != &#34;&#34;:
                 file_path = Path(Path.cwd() / &#39;export&#39; / &#34;packet_filter&#34; / f&#34;{task.host.name}.txt&#34;)
-                exporter = TextFileExporter(file_path, packet_filter_info)
+                exporter = FileExporter(file_path, packet_filter_info)
                 exporter.export_to_file()
             else:
                 print(f&#34;{Fore.RED}{task.host.name}: No packet filter is defined.&#34;)
@@ -267,9 +290,22 @@ class NetworkInfoExporter:
 <dl>
 <dt id="scripts.utility.network_info_exporter.NetworkInfoExporter"><code class="flex name class">
 <span>class <span class="ident">NetworkInfoExporter</span></span>
+<span>(</span><span>info_collector: <a title="scripts.utility.network_info_collector.NetworkInfoCollector" href="network_info_collector.html#scripts.utility.network_info_collector.NetworkInfoCollector">NetworkInfoCollector</a>)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Třída která umožňuje exportovat data ze síťových zařízení.</p></div>
+<div class="desc"><p>Třída která umožňuje exportovat data ze síťových zařízení.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>info_collector</code></strong> :&ensp;<code>NetworkInfoCollector</code></dt>
+<dd>objekt, který slouží k obdržení komplexních dat ze síťových prvků - např. při paralelním slučování
+několika MultiResult objektů z více Nornir podúloh (subtasků) s jiným typem přístupu k NAPALM knihovně.</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>info_collector</code></strong> :&ensp;<code>NetworkInfoCollector</code></dt>
+<dd>objekt, který slouží k obdržení komplexních dat ze síťových prvků - např. při paralelním slučování
+několika MultiResult objektů z více Nornir podúloh (subtasků) s jiným typem přístupu k NAPALM knihovn</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -277,58 +313,75 @@ class NetworkInfoExporter:
 <pre><code class="python">class NetworkInfoExporter:
     &#34;&#34;&#34;
     Třída která umožňuje exportovat data ze síťových zařízení.
+
+    Args:
+        info_collector (NetworkInfoCollector): objekt, který slouží k obdržení komplexních dat ze síťových prvků - např. při paralelním slučování
+                                               několika MultiResult objektů z více Nornir podúloh (subtasků) s jiným typem přístupu k NAPALM knihovně.
+
+
+    Attributes:
+         info_collector (NetworkInfoCollector): objekt, který slouží k obdržení komplexních dat ze síťových prvků - např. při paralelním slučování
+                                               několika MultiResult objektů z více Nornir podúloh (subtasků) s jiným typem přístupu k NAPALM knihovn
+
     &#34;&#34;&#34;
 
-    def export_device_facts(self, nornir_devices: Nornir, dest_file_path: Path) -&gt; None:
+    def __init__(self, info_collector: NetworkInfoCollector):
+        self._info_collector = info_collector
+
+    def export_device_facts(self, nornir_devices: Nornir) -&gt; None:
         &#34;&#34;&#34;
         Export základních údajů jednotlivých zařízení do .xlsx souboru.
 
         Args:
             nornir_devices (Nornir): filtrovaný Nornir objekt umožňující na daných zařízeních volat nornir úkoly.
-            dest_file_path: (Path): cesta k výslednému .xlsx souboru.
 
         Returns:
             None
 
         &#34;&#34;&#34;
-        info_collector = NetworkInfoCollector()
-        all_results_aggregation: AggregatedResult = nornir_devices.run(
-            task=info_collector.get_conn_state_and_device_facts)
+        # TODO 1
         sorted_headers_export = [&#34;hostname&#34;, &#34;FQDN&#34;, &#34;vendor&#34;, &#34;serial_number&#34;, &#34;os_version&#34;, &#34;uptime&#34;, &#34;connection&#34;]
         wider_header_columns = [&#34;os_version&#34;, &#34;FQDN&#34;]
-        if not all_results_aggregation.failed:
+        dest_file_path = Path(Path.cwd() / &#39;export&#39; / &#34;excel&#34; / &#34;facts.xlsx&#34;)
+        try:
+            all_results_aggregation: AggregatedResult = nornir_devices.run(
+                task=self._info_collector.get_conn_state_and_device_facts)
             exporter = ExcelExporter(Workbook(), &#34;Základní informace o zařízeních&#34;, dest_file_path)
             parser = NetworkInfoParser()
             parsed_data = parser.get_parsed_facts_data(all_results_aggregation)
             exporter.write_header(sorted_headers_export, wider_header_columns)
             exporter.write_data(sorted_headers_export, parsed_data)
             exporter.save_xlsx_file()
-        else:
-            print(f&#34;{Fore.RED}Export failed - more in nornir.log&#34;)
+        except (NornirExecutionError, OSError, ValueError) as err:
+            print(f&#34;{Fore.RED}Export device facts to {dest_file_path.name} failed.&#34;)
+            print(err)
 
-    def export_interfaces_packet_counters(self, nornir_devices: Nornir, dest_file_path: Path) -&gt; None:
+
+    def export_interfaces_packet_counters(self, nornir_devices: Nornir) -&gt; None:
         &#34;&#34;&#34;
          Export statistik týkající se přijímání a vysílání paketů pro jednotlivá rozhraní síťových zařízení. Statistiky jsou exportovány do .xslx souboru.
+         Tx_broadcast a tx_multicast nejsou exportovány vůbec (NAPALM momentálně nepodporuje tyto statistiky - \n
+         U vývojáři nedefinovaných regexů vychází vždy daná statistika -1 (platí pro tx_broadcast, tx_multicast a několik paket counterů u Juniper Olive).
 
          Args:
              nornir_devices (Nornir): filtrovaný Nornir objekt umožňující na daných zařízeních volat nornir úkoly.
-             dest_file_path: (Path): cesta k výslednému .xlsx souboru.
 
          Returns:
              None
 
          &#34;&#34;&#34;
-        info_collector = NetworkInfoCollector()
-        all_results_aggregation: AggregatedResult = nornir_devices.run(
-            task=info_collector.get_interfaces_packet_counters)
         sorted_headers_export = [&#34;interface&#34;, &#34;rx_broadcast&#34;, &#34;rx_discards&#34;, &#34;rx_errors&#34;,
-                                 &#34;rx_multicast&#34;, &#34;rx_octets&#34;, &#34;rx_unicast&#34;, &#34;tx_broadcast&#34;,
-                                 &#34;tx_discards&#34;, &#34;tx_errors&#34;, &#34;tx_multicast&#34;, &#34;tx_octets&#34;, &#34;tx_unicast&#34;]
+                                 &#34;rx_multicast&#34;, &#34;rx_octets&#34;, &#34;rx_unicast&#34;,
+                                 &#34;tx_discards&#34;, &#34;tx_errors&#34;, &#34;tx_octets&#34;, &#34;tx_unicast&#34;]
         wider_header_columns = [&#34;interface&#34;]
-        if not all_results_aggregation.failed:
+        dest_file_path = Path(Path.cwd() / &#39;export&#39; / &#34;excel&#34; / f&#34;packets_counter.xlsx&#34;)
+        try:
+            all_results_aggregation: AggregatedResult = nornir_devices.run(
+                task=napalm_get, name=&#34;Get interfaces packet counters&#34;, getters=[&#34;interfaces_counters&#34;])
             parser = NetworkInfoParser()
             parser.parse_interfaces_packet_counters_data(all_results_aggregation)
-            exporter = ExcelExporter(Workbook(), list(all_results_aggregation.keys())[0], dest_file_path)
+            first_host = list(all_results_aggregation.keys())[0]
+            exporter = ExcelExporter(Workbook(), first_host, dest_file_path)
             for host in all_results_aggregation:
                 sheet_name = host
                 exporter.create_sheet(sheet_name)
@@ -336,20 +389,26 @@ class NetworkInfoExporter:
                 row = 2
                 column = 1
                 exporter.write_header(sorted_headers_export, wider_header_columns, row, column)
-                intefaces_data = all_results_aggregation[host][1].result[&#39;interfaces_counters&#39;]
-                for interface in sorted(intefaces_data):
-                    interface_dict = intefaces_data[interface]
+                interfaces_data = all_results_aggregation[host][0].result[&#39;interfaces_counters&#39;]
+                host_interfaces_lst = []
+                for interface in sorted(interfaces_data):
+                    interface_dict = interfaces_data[interface]
                     interface_dict[&#39;interface&#39;] = interface
-                    exporter.write_data(sorted_headers_export, [interface_dict], row, column)
-                    row += 1
+                    host_interfaces_lst.append(interface_dict)
+                exporter.write_data(sorted_headers_export, host_interfaces_lst, row, column)
             exporter.save_xlsx_file()
-        else:
-            print(f&#34;{Fore.RED}Export failed - more in nornir.log&#34;)
+        except (ValueError, NornirExecutionError) as err:
+            print(f&#34;{Fore.RED}Export interfaces packet counters to {dest_file_path.name} failed.&#34;)
+            print(err)
+        except OSError as err:
+            print(f&#34;{Fore.RED}Export interfaces packet counters to {dest_file_path.name} failed.&#34;)
+            print(f&#34;{Fore.RED}Error: Creating directories for specified path {dest_file_path.parent} failed.&#34;)
+
 
     def export_device_configuration(self, task: Task) -&gt; None:
         &#34;&#34;&#34;
-        Export současné (running) konfigurace síťových prvků do .txt souborů.
-        Export je proveden paralelně. Výsledná cesta je ./export/running_configuration/{konkrétní host}.txt (při spuštění skriptu na GNU/Linux).
+        Export současné (running) konfigurace síťových prvků do .conf souborů.
+        Export je proveden paralelně. Výsledná cesta je ./export/running_configuration/{konkrétní host}.conf (při spuštění skriptu na GNU/Linux).
 
         Args:
             task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
@@ -358,12 +417,11 @@ class NetworkInfoExporter:
             None
 
         &#34;&#34;&#34;
-        collector = NetworkInfoCollector()
-        result = collector.get_device_configuration(task)
+        result = task.run(task=napalm_get, name=&#34;Get configuration&#34;, getters=[&#34;config&#34;])
         if not result.failed:
             running_configuration = result[0].result[&#34;config&#34;][&#39;running&#39;].strip()
-            file_path = Path(Path.cwd() / &#39;export&#39; / &#34;running_configuration&#34; / f&#34;{task.host.name}.txt&#34;)
-            exporter = TextFileExporter(file_path, running_configuration)
+            file_path = Path(Path.cwd() / &#39;export&#39; / &#34;running_configuration&#34; / f&#34;{task.host.name}.conf&#34;)
+            exporter = FileExporter(file_path, running_configuration)
             exporter.export_to_file()
         else:
             print(f&#34;{Fore.RED}Export failed for host {task.host.name} more in nornir.log&#34;)
@@ -392,7 +450,8 @@ class NetworkInfoExporter:
         elif task.host[&#39;vendor&#39;] == &#34;juniper&#34; and task.host[&#39;dev_type&#39;] == &#34;router&#34;:
             command = &#34;show route&#34;
         else:
-            raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
+            print(f&#34;{Fore.RED}Export failed for host {task.host.name} - not implemented for that vendor.&#34;)
+            raise NornirSubTaskError(f&#34;Function was not implemented for vendor {task.host.name}.&#34;, task)
         result = task.run(task=netmiko_send_command, name=&#34;Get IP routes&#34;, command_string=command)
         if not result.failed:
             ipv4_routes = result[0].result
@@ -401,7 +460,7 @@ class NetworkInfoExporter:
                 ipv4_routes = parser.get_parsed_juniper_routes(result)
             if ipv4_routes != &#34;&#34;:
                 file_path = Path(Path.cwd() / &#39;export&#39; / &#34;ip_routes&#34; / f&#34;{task.host.name}_ipv4.txt&#34;)
-                exporter = TextFileExporter(file_path, ipv4_routes)
+                exporter = FileExporter(file_path, ipv4_routes)
                 exporter.export_to_file()
             else:
                 print(f&#34;{Fore.RED}{task.host.name}: No IPv4 routes are defined.&#34;)
@@ -432,7 +491,8 @@ class NetworkInfoExporter:
         elif task.host[&#39;vendor&#39;] == &#34;juniper&#34; and task.host[&#39;dev_type&#39;] == &#34;router&#34;:
             command = &#34;show route&#34;
         else:
-            raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
+            print(f&#34;{Fore.RED}Export failed for host {task.host.name} - not implemented for that vendor.&#34;)
+            raise NornirSubTaskError(f&#34;Function was not implemented for vendor {task.host.name}.&#34;, task)
         result = task.run(task=netmiko_send_command, name=&#34;Get IP routes&#34;, command_string=command)
         if not result.failed:
             ipv6_routes = result[0].result
@@ -441,7 +501,7 @@ class NetworkInfoExporter:
                 ipv6_routes = parser.get_parsed_juniper_routes(result, ipv6_routes=True)
             if ipv6_routes != &#34;&#34;:
                 file_path = Path(Path.cwd() / &#39;export&#39; / &#34;ip_routes&#34; / f&#34;{task.host.name}_ipv6.txt&#34;)
-                exporter = TextFileExporter(file_path, ipv6_routes)
+                exporter = FileExporter(file_path, ipv6_routes)
                 exporter.export_to_file()
             else:
                 print(f&#34;{Fore.RED}{task.host.name}: No IPv6 routes are defined.&#34;)
@@ -472,14 +532,15 @@ class NetworkInfoExporter:
         elif task.host[&#39;vendor&#39;] == &#34;juniper&#34; and task.host[&#39;dev_type&#39;] == &#34;router&#34;:
             command = &#34;show firewall&#34;
         else:
-            raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
+            print(f&#34;{Fore.RED}Export failed for host {task.host.name} - not implemented for that vendor.&#34;)
+            raise NornirSubTaskError(f&#34;Function was not implemented for vendor {task.host.name}.&#34;, task)
         result = task.run(task=netmiko_send_config, name=&#34;Get packet filters info&#34;, config_commands=[command])
         if not result.failed:
             parser = NetworkInfoParser()
             packet_filter_info = parser.get_parsed_packet_filter_data(task.host[&#39;vendor&#39;], result)
             if packet_filter_info != &#34;&#34;:
                 file_path = Path(Path.cwd() / &#39;export&#39; / &#34;packet_filter&#34; / f&#34;{task.host.name}.txt&#34;)
-                exporter = TextFileExporter(file_path, packet_filter_info)
+                exporter = FileExporter(file_path, packet_filter_info)
                 exporter.export_to_file()
             else:
                 print(f&#34;{Fore.RED}{task.host.name}: No packet filter is defined.&#34;)
@@ -492,8 +553,8 @@ class NetworkInfoExporter:
 <span>def <span class="ident">export_device_configuration</span></span>(<span>self, task: nornir.core.task.Task) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Export současné (running) konfigurace síťových prvků do .txt souborů.
-Export je proveden paralelně. Výsledná cesta je ./export/running_configuration/{konkrétní host}.txt (při spuštění skriptu na GNU/Linux).</p>
+<div class="desc"><p>Export současné (running) konfigurace síťových prvků do .conf souborů.
+Export je proveden paralelně. Výsledná cesta je ./export/running_configuration/{konkrétní host}.conf (při spuštění skriptu na GNU/Linux).</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
@@ -507,8 +568,8 @@ Export je proveden paralelně. Výsledná cesta je ./export/running_configuratio
 </summary>
 <pre><code class="python">def export_device_configuration(self, task: Task) -&gt; None:
     &#34;&#34;&#34;
-    Export současné (running) konfigurace síťových prvků do .txt souborů.
-    Export je proveden paralelně. Výsledná cesta je ./export/running_configuration/{konkrétní host}.txt (při spuštění skriptu na GNU/Linux).
+    Export současné (running) konfigurace síťových prvků do .conf souborů.
+    Export je proveden paralelně. Výsledná cesta je ./export/running_configuration/{konkrétní host}.conf (při spuštění skriptu na GNU/Linux).
 
     Args:
         task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
@@ -517,19 +578,18 @@ Export je proveden paralelně. Výsledná cesta je ./export/running_configuratio
         None
 
     &#34;&#34;&#34;
-    collector = NetworkInfoCollector()
-    result = collector.get_device_configuration(task)
+    result = task.run(task=napalm_get, name=&#34;Get configuration&#34;, getters=[&#34;config&#34;])
     if not result.failed:
         running_configuration = result[0].result[&#34;config&#34;][&#39;running&#39;].strip()
-        file_path = Path(Path.cwd() / &#39;export&#39; / &#34;running_configuration&#34; / f&#34;{task.host.name}.txt&#34;)
-        exporter = TextFileExporter(file_path, running_configuration)
+        file_path = Path(Path.cwd() / &#39;export&#39; / &#34;running_configuration&#34; / f&#34;{task.host.name}.conf&#34;)
+        exporter = FileExporter(file_path, running_configuration)
         exporter.export_to_file()
     else:
         print(f&#34;{Fore.RED}Export failed for host {task.host.name} more in nornir.log&#34;)</code></pre>
 </details>
 </dd>
 <dt id="scripts.utility.network_info_exporter.NetworkInfoExporter.export_device_facts"><code class="name flex">
-<span>def <span class="ident">export_device_facts</span></span>(<span>self, nornir_devices: nornir.core.Nornir, dest_file_path: pathlib.Path) ‑> NoneType</span>
+<span>def <span class="ident">export_device_facts</span></span>(<span>self, nornir_devices: nornir.core.Nornir) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Export základních údajů jednotlivých zařízení do .xlsx souboru.</p>
@@ -537,8 +597,6 @@ Export je proveden paralelně. Výsledná cesta je ./export/running_configuratio
 <dl>
 <dt><strong><code>nornir_devices</code></strong> :&ensp;<code>Nornir</code></dt>
 <dd>filtrovaný Nornir objekt umožňující na daných zařízeních volat nornir úkoly.</dd>
-<dt><strong><code>dest_file_path</code></strong></dt>
-<dd>(Path): cesta k výslednému .xlsx souboru.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <p>None</p></div>
@@ -546,45 +604,46 @@ Export je proveden paralelně. Výsledná cesta je ./export/running_configuratio
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def export_device_facts(self, nornir_devices: Nornir, dest_file_path: Path) -&gt; None:
+<pre><code class="python">def export_device_facts(self, nornir_devices: Nornir) -&gt; None:
     &#34;&#34;&#34;
     Export základních údajů jednotlivých zařízení do .xlsx souboru.
 
     Args:
         nornir_devices (Nornir): filtrovaný Nornir objekt umožňující na daných zařízeních volat nornir úkoly.
-        dest_file_path: (Path): cesta k výslednému .xlsx souboru.
 
     Returns:
         None
 
     &#34;&#34;&#34;
-    info_collector = NetworkInfoCollector()
-    all_results_aggregation: AggregatedResult = nornir_devices.run(
-        task=info_collector.get_conn_state_and_device_facts)
+    # TODO 1
     sorted_headers_export = [&#34;hostname&#34;, &#34;FQDN&#34;, &#34;vendor&#34;, &#34;serial_number&#34;, &#34;os_version&#34;, &#34;uptime&#34;, &#34;connection&#34;]
     wider_header_columns = [&#34;os_version&#34;, &#34;FQDN&#34;]
-    if not all_results_aggregation.failed:
+    dest_file_path = Path(Path.cwd() / &#39;export&#39; / &#34;excel&#34; / &#34;facts.xlsx&#34;)
+    try:
+        all_results_aggregation: AggregatedResult = nornir_devices.run(
+            task=self._info_collector.get_conn_state_and_device_facts)
         exporter = ExcelExporter(Workbook(), &#34;Základní informace o zařízeních&#34;, dest_file_path)
         parser = NetworkInfoParser()
         parsed_data = parser.get_parsed_facts_data(all_results_aggregation)
         exporter.write_header(sorted_headers_export, wider_header_columns)
         exporter.write_data(sorted_headers_export, parsed_data)
         exporter.save_xlsx_file()
-    else:
-        print(f&#34;{Fore.RED}Export failed - more in nornir.log&#34;)</code></pre>
+    except (NornirExecutionError, OSError, ValueError) as err:
+        print(f&#34;{Fore.RED}Export device facts to {dest_file_path.name} failed.&#34;)
+        print(err)</code></pre>
 </details>
 </dd>
 <dt id="scripts.utility.network_info_exporter.NetworkInfoExporter.export_interfaces_packet_counters"><code class="name flex">
-<span>def <span class="ident">export_interfaces_packet_counters</span></span>(<span>self, nornir_devices: nornir.core.Nornir, dest_file_path: pathlib.Path) ‑> NoneType</span>
+<span>def <span class="ident">export_interfaces_packet_counters</span></span>(<span>self, nornir_devices: nornir.core.Nornir) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Export statistik týkající se přijímání a vysílání paketů pro jednotlivá rozhraní síťových zařízení. Statistiky jsou exportovány do .xslx souboru.</p>
+<div class="desc"><p>Export statistik týkající se přijímání a vysílání paketů pro jednotlivá rozhraní síťových zařízení. Statistiky jsou exportovány do .xslx souboru.
+Tx_broadcast a tx_multicast nejsou exportovány vůbec (NAPALM momentálně nepodporuje tyto statistiky - </p>
+<p>U vývojáři nedefinovaných regexů vychází vždy daná statistika -1 (platí pro tx_broadcast, tx_multicast a několik paket counterů u Juniper Olive).</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>nornir_devices</code></strong> :&ensp;<code>Nornir</code></dt>
 <dd>filtrovaný Nornir objekt umožňující na daných zařízeních volat nornir úkoly.</dd>
-<dt><strong><code>dest_file_path</code></strong></dt>
-<dd>(Path): cesta k výslednému .xlsx souboru.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <p>None</p></div>
@@ -592,29 +651,31 @@ Export je proveden paralelně. Výsledná cesta je ./export/running_configuratio
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def export_interfaces_packet_counters(self, nornir_devices: Nornir, dest_file_path: Path) -&gt; None:
+<pre><code class="python">def export_interfaces_packet_counters(self, nornir_devices: Nornir) -&gt; None:
     &#34;&#34;&#34;
      Export statistik týkající se přijímání a vysílání paketů pro jednotlivá rozhraní síťových zařízení. Statistiky jsou exportovány do .xslx souboru.
+     Tx_broadcast a tx_multicast nejsou exportovány vůbec (NAPALM momentálně nepodporuje tyto statistiky - \n
+     U vývojáři nedefinovaných regexů vychází vždy daná statistika -1 (platí pro tx_broadcast, tx_multicast a několik paket counterů u Juniper Olive).
 
      Args:
          nornir_devices (Nornir): filtrovaný Nornir objekt umožňující na daných zařízeních volat nornir úkoly.
-         dest_file_path: (Path): cesta k výslednému .xlsx souboru.
 
      Returns:
          None
 
      &#34;&#34;&#34;
-    info_collector = NetworkInfoCollector()
-    all_results_aggregation: AggregatedResult = nornir_devices.run(
-        task=info_collector.get_interfaces_packet_counters)
     sorted_headers_export = [&#34;interface&#34;, &#34;rx_broadcast&#34;, &#34;rx_discards&#34;, &#34;rx_errors&#34;,
-                             &#34;rx_multicast&#34;, &#34;rx_octets&#34;, &#34;rx_unicast&#34;, &#34;tx_broadcast&#34;,
-                             &#34;tx_discards&#34;, &#34;tx_errors&#34;, &#34;tx_multicast&#34;, &#34;tx_octets&#34;, &#34;tx_unicast&#34;]
+                             &#34;rx_multicast&#34;, &#34;rx_octets&#34;, &#34;rx_unicast&#34;,
+                             &#34;tx_discards&#34;, &#34;tx_errors&#34;, &#34;tx_octets&#34;, &#34;tx_unicast&#34;]
     wider_header_columns = [&#34;interface&#34;]
-    if not all_results_aggregation.failed:
+    dest_file_path = Path(Path.cwd() / &#39;export&#39; / &#34;excel&#34; / f&#34;packets_counter.xlsx&#34;)
+    try:
+        all_results_aggregation: AggregatedResult = nornir_devices.run(
+            task=napalm_get, name=&#34;Get interfaces packet counters&#34;, getters=[&#34;interfaces_counters&#34;])
         parser = NetworkInfoParser()
         parser.parse_interfaces_packet_counters_data(all_results_aggregation)
-        exporter = ExcelExporter(Workbook(), list(all_results_aggregation.keys())[0], dest_file_path)
+        first_host = list(all_results_aggregation.keys())[0]
+        exporter = ExcelExporter(Workbook(), first_host, dest_file_path)
         for host in all_results_aggregation:
             sheet_name = host
             exporter.create_sheet(sheet_name)
@@ -622,15 +683,20 @@ Export je proveden paralelně. Výsledná cesta je ./export/running_configuratio
             row = 2
             column = 1
             exporter.write_header(sorted_headers_export, wider_header_columns, row, column)
-            intefaces_data = all_results_aggregation[host][1].result[&#39;interfaces_counters&#39;]
-            for interface in sorted(intefaces_data):
-                interface_dict = intefaces_data[interface]
+            interfaces_data = all_results_aggregation[host][0].result[&#39;interfaces_counters&#39;]
+            host_interfaces_lst = []
+            for interface in sorted(interfaces_data):
+                interface_dict = interfaces_data[interface]
                 interface_dict[&#39;interface&#39;] = interface
-                exporter.write_data(sorted_headers_export, [interface_dict], row, column)
-                row += 1
+                host_interfaces_lst.append(interface_dict)
+            exporter.write_data(sorted_headers_export, host_interfaces_lst, row, column)
         exporter.save_xlsx_file()
-    else:
-        print(f&#34;{Fore.RED}Export failed - more in nornir.log&#34;)</code></pre>
+    except (ValueError, NornirExecutionError) as err:
+        print(f&#34;{Fore.RED}Export interfaces packet counters to {dest_file_path.name} failed.&#34;)
+        print(err)
+    except OSError as err:
+        print(f&#34;{Fore.RED}Export interfaces packet counters to {dest_file_path.name} failed.&#34;)
+        print(f&#34;{Fore.RED}Error: Creating directories for specified path {dest_file_path.parent} failed.&#34;)</code></pre>
 </details>
 </dd>
 <dt id="scripts.utility.network_info_exporter.NetworkInfoExporter.export_ipv4_routes"><code class="name flex">
@@ -681,7 +747,8 @@ export na nepodporovaných zařízeních.</dd>
     elif task.host[&#39;vendor&#39;] == &#34;juniper&#34; and task.host[&#39;dev_type&#39;] == &#34;router&#34;:
         command = &#34;show route&#34;
     else:
-        raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
+        print(f&#34;{Fore.RED}Export failed for host {task.host.name} - not implemented for that vendor.&#34;)
+        raise NornirSubTaskError(f&#34;Function was not implemented for vendor {task.host.name}.&#34;, task)
     result = task.run(task=netmiko_send_command, name=&#34;Get IP routes&#34;, command_string=command)
     if not result.failed:
         ipv4_routes = result[0].result
@@ -690,7 +757,7 @@ export na nepodporovaných zařízeních.</dd>
             ipv4_routes = parser.get_parsed_juniper_routes(result)
         if ipv4_routes != &#34;&#34;:
             file_path = Path(Path.cwd() / &#39;export&#39; / &#34;ip_routes&#34; / f&#34;{task.host.name}_ipv4.txt&#34;)
-            exporter = TextFileExporter(file_path, ipv4_routes)
+            exporter = FileExporter(file_path, ipv4_routes)
             exporter.export_to_file()
         else:
             print(f&#34;{Fore.RED}{task.host.name}: No IPv4 routes are defined.&#34;)
@@ -746,7 +813,8 @@ export na nepodporovaných zařízeních.</dd>
     elif task.host[&#39;vendor&#39;] == &#34;juniper&#34; and task.host[&#39;dev_type&#39;] == &#34;router&#34;:
         command = &#34;show route&#34;
     else:
-        raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
+        print(f&#34;{Fore.RED}Export failed for host {task.host.name} - not implemented for that vendor.&#34;)
+        raise NornirSubTaskError(f&#34;Function was not implemented for vendor {task.host.name}.&#34;, task)
     result = task.run(task=netmiko_send_command, name=&#34;Get IP routes&#34;, command_string=command)
     if not result.failed:
         ipv6_routes = result[0].result
@@ -755,7 +823,7 @@ export na nepodporovaných zařízeních.</dd>
             ipv6_routes = parser.get_parsed_juniper_routes(result, ipv6_routes=True)
         if ipv6_routes != &#34;&#34;:
             file_path = Path(Path.cwd() / &#39;export&#39; / &#34;ip_routes&#34; / f&#34;{task.host.name}_ipv6.txt&#34;)
-            exporter = TextFileExporter(file_path, ipv6_routes)
+            exporter = FileExporter(file_path, ipv6_routes)
             exporter.export_to_file()
         else:
             print(f&#34;{Fore.RED}{task.host.name}: No IPv6 routes are defined.&#34;)
@@ -811,14 +879,15 @@ export na nepodporovaných zařízeních.</dd>
     elif task.host[&#39;vendor&#39;] == &#34;juniper&#34; and task.host[&#39;dev_type&#39;] == &#34;router&#34;:
         command = &#34;show firewall&#34;
     else:
-        raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
+        print(f&#34;{Fore.RED}Export failed for host {task.host.name} - not implemented for that vendor.&#34;)
+        raise NornirSubTaskError(f&#34;Function was not implemented for vendor {task.host.name}.&#34;, task)
     result = task.run(task=netmiko_send_config, name=&#34;Get packet filters info&#34;, config_commands=[command])
     if not result.failed:
         parser = NetworkInfoParser()
         packet_filter_info = parser.get_parsed_packet_filter_data(task.host[&#39;vendor&#39;], result)
         if packet_filter_info != &#34;&#34;:
             file_path = Path(Path.cwd() / &#39;export&#39; / &#34;packet_filter&#34; / f&#34;{task.host.name}.txt&#34;)
-            exporter = TextFileExporter(file_path, packet_filter_info)
+            exporter = FileExporter(file_path, packet_filter_info)
             exporter.export_to_file()
         else:
             print(f&#34;{Fore.RED}{task.host.name}: No packet filter is defined.&#34;)

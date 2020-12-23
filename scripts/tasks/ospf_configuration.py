@@ -30,7 +30,7 @@ class OSPFConfiguration:
         task.host["ipv4_ospf"] = r.result
 
         task.run(task=napalm_configure,
-                 name="Loading OSPFv3 Configuration on the device",
+                 name="Loading OSPFv2 Configuration on the device",
                  replace=False,
                  configuration=task.host["ipv4_ospf"],
                  dry_run=dry_run)

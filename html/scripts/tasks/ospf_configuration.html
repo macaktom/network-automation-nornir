@@ -58,7 +58,7 @@ class OSPFConfiguration:
         task.host[&#34;ipv4_ospf&#34;] = r.result
 
         task.run(task=napalm_configure,
-                 name=&#34;Loading OSPFv3 Configuration on the device&#34;,
+                 name=&#34;Loading OSPFv2 Configuration on the device&#34;,
                  replace=False,
                  configuration=task.host[&#34;ipv4_ospf&#34;],
                  dry_run=dry_run)
@@ -134,7 +134,7 @@ class OSPFConfiguration:
         task.host[&#34;ipv4_ospf&#34;] = r.result
 
         task.run(task=napalm_configure,
-                 name=&#34;Loading OSPFv3 Configuration on the device&#34;,
+                 name=&#34;Loading OSPFv2 Configuration on the device&#34;,
                  replace=False,
                  configuration=task.host[&#34;ipv4_ospf&#34;],
                  dry_run=dry_run)
@@ -207,7 +207,7 @@ class OSPFConfiguration:
     task.host[&#34;ipv4_ospf&#34;] = r.result
 
     task.run(task=napalm_configure,
-             name=&#34;Loading OSPFv3 Configuration on the device&#34;,
+             name=&#34;Loading OSPFv2 Configuration on the device&#34;,
              replace=False,
              configuration=task.host[&#34;ipv4_ospf&#34;],
              dry_run=dry_run)</code></pre>

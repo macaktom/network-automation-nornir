@@ -28,20 +28,23 @@
 </summary>
 <pre><code class="python">from pathlib import Path
 
+from colorama import Fore
 
-class TextFileExporter:
+
+class FileExporter:
     &#34;&#34;&#34;
-    Třida pro exportování dat do formátu .txt.
+    Třida pro exportování dat do formátu .txt nebo .conf.
 
     Args:
-        file_path (Path): argument metody, obsahující cestu k exportovanému .txt souboru.
-        content (str): argument metody, obsahující data, která budou exportována do .txt souboru.
+        file_path (Path): argument metody, obsahující cestu k exportovanému .txt nebo .conf souboru.
+        content (str): argument metody, obsahující data, která budou exportována do .txt nebo .conf souboru.
 
     Attributes:
-         dest_file (Path): instanční proměnná, definující cestu k exportovanému .txt souboru.
-         content (str): instanční proměnná, definující data, která budou exportována do .txt souboru.
+         dest_file (Path): instanční proměnná, definující cestu k exportovanému .txt nebo .conf souboru.
+         content (str): instanční proměnná, definující data, která budou exportována do .txt nebo .conf souboru.
 
     &#34;&#34;&#34;
+
     def __init__(self, file_path: Path, content: str):
         self._dest_file = file_path
         self._content = content
@@ -53,31 +56,26 @@ class TextFileExporter:
         Složky jsou vytvořeny pouze tehdy, pokud nebyly dříve uživatelem vytvořeny.
 
         Args:
-            folder_path (Path): cesta obsahující všechny nadřazené složky, které jsou nutné pro nalezení výsledného .txt souboru
-
-        Raises:
-            OSError: Výjimka, která nastane pokud došlo k chybě při vytváření složek z definované cesty folder_path.
+            folder_path (Path): cesta obsahující všechny nadřazené složky, které jsou nutné pro nalezení výsledného .txt nebo .conf souboru
 
         Returns:
             None
         &#34;&#34;&#34;
-        try:
-            folder_path.mkdir(parents=True, exist_ok=True)
-        except OSError:
-            print(f&#34;Error: Creating directories for specified path {folder_path} failed.&#34;)
+
+        folder_path.mkdir(parents=True, exist_ok=True)
 
     def _check_full_file_path(self) -&gt; None:
         &#34;&#34;&#34;
-        Metoda, která zkontroluje, jestli je k instanční proměnné dest_file přiřazena validní cesta k .txt souboru.
+        Metoda, která zkontroluje, jestli je k instanční proměnné dest_file přiřazena validní cesta k .txt nebo .conf souboru.
         Dodatečně vytvoří požadované nadřazené složky, pokud už nejsou vytvořené za pomocí metody _create_parent_folders.
 
         Raises:
-            ValueError: Výjimka, která nastane pokud atribut dest_file není validní cestou k .txt souboru.
+            ValueError: Výjimka, která nastane pokud atribut dest_file není validní cestou k .txt nebo .conf souboru.
 
         Returns:
             None
         &#34;&#34;&#34;
-        if self._dest_file.suffix == &#34;.txt&#34;:
+        if self._dest_file.suffix == &#34;.txt&#34; or self._dest_file.suffix == &#34;.conf&#34;:
             folder_path = self._dest_file.parent
             self._create_parent_folders(folder_path)
         else:
@@ -97,7 +95,7 @@ class TextFileExporter:
         mode = &#34;a&#34; if append else &#34;w&#34;
         with open(self._dest_file, mode) as file:
             file.write(self._content)
-            print(f&#34;{self._dest_file.name} was exported successfully.&#34;)</code></pre>
+            print(f&#34;{Fore.GREEN}File {self._dest_file.relative_to(Path.cwd())} was exported successfully.&#34;)</code></pre>
 </details>
 </section>
 <section>
@@ -109,43 +107,44 @@ class TextFileExporter:
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="scripts.utility.text_file_exporter.TextFileExporter"><code class="flex name class">
-<span>class <span class="ident">TextFileExporter</span></span>
+<dt id="scripts.utility.text_file_exporter.FileExporter"><code class="flex name class">
+<span>class <span class="ident">FileExporter</span></span>
 <span>(</span><span>file_path: pathlib.Path, content: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Třida pro exportování dat do formátu .txt.</p>
+<div class="desc"><p>Třida pro exportování dat do formátu .txt nebo .conf.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>file_path</code></strong> :&ensp;<code>Path</code></dt>
-<dd>argument metody, obsahující cestu k exportovanému .txt souboru.</dd>
+<dd>argument metody, obsahující cestu k exportovanému .txt nebo .conf souboru.</dd>
 <dt><strong><code>content</code></strong> :&ensp;<code>str</code></dt>
-<dd>argument metody, obsahující data, která budou exportována do .txt souboru.</dd>
+<dd>argument metody, obsahující data, která budou exportována do .txt nebo .conf souboru.</dd>
 </dl>
 <h2 id="attributes">Attributes</h2>
 <dl>
 <dt><strong><code>dest_file</code></strong> :&ensp;<code>Path</code></dt>
-<dd>instanční proměnná, definující cestu k exportovanému .txt souboru.</dd>
+<dd>instanční proměnná, definující cestu k exportovanému .txt nebo .conf souboru.</dd>
 <dt><strong><code>content</code></strong> :&ensp;<code>str</code></dt>
-<dd>instanční proměnná, definující data, která budou exportována do .txt souboru.</dd>
+<dd>instanční proměnná, definující data, která budou exportována do .txt nebo .conf souboru.</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class TextFileExporter:
+<pre><code class="python">class FileExporter:
     &#34;&#34;&#34;
-    Třida pro exportování dat do formátu .txt.
+    Třida pro exportování dat do formátu .txt nebo .conf.
 
     Args:
-        file_path (Path): argument metody, obsahující cestu k exportovanému .txt souboru.
-        content (str): argument metody, obsahující data, která budou exportována do .txt souboru.
+        file_path (Path): argument metody, obsahující cestu k exportovanému .txt nebo .conf souboru.
+        content (str): argument metody, obsahující data, která budou exportována do .txt nebo .conf souboru.
 
     Attributes:
-         dest_file (Path): instanční proměnná, definující cestu k exportovanému .txt souboru.
-         content (str): instanční proměnná, definující data, která budou exportována do .txt souboru.
+         dest_file (Path): instanční proměnná, definující cestu k exportovanému .txt nebo .conf souboru.
+         content (str): instanční proměnná, definující data, která budou exportována do .txt nebo .conf souboru.
 
     &#34;&#34;&#34;
+
     def __init__(self, file_path: Path, content: str):
         self._dest_file = file_path
         self._content = content
@@ -157,31 +156,26 @@ class TextFileExporter:
         Složky jsou vytvořeny pouze tehdy, pokud nebyly dříve uživatelem vytvořeny.
 
         Args:
-            folder_path (Path): cesta obsahující všechny nadřazené složky, které jsou nutné pro nalezení výsledného .txt souboru
-
-        Raises:
-            OSError: Výjimka, která nastane pokud došlo k chybě při vytváření složek z definované cesty folder_path.
+            folder_path (Path): cesta obsahující všechny nadřazené složky, které jsou nutné pro nalezení výsledného .txt nebo .conf souboru
 
         Returns:
             None
         &#34;&#34;&#34;
-        try:
-            folder_path.mkdir(parents=True, exist_ok=True)
-        except OSError:
-            print(f&#34;Error: Creating directories for specified path {folder_path} failed.&#34;)
+
+        folder_path.mkdir(parents=True, exist_ok=True)
 
     def _check_full_file_path(self) -&gt; None:
         &#34;&#34;&#34;
-        Metoda, která zkontroluje, jestli je k instanční proměnné dest_file přiřazena validní cesta k .txt souboru.
+        Metoda, která zkontroluje, jestli je k instanční proměnné dest_file přiřazena validní cesta k .txt nebo .conf souboru.
         Dodatečně vytvoří požadované nadřazené složky, pokud už nejsou vytvořené za pomocí metody _create_parent_folders.
 
         Raises:
-            ValueError: Výjimka, která nastane pokud atribut dest_file není validní cestou k .txt souboru.
+            ValueError: Výjimka, která nastane pokud atribut dest_file není validní cestou k .txt nebo .conf souboru.
 
         Returns:
             None
         &#34;&#34;&#34;
-        if self._dest_file.suffix == &#34;.txt&#34;:
+        if self._dest_file.suffix == &#34;.txt&#34; or self._dest_file.suffix == &#34;.conf&#34;:
             folder_path = self._dest_file.parent
             self._create_parent_folders(folder_path)
         else:
@@ -201,11 +195,11 @@ class TextFileExporter:
         mode = &#34;a&#34; if append else &#34;w&#34;
         with open(self._dest_file, mode) as file:
             file.write(self._content)
-            print(f&#34;{self._dest_file.name} was exported successfully.&#34;)</code></pre>
+            print(f&#34;{Fore.GREEN}File {self._dest_file.relative_to(Path.cwd())} was exported successfully.&#34;)</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
-<dt id="scripts.utility.text_file_exporter.TextFileExporter.export_to_file"><code class="name flex">
+<dt id="scripts.utility.text_file_exporter.FileExporter.export_to_file"><code class="name flex">
 <span>def <span class="ident">export_to_file</span></span>(<span>self, append: bool = False) ‑> NoneType</span>
 </code></dt>
 <dd>
@@ -236,7 +230,7 @@ Defaultně nastaveno jako False (vytvoření nového souboru).</dd>
     mode = &#34;a&#34; if append else &#34;w&#34;
     with open(self._dest_file, mode) as file:
         file.write(self._content)
-        print(f&#34;{self._dest_file.name} was exported successfully.&#34;)</code></pre>
+        print(f&#34;{Fore.GREEN}File {self._dest_file.relative_to(Path.cwd())} was exported successfully.&#34;)</code></pre>
 </details>
 </dd>
 </dl>
@@ -258,9 +252,9 @@ Defaultně nastaveno jako False (vytvoření nového souboru).</dd>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="scripts.utility.text_file_exporter.TextFileExporter" href="#scripts.utility.text_file_exporter.TextFileExporter">TextFileExporter</a></code></h4>
+<h4><code><a title="scripts.utility.text_file_exporter.FileExporter" href="#scripts.utility.text_file_exporter.FileExporter">FileExporter</a></code></h4>
 <ul class="">
-<li><code><a title="scripts.utility.text_file_exporter.TextFileExporter.export_to_file" href="#scripts.utility.text_file_exporter.TextFileExporter.export_to_file">export_to_file</a></code></li>
+<li><code><a title="scripts.utility.text_file_exporter.FileExporter.export_to_file" href="#scripts.utility.text_file_exporter.FileExporter.export_to_file">export_to_file</a></code></li>
 </ul>
 </li>
 </ul>
