@@ -7321,3 +7321,1274 @@ nornir.core.exceptions.NornirSubTaskError: Subtask: Show device basic facts (fai
 2020-12-23 18:29:01,436 -  nornir.core -     INFO -        run() - Running task 'export_ipv6_routes' with args {} on 3 hosts
 2020-12-23 18:29:02,245 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
 2020-12-23 18:29:03,659 -  nornir.core -     INFO -        run() - Running task 'Get interfaces packet counters' with args {'getters': ['interfaces_counters']} on 3 hosts
+2020-12-23 20:05:16,453 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-23 20:06:23,142 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-23 20:07:33,368 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-23 20:08:55,297 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-23 20:09:50,758 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-23 20:10:01,507 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-23 20:12:26,537 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-23 20:14:29,121 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-23 20:14:39,047 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-23 20:18:06,077 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-23 20:19:24,275 -  nornir.core -     INFO -        run() - Running task 'Backup running configuration' with args {} on 3 hosts
+2020-12-23 20:21:06,205 -  nornir.core -     INFO -        run() - Running task 'Restore backed up configuration' with args {'dry_run': False} on 3 hosts
+2020-12-23 20:22:24,734 -  nornir.core -     INFO -        run() - Running task 'Restore backed up configuration' with args {'dry_run': False} on 3 hosts
+2020-12-23 20:32:24,813 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 1 hosts
+2020-12-23 20:32:34,808 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 1 hosts
+2020-12-23 20:32:40,929 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-23 20:33:07,335 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-23 20:33:14,048 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-23 21:21:01,085 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 1 hosts
+2020-12-23 21:21:04,712 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 1 hosts
+2020-12-23 21:21:11,234 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-23 21:21:17,982 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 1 hosts
+2020-12-23 21:21:23,859 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-23 21:21:30,551 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-23 21:21:35,651 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 1 hosts
+2020-12-23 21:21:42,594 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 1 hosts
+2020-12-23 21:22:11,531 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-24 08:06:21,779 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-24 08:06:24,876 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'Show device basic facts' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 1347, in open
+    self._conn = netconf_ssh.connect(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/manager.py", line 168, in connect
+    return connect_ssh(*args, **kwds)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/manager.py", line 135, in connect_ssh
+    session.connect(*args, **kwds)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/transport/ssh.py", line 291, in connect
+    raise SSHError("Could not open socket to %s:%s" % (host, port))
+ncclient.transport.errors.SSHError: Could not open socket to 10.10.10.4:22
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 127, in open
+    self.device.open(auto_probe=self.auto_probe)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 1385, in open
+    raise EzErrors.ConnectTimeoutError(self)
+jnpr.junos.exception.ConnectTimeoutError: ConnectTimeoutError(10.10.10.4)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_get.py", line 32, in napalm_get
+    device = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 440, in get_connection
+    self.open_connection(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 492, in open_connection
+    conn_obj.open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/connections/__init__.py", line 57, in open
+    connection.open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 129, in open
+    raise ConnectionException(cte.msg) from cte
+napalm.base.exceptions.ConnectionException: None
+
+2020-12-24 08:06:24,877 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'show_device_facts' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_viewer.py", line 236, in show_device_facts
+    result = task.run(task=napalm_get, name="Show device basic facts", getters=["facts"])
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Show device basic facts (failed)
+
+
+2020-12-24 08:08:17,237 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-24 08:14:46,592 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-24 08:15:00,836 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-24 08:25:58,602 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-24 08:43:11,048 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-24 09:45:44,091 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-24 10:39:38,713 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {} on 1 hosts
+2020-12-24 10:39:38,739 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'Delete Configuration Template Loading' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_jinja2/plugins/tasks/template_file.py", line 41, in template_file
+    text = t.render(host=task.host, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 1090, in render
+    self.environment.handle_exception()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "templates/juniper/router/delete_configuration.j2", line 22, in top-level template code
+    {% for interface in delete_config.packet_filter_config.interfaces %}
+jinja2.exceptions.UndefinedError: 'dict object' has no attribute 'interfaces'
+
+2020-12-24 10:39:38,739 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 23, in delete_configuration
+    r = task.run(task=template_file,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Delete Configuration Template Loading (failed)
+
+
+2020-12-24 10:40:35,121 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {} on 1 hosts
+2020-12-24 10:40:35,144 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'Delete Configuration Template Loading' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_jinja2/plugins/tasks/template_file.py", line 41, in template_file
+    text = t.render(host=task.host, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 1090, in render
+    self.environment.handle_exception()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "templates/juniper/router/delete_configuration.j2", line 22, in top-level template code
+    {% for interface in delete_config.packet_filter_config.interfaces %}
+jinja2.exceptions.UndefinedError: 'dict object' has no attribute 'interfaces'
+
+2020-12-24 10:40:35,145 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 23, in delete_configuration
+    r = task.run(task=template_file,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Delete Configuration Template Loading (failed)
+
+
+2020-12-24 10:41:32,152 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {} on 1 hosts
+2020-12-24 10:41:34,723 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'Loading Delete Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 834, in execute
+    rpc_rsp_e = self._rpc_reply(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 165, in wrapper
+    raise ex
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 117, in wrapper
+    rsp = function(self, *args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 1440, in _rpc_reply
+    return self._conn.rpc(rpc_cmd_e, filter_xml)._NCElement__doc
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/manager.py", line 226, in execute
+    return cls(self._session,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/third_party/juniper/rpc.py", line 52, in request
+    return self._request(rpc)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/rpc.py", line 360, in _request
+    raise self._reply.error
+ncclient.operations.rpc.RPCError: 
+configuration database modified
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 603, in lock
+    self.rpc.lock_configuration()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/rpcmeta.py", line 364, in _exec_rpc
+    return self._junos.execute(rpc, **dec_args)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 76, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 31, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 854, in execute
+    raise EzErrors.RpcError(cmd=rpc_cmd_e, rsp=rsp, errs=ex)
+jnpr.junos.exception.RpcError: RpcError(severity: error, bad_element: None, message: configuration database modified)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 150, in _lock
+    self.device.cu.lock()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 606, in lock
+    raise LockError(rsp=err.rsp)
+jnpr.junos.exception.LockError: LockError(severity: error, bad_element: None, message: configuration database modified)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 34, in napalm_configure
+    device.load_merge_candidate(filename=filename, config=configuration)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 269, in load_merge_candidate
+    self._load_candidate(filename, config, False)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 234, in _load_candidate
+    self._lock()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 153, in _lock
+    raise LockError(str(jle))
+napalm.base.exceptions.LockError: LockError(severity: error, bad_element: None, message: configuration database modified)
+
+2020-12-24 10:41:34,723 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 31, in delete_configuration
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading Delete Configuration on the device (failed)
+
+
+2020-12-24 10:42:15,562 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {} on 1 hosts
+2020-12-24 10:42:18,159 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'Loading Delete Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 834, in execute
+    rpc_rsp_e = self._rpc_reply(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 165, in wrapper
+    raise ex
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 117, in wrapper
+    rsp = function(self, *args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 1440, in _rpc_reply
+    return self._conn.rpc(rpc_cmd_e, filter_xml)._NCElement__doc
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/manager.py", line 226, in execute
+    return cls(self._session,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/third_party/juniper/rpc.py", line 52, in request
+    return self._request(rpc)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/rpc.py", line 360, in _request
+    raise self._reply.error
+ncclient.operations.rpc.RPCError: 
+configuration database modified
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 603, in lock
+    self.rpc.lock_configuration()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/rpcmeta.py", line 364, in _exec_rpc
+    return self._junos.execute(rpc, **dec_args)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 76, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 31, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 854, in execute
+    raise EzErrors.RpcError(cmd=rpc_cmd_e, rsp=rsp, errs=ex)
+jnpr.junos.exception.RpcError: RpcError(severity: error, bad_element: None, message: configuration database modified)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 150, in _lock
+    self.device.cu.lock()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 606, in lock
+    raise LockError(rsp=err.rsp)
+jnpr.junos.exception.LockError: LockError(severity: error, bad_element: None, message: configuration database modified)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 34, in napalm_configure
+    device.load_merge_candidate(filename=filename, config=configuration)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 269, in load_merge_candidate
+    self._load_candidate(filename, config, False)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 234, in _load_candidate
+    self._lock()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 153, in _lock
+    raise LockError(str(jle))
+napalm.base.exceptions.LockError: LockError(severity: error, bad_element: None, message: configuration database modified)
+
+2020-12-24 10:42:18,159 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 31, in delete_configuration
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading Delete Configuration on the device (failed)
+
+
+2020-12-24 10:45:07,741 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-24 10:45:53,668 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-24 10:46:34,643 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {'json_out': False} on 1 hosts
+2020-12-24 10:46:34,644 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'show_device_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+TypeError: show_device_configuration() got an unexpected keyword argument 'json_out'
+
+2020-12-24 10:46:44,432 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-24 10:47:10,178 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-24 10:48:27,289 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {} on 1 hosts
+2020-12-24 10:48:30,086 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'Loading Delete Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 834, in execute
+    rpc_rsp_e = self._rpc_reply(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 165, in wrapper
+    raise ex
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 117, in wrapper
+    rsp = function(self, *args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 1440, in _rpc_reply
+    return self._conn.rpc(rpc_cmd_e, filter_xml)._NCElement__doc
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/manager.py", line 226, in execute
+    return cls(self._session,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/third_party/juniper/rpc.py", line 52, in request
+    return self._request(rpc)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/rpc.py", line 358, in _request
+    raise RPCError(to_ele(self._reply._raw), errs=errors)
+ncclient.operations.rpc.RPCError: error: syntax error
+error: syntax error
+error: syntax error
+warning: statement not found
+error: syntax error
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 490, in try_load
+    got = self.rpc.load_config(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/rpcmeta.py", line 288, in load_config
+    return self._junos.execute(rpc, ignore_warning=ignore_warning)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 76, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 31, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 854, in execute
+    raise EzErrors.RpcError(cmd=rpc_cmd_e, rsp=rsp, errs=ex)
+jnpr.junos.exception.RpcError: RpcError(severity: error, bad_element: static-into-ospf, message: error: syntax error
+error: syntax error
+error: syntax error
+warning: statement not found
+error: syntax error)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 249, in _load_candidate
+    self.device.cu.load(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 579, in load
+    return try_load(rpc_contents, rpc_xattrs, ignore_warning=ignore_warning)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 496, in try_load
+    raise ConfigLoadError(cmd=err.cmd, rsp=err.rsp, errs=err.errs)
+jnpr.junos.exception.ConfigLoadError: ConfigLoadError(severity: error, bad_element: static-into-ospf, message: error: syntax error
+error: syntax error
+error: syntax error
+warning: statement not found
+error: syntax error)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 34, in napalm_configure
+    device.load_merge_candidate(filename=filename, config=configuration)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 269, in load_merge_candidate
+    self._load_candidate(filename, config, False)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 259, in _load_candidate
+    raise MergeConfigException(e.errs)
+napalm.base.exceptions.MergeConfigException: [{'severity': 'error', 'source': None, 'edit_path': None, 'bad_element': 'static-into-ospf', 'message': 'syntax error'}, {'severity': 'error', 'source': None, 'edit_path': None, 'bad_element': 'static-into-ospfv3', 'message': 'syntax error'}, {'severity': 'error', 'source': None, 'edit_path': None, 'bad_element': 'output', 'message': 'syntax error'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'error', 'source': None, 'edit_path': None, 'bad_element': 'output', 'message': 'syntax error'}]
+
+2020-12-24 10:48:30,086 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 31, in delete_configuration
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading Delete Configuration on the device (failed)
+
+
+2020-12-24 10:49:02,088 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {} on 1 hosts
+2020-12-24 10:49:04,823 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'Loading Delete Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 834, in execute
+    rpc_rsp_e = self._rpc_reply(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 165, in wrapper
+    raise ex
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 117, in wrapper
+    rsp = function(self, *args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 1440, in _rpc_reply
+    return self._conn.rpc(rpc_cmd_e, filter_xml)._NCElement__doc
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/manager.py", line 226, in execute
+    return cls(self._session,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/third_party/juniper/rpc.py", line 52, in request
+    return self._request(rpc)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/rpc.py", line 358, in _request
+    raise RPCError(to_ele(self._reply._raw), errs=errors)
+ncclient.operations.rpc.RPCError: error: syntax error
+error: syntax error
+error: syntax error
+error: syntax error
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 490, in try_load
+    got = self.rpc.load_config(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/rpcmeta.py", line 288, in load_config
+    return self._junos.execute(rpc, ignore_warning=ignore_warning)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 76, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 31, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 854, in execute
+    raise EzErrors.RpcError(cmd=rpc_cmd_e, rsp=rsp, errs=ex)
+jnpr.junos.exception.RpcError: RpcError(severity: error, bad_element: static-into-ospf, message: error: syntax error
+error: syntax error
+error: syntax error
+error: syntax error)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 249, in _load_candidate
+    self.device.cu.load(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 579, in load
+    return try_load(rpc_contents, rpc_xattrs, ignore_warning=ignore_warning)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 496, in try_load
+    raise ConfigLoadError(cmd=err.cmd, rsp=err.rsp, errs=err.errs)
+jnpr.junos.exception.ConfigLoadError: ConfigLoadError(severity: error, bad_element: static-into-ospf, message: error: syntax error
+error: syntax error
+error: syntax error
+error: syntax error)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 34, in napalm_configure
+    device.load_merge_candidate(filename=filename, config=configuration)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 269, in load_merge_candidate
+    self._load_candidate(filename, config, False)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 259, in _load_candidate
+    raise MergeConfigException(e.errs)
+napalm.base.exceptions.MergeConfigException: [{'severity': 'error', 'source': None, 'edit_path': None, 'bad_element': 'static-into-ospf', 'message': 'syntax error'}, {'severity': 'error', 'source': None, 'edit_path': None, 'bad_element': 'static-into-ospfv3', 'message': 'syntax error'}, {'severity': 'error', 'source': None, 'edit_path': None, 'bad_element': 'output', 'message': 'syntax error'}, {'severity': 'error', 'source': None, 'edit_path': None, 'bad_element': 'output', 'message': 'syntax error'}]
+
+2020-12-24 10:49:04,824 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 31, in delete_configuration
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading Delete Configuration on the device (failed)
+
+
+2020-12-24 10:50:37,381 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {} on 1 hosts
+2020-12-24 10:50:40,145 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'Loading Delete Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 834, in execute
+    rpc_rsp_e = self._rpc_reply(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 165, in wrapper
+    raise ex
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 117, in wrapper
+    rsp = function(self, *args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 1440, in _rpc_reply
+    return self._conn.rpc(rpc_cmd_e, filter_xml)._NCElement__doc
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/manager.py", line 226, in execute
+    return cls(self._session,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/third_party/juniper/rpc.py", line 52, in request
+    return self._request(rpc)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/rpc.py", line 358, in _request
+    raise RPCError(to_ele(self._reply._raw), errs=errors)
+ncclient.operations.rpc.RPCError: error: syntax error
+error: syntax error
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 490, in try_load
+    got = self.rpc.load_config(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/rpcmeta.py", line 288, in load_config
+    return self._junos.execute(rpc, ignore_warning=ignore_warning)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 76, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 31, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 854, in execute
+    raise EzErrors.RpcError(cmd=rpc_cmd_e, rsp=rsp, errs=ex)
+jnpr.junos.exception.RpcError: RpcError(severity: error, bad_element: output, message: error: syntax error
+error: syntax error)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 249, in _load_candidate
+    self.device.cu.load(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 579, in load
+    return try_load(rpc_contents, rpc_xattrs, ignore_warning=ignore_warning)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 496, in try_load
+    raise ConfigLoadError(cmd=err.cmd, rsp=err.rsp, errs=err.errs)
+jnpr.junos.exception.ConfigLoadError: ConfigLoadError(severity: error, bad_element: output, message: error: syntax error
+error: syntax error)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 34, in napalm_configure
+    device.load_merge_candidate(filename=filename, config=configuration)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 269, in load_merge_candidate
+    self._load_candidate(filename, config, False)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 259, in _load_candidate
+    raise MergeConfigException(e.errs)
+napalm.base.exceptions.MergeConfigException: [{'severity': 'error', 'source': None, 'edit_path': None, 'bad_element': 'output', 'message': 'syntax error'}, {'severity': 'error', 'source': None, 'edit_path': None, 'bad_element': 'output', 'message': 'syntax error'}]
+
+2020-12-24 10:50:40,145 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 31, in delete_configuration
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading Delete Configuration on the device (failed)
+
+
+2020-12-24 10:53:27,983 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {} on 1 hosts
+2020-12-24 10:54:10,157 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {} on 1 hosts
+2020-12-24 10:54:13,521 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'Loading Delete Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 834, in execute
+    rpc_rsp_e = self._rpc_reply(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 165, in wrapper
+    raise ex
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 117, in wrapper
+    rsp = function(self, *args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 1440, in _rpc_reply
+    return self._conn.rpc(rpc_cmd_e, filter_xml)._NCElement__doc
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/manager.py", line 226, in execute
+    return cls(self._session,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/third_party/juniper/rpc.py", line 52, in request
+    return self._request(rpc)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/rpc.py", line 358, in _request
+    raise RPCError(to_ele(self._reply._raw), errs=errors)
+ncclient.operations.rpc.RPCError: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 490, in try_load
+    got = self.rpc.load_config(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/rpcmeta.py", line 288, in load_config
+    return self._junos.execute(rpc, ignore_warning=ignore_warning)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 76, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 31, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 854, in execute
+    raise EzErrors.RpcError(cmd=rpc_cmd_e, rsp=rsp, errs=ex)
+jnpr.junos.exception.RpcError: RpcError(severity: None, bad_element: None, message: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 249, in _load_candidate
+    self.device.cu.load(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 579, in load
+    return try_load(rpc_contents, rpc_xattrs, ignore_warning=ignore_warning)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 496, in try_load
+    raise ConfigLoadError(cmd=err.cmd, rsp=err.rsp, errs=err.errs)
+jnpr.junos.exception.ConfigLoadError: ConfigLoadError(severity: None, bad_element: None, message: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 34, in napalm_configure
+    device.load_merge_candidate(filename=filename, config=configuration)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 269, in load_merge_candidate
+    self._load_candidate(filename, config, False)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 259, in _load_candidate
+    raise MergeConfigException(e.errs)
+napalm.base.exceptions.MergeConfigException: [{'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': '[edit interfaces em2 unit 0 family inet]', 'bad_element': None, 'message': 'statement not found: filter'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': '[edit interfaces em1 unit 1 family inet6]', 'bad_element': None, 'message': 'statement not found: filter'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}]
+
+2020-12-24 10:54:13,521 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 31, in delete_configuration
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading Delete Configuration on the device (failed)
+
+
+2020-12-24 10:54:35,687 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {} on 1 hosts
+2020-12-24 10:54:38,463 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'Loading Delete Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 834, in execute
+    rpc_rsp_e = self._rpc_reply(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 165, in wrapper
+    raise ex
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 117, in wrapper
+    rsp = function(self, *args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 1440, in _rpc_reply
+    return self._conn.rpc(rpc_cmd_e, filter_xml)._NCElement__doc
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/manager.py", line 226, in execute
+    return cls(self._session,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/third_party/juniper/rpc.py", line 52, in request
+    return self._request(rpc)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/rpc.py", line 358, in _request
+    raise RPCError(to_ele(self._reply._raw), errs=errors)
+ncclient.operations.rpc.RPCError: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 490, in try_load
+    got = self.rpc.load_config(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/rpcmeta.py", line 288, in load_config
+    return self._junos.execute(rpc, ignore_warning=ignore_warning)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 76, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 31, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 854, in execute
+    raise EzErrors.RpcError(cmd=rpc_cmd_e, rsp=rsp, errs=ex)
+jnpr.junos.exception.RpcError: RpcError(severity: None, bad_element: None, message: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 249, in _load_candidate
+    self.device.cu.load(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 579, in load
+    return try_load(rpc_contents, rpc_xattrs, ignore_warning=ignore_warning)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 496, in try_load
+    raise ConfigLoadError(cmd=err.cmd, rsp=err.rsp, errs=err.errs)
+jnpr.junos.exception.ConfigLoadError: ConfigLoadError(severity: None, bad_element: None, message: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 34, in napalm_configure
+    device.load_merge_candidate(filename=filename, config=configuration)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 269, in load_merge_candidate
+    self._load_candidate(filename, config, False)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 259, in _load_candidate
+    raise MergeConfigException(e.errs)
+napalm.base.exceptions.MergeConfigException: [{'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': '[edit interfaces em2 unit 0 family inet]', 'bad_element': None, 'message': 'statement not found: filter'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': '[edit interfaces em1 unit 1 family inet6]', 'bad_element': None, 'message': 'statement not found: filter'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}]
+
+2020-12-24 10:54:38,464 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 31, in delete_configuration
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading Delete Configuration on the device (failed)
+
+
+2020-12-24 11:00:03,548 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:00:12,422 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:00:19,247 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:00:25,957 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:00:31,631 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:00:32,781 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:00:33,903 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:00:40,691 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:01:28,786 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {} on 1 hosts
+2020-12-24 11:02:04,706 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-24 11:02:15,204 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-24 11:04:27,443 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {} on 1 hosts
+2020-12-24 11:04:30,387 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'Loading Delete Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 834, in execute
+    rpc_rsp_e = self._rpc_reply(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 165, in wrapper
+    raise ex
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 117, in wrapper
+    rsp = function(self, *args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 1440, in _rpc_reply
+    return self._conn.rpc(rpc_cmd_e, filter_xml)._NCElement__doc
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/manager.py", line 226, in execute
+    return cls(self._session,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/third_party/juniper/rpc.py", line 52, in request
+    return self._request(rpc)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/rpc.py", line 358, in _request
+    raise RPCError(to_ele(self._reply._raw), errs=errors)
+ncclient.operations.rpc.RPCError: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 490, in try_load
+    got = self.rpc.load_config(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/rpcmeta.py", line 288, in load_config
+    return self._junos.execute(rpc, ignore_warning=ignore_warning)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 76, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 31, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 854, in execute
+    raise EzErrors.RpcError(cmd=rpc_cmd_e, rsp=rsp, errs=ex)
+jnpr.junos.exception.RpcError: RpcError(severity: None, bad_element: None, message: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 249, in _load_candidate
+    self.device.cu.load(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 579, in load
+    return try_load(rpc_contents, rpc_xattrs, ignore_warning=ignore_warning)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 496, in try_load
+    raise ConfigLoadError(cmd=err.cmd, rsp=err.rsp, errs=err.errs)
+jnpr.junos.exception.ConfigLoadError: ConfigLoadError(severity: None, bad_element: None, message: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 34, in napalm_configure
+    device.load_merge_candidate(filename=filename, config=configuration)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 269, in load_merge_candidate
+    self._load_candidate(filename, config, False)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 259, in _load_candidate
+    raise MergeConfigException(e.errs)
+napalm.base.exceptions.MergeConfigException: [{'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': '[edit interfaces em2 unit 0 family inet]', 'bad_element': None, 'message': 'statement not found: filter'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': '[edit interfaces em1 unit 1 family inet6]', 'bad_element': None, 'message': 'statement not found: filter'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}]
+
+2020-12-24 11:04:30,387 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 31, in delete_configuration
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading Delete Configuration on the device (failed)
+
+
+2020-12-24 11:05:51,203 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:06:00,290 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:06:06,817 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:06:14,029 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:06:19,727 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:06:20,856 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:06:21,985 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:06:28,616 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:09:39,981 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-24 11:18:37,996 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {} on 1 hosts
+2020-12-24 11:20:39,360 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {} on 1 hosts
+2020-12-24 11:21:10,772 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {} on 1 hosts
+2020-12-24 11:21:23,866 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {} on 1 hosts
+2020-12-24 11:22:09,840 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {} on 1 hosts
+2020-12-24 11:22:13,479 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'Loading Delete Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 834, in execute
+    rpc_rsp_e = self._rpc_reply(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 165, in wrapper
+    raise ex
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 117, in wrapper
+    rsp = function(self, *args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 1440, in _rpc_reply
+    return self._conn.rpc(rpc_cmd_e, filter_xml)._NCElement__doc
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/manager.py", line 226, in execute
+    return cls(self._session,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/third_party/juniper/rpc.py", line 52, in request
+    return self._request(rpc)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/rpc.py", line 358, in _request
+    raise RPCError(to_ele(self._reply._raw), errs=errors)
+ncclient.operations.rpc.RPCError: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: routing-options
+warning: statement not found
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 490, in try_load
+    got = self.rpc.load_config(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/rpcmeta.py", line 288, in load_config
+    return self._junos.execute(rpc, ignore_warning=ignore_warning)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 76, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 31, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 854, in execute
+    raise EzErrors.RpcError(cmd=rpc_cmd_e, rsp=rsp, errs=ex)
+jnpr.junos.exception.RpcError: RpcError(severity: None, bad_element: None, message: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: routing-options
+warning: statement not found
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 249, in _load_candidate
+    self.device.cu.load(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 579, in load
+    return try_load(rpc_contents, rpc_xattrs, ignore_warning=ignore_warning)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 496, in try_load
+    raise ConfigLoadError(cmd=err.cmd, rsp=err.rsp, errs=err.errs)
+jnpr.junos.exception.ConfigLoadError: ConfigLoadError(severity: None, bad_element: None, message: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: routing-options
+warning: statement not found
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 34, in napalm_configure
+    device.load_merge_candidate(filename=filename, config=configuration)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 269, in load_merge_candidate
+    self._load_candidate(filename, config, False)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 259, in _load_candidate
+    raise MergeConfigException(e.errs)
+napalm.base.exceptions.MergeConfigException: [{'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': '[edit]', 'bad_element': None, 'message': 'statement not found: routing-options'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': '[edit interfaces em2 unit 0 family inet]', 'bad_element': None, 'message': 'statement not found: filter'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': '[edit interfaces em1 unit 1 family inet6]', 'bad_element': None, 'message': 'statement not found: filter'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}]
+
+2020-12-24 11:22:13,480 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 31, in delete_configuration
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading Delete Configuration on the device (failed)
+
+
+2020-12-24 11:25:29,156 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:25:38,608 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:25:45,080 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:25:52,276 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:25:57,948 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:25:59,173 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:26:00,317 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:26:06,944 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:26:49,703 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {} on 1 hosts
+2020-12-24 11:27:31,772 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-24 11:28:31,223 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {} on 1 hosts
+2020-12-24 11:28:34,093 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'Loading Delete Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 834, in execute
+    rpc_rsp_e = self._rpc_reply(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 165, in wrapper
+    raise ex
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 117, in wrapper
+    rsp = function(self, *args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 1440, in _rpc_reply
+    return self._conn.rpc(rpc_cmd_e, filter_xml)._NCElement__doc
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/manager.py", line 226, in execute
+    return cls(self._session,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/third_party/juniper/rpc.py", line 52, in request
+    return self._request(rpc)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/rpc.py", line 358, in _request
+    raise RPCError(to_ele(self._reply._raw), errs=errors)
+ncclient.operations.rpc.RPCError: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: routing-options
+warning: statement not found
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 490, in try_load
+    got = self.rpc.load_config(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/rpcmeta.py", line 288, in load_config
+    return self._junos.execute(rpc, ignore_warning=ignore_warning)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 76, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 31, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 854, in execute
+    raise EzErrors.RpcError(cmd=rpc_cmd_e, rsp=rsp, errs=ex)
+jnpr.junos.exception.RpcError: RpcError(severity: None, bad_element: None, message: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: routing-options
+warning: statement not found
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 249, in _load_candidate
+    self.device.cu.load(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 579, in load
+    return try_load(rpc_contents, rpc_xattrs, ignore_warning=ignore_warning)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 496, in try_load
+    raise ConfigLoadError(cmd=err.cmd, rsp=err.rsp, errs=err.errs)
+jnpr.junos.exception.ConfigLoadError: ConfigLoadError(severity: None, bad_element: None, message: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: routing-options
+warning: statement not found
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 34, in napalm_configure
+    device.load_merge_candidate(filename=filename, config=configuration)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 269, in load_merge_candidate
+    self._load_candidate(filename, config, False)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 259, in _load_candidate
+    raise MergeConfigException(e.errs)
+napalm.base.exceptions.MergeConfigException: [{'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': '[edit]', 'bad_element': None, 'message': 'statement not found: routing-options'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': '[edit interfaces em2 unit 0 family inet]', 'bad_element': None, 'message': 'statement not found: filter'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': '[edit interfaces em1 unit 1 family inet6]', 'bad_element': None, 'message': 'statement not found: filter'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}]
+
+2020-12-24 11:28:34,093 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 31, in delete_configuration
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading Delete Configuration on the device (failed)
+
+
+2020-12-24 11:29:59,671 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:30:09,592 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:30:15,859 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:30:21,923 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:30:27,526 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:30:28,699 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:30:29,819 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:30:36,373 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:31:08,346 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {} on 1 hosts
+2020-12-24 11:31:13,294 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:31:14,436 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:31:22,882 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:31:29,981 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:31:31,118 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:31:32,275 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:31:33,413 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:31:34,545 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:32:24,144 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {} on 1 hosts
+2020-12-24 11:33:40,569 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-24 11:33:57,238 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-24 11:35:30,529 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-24 11:37:42,044 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': False} on 1 hosts
+2020-12-24 11:38:06,409 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-24 11:38:09,888 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'Loading Delete Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 834, in execute
+    rpc_rsp_e = self._rpc_reply(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 165, in wrapper
+    raise ex
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 117, in wrapper
+    rsp = function(self, *args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 1440, in _rpc_reply
+    return self._conn.rpc(rpc_cmd_e, filter_xml)._NCElement__doc
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/manager.py", line 226, in execute
+    return cls(self._session,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/third_party/juniper/rpc.py", line 52, in request
+    return self._request(rpc)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/rpc.py", line 358, in _request
+    raise RPCError(to_ele(self._reply._raw), errs=errors)
+ncclient.operations.rpc.RPCError: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: routing-options
+warning: statement not found
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 490, in try_load
+    got = self.rpc.load_config(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/rpcmeta.py", line 288, in load_config
+    return self._junos.execute(rpc, ignore_warning=ignore_warning)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 76, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 31, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 854, in execute
+    raise EzErrors.RpcError(cmd=rpc_cmd_e, rsp=rsp, errs=ex)
+jnpr.junos.exception.RpcError: RpcError(severity: None, bad_element: None, message: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: routing-options
+warning: statement not found
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 249, in _load_candidate
+    self.device.cu.load(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 579, in load
+    return try_load(rpc_contents, rpc_xattrs, ignore_warning=ignore_warning)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 496, in try_load
+    raise ConfigLoadError(cmd=err.cmd, rsp=err.rsp, errs=err.errs)
+jnpr.junos.exception.ConfigLoadError: ConfigLoadError(severity: None, bad_element: None, message: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: routing-options
+warning: statement not found
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 34, in napalm_configure
+    device.load_merge_candidate(filename=filename, config=configuration)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 269, in load_merge_candidate
+    self._load_candidate(filename, config, False)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 259, in _load_candidate
+    raise MergeConfigException(e.errs)
+napalm.base.exceptions.MergeConfigException: [{'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': '[edit]', 'bad_element': None, 'message': 'statement not found: routing-options'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': '[edit interfaces em2 unit 0 family inet]', 'bad_element': None, 'message': 'statement not found: filter'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': '[edit interfaces em1 unit 1 family inet6]', 'bad_element': None, 'message': 'statement not found: filter'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}]
+
+2020-12-24 11:38:09,888 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 31, in delete_configuration
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading Delete Configuration on the device (failed)
+
+
+2020-12-24 11:38:24,039 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-24 12:14:35,226 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-24 13:11:49,381 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-24 13:11:49,400 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'Delete Configuration Template Loading' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_jinja2/plugins/tasks/template_file.py", line 40, in template_file
+    t = env.get_template(template)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 883, in get_template
+    return self._load_template(name, self.make_globals(globals))
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 857, in _load_template
+    template = self.loader.load(self, name, globals)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/loaders.py", line 127, in load
+    code = environment.compile(source, name, filename)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 638, in compile
+    self.handle_exception(source=source_hint)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "templates/juniper/router/delete_configuration.j2", line 43, in template
+    {% endif %}
+jinja2.exceptions.TemplateSyntaxError: Encountered unknown tag 'endif'. You probably made a nesting mistake. Jinja is expecting this tag, but currently looking for 'endfor' or 'else'. The innermost block that needs to be closed is 'for'.
+
+2020-12-24 13:11:49,400 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 23, in delete_configuration
+    r = task.run(task=template_file,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Delete Configuration Template Loading (failed)
+
+
+2020-12-24 13:13:01,774 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-24 13:13:05,274 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-24 13:13:35,447 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': False} on 1 hosts
+2020-12-24 13:13:44,472 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-24 13:32:39,316 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-24 13:32:39,342 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'Delete Configuration Template Loading' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_jinja2/plugins/tasks/template_file.py", line 41, in template_file
+    text = t.render(host=task.host, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 1090, in render
+    self.environment.handle_exception()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "templates/juniper/router/delete_configuration.j2", line 43, in top-level template code
+    {% for unit in int_dict.units %}
+jinja2.exceptions.UndefinedError: 'dict object' has no attribute 'units'
+
+2020-12-24 13:32:39,343 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 23, in delete_configuration
+    r = task.run(task=template_file,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Delete Configuration Template Loading (failed)
+
+
+2020-12-24 13:33:03,514 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-24 13:33:42,770 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-24 13:34:03,067 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-24 13:34:34,520 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-24 13:34:59,644 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': False} on 1 hosts
+2020-12-24 13:35:09,260 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-24 13:52:50,863 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-24 13:53:21,919 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 1 hosts
+2020-12-24 13:53:31,462 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 1 hosts
+2020-12-24 13:53:38,590 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-24 13:53:44,442 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 1 hosts
+2020-12-24 13:53:49,823 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-24 13:53:56,456 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-24 13:54:01,103 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 1 hosts
+2020-12-24 13:54:05,972 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 1 hosts
+2020-12-24 13:54:40,823 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-24 13:55:27,904 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': False} on 1 hosts
+2020-12-24 13:57:30,837 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 1 hosts
+2020-12-24 13:57:41,366 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 1 hosts
+2020-12-24 13:57:47,161 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-24 13:57:52,708 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 1 hosts
+2020-12-24 13:57:59,107 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-24 13:58:00,462 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-24 13:58:01,598 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 1 hosts
+2020-12-24 13:58:07,953 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 1 hosts
+2020-12-24 13:58:43,119 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-24 13:59:22,140 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': False} on 1 hosts
+2020-12-24 13:59:36,157 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts
+2020-12-24 14:03:30,235 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 1 hosts
+2020-12-24 14:03:40,459 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 1 hosts
+2020-12-24 14:03:46,329 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-24 14:03:51,847 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 1 hosts
+2020-12-24 14:03:57,297 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-24 14:04:05,892 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-24 14:04:13,728 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 1 hosts
+2020-12-24 14:04:19,362 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 1 hosts
+2020-12-24 14:05:55,922 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': False} on 1 hosts
+2020-12-24 14:06:10,316 -  nornir.core -     INFO -        run() - Running task 'show_device_configuration' with args {} on 1 hosts

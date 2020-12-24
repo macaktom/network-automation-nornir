@@ -1,0 +1,50 @@
+{% if delete_config is defined %}
+{% if delete_config.static_routing_config is defined and delete_config.static_routing_config %}
+delete routing-options static
+{% endif %}
+{% if delete_config.static_routing_ipv6_config is defined and delete_config.static_routing_ipv6_config %}
+delete routing-options rib inet6.0
+{% endif %}
+{% if delete_config.ospf_config is defined and delete_config.ospf_config.policy_statement is defined %}
+delete protocols ospf
+delete policy-options policy-statement {{ delete_config.ospf_config.policy_statement }}
+{% if delete_config.ospf_config.router_id is defined %}
+delete routing-options router-id {{ delete_config.ospf_config.router_id }}
+{% endif %}
+{% endif %}
+{% if delete_config.ospfv3_config is defined and delete_config.ospfv3_config.policy_statement is defined %}
+delete protocols ospf3
+delete policy-options policy-statement {{ delete_config.ospfv3_config.policy_statement }}
+{% if delete_config.ospfv3_config.router_id is defined %}
+delete routing-options router-id {{ delete_config.ospfv3_config.router_id }}
+{% endif %}
+{% endif %}
+{% if delete_config.packet_filter_config is defined %}
+{% for filter, filter_dict in delete_config.packet_filter_config.items() | sort %}
+{% for interface in filter_dict.interfaces %}
+delete interfaces {{ interface.name }} unit {{ interface.unit_number }} family inet filter {{ interface.filter_direction }} {{ filter }}
+{% endfor %}
+delete firewall family inet filter {{ filter }}
+{% endfor %}
+{% endif %}
+{% if delete_config.packet_filter_ipv6_config is defined %}
+{% for filter, filter_dict in delete_config.packet_filter_ipv6_config.items() | sort %}
+{% for interface in filter_dict.interfaces %}
+delete interfaces {{ interface.name }} unit {{ interface.unit_number }} family inet6 filter {{ interface.filter_direction }} {{ filter }}
+{% endfor %}
+delete firewall family inet6 filter {{ filter }}
+{% endfor %}
+{% endif %}
+{% if delete_config.interfaces is defined %}
+{% for int, int_dict in delete_config.interfaces.items() | sort %}
+{% if int_dict.delete_whole_interface is defined and int_dict.delete_whole_interface %}
+delete interfaces {{ int }}
+{% elif int_dict.delete_units is defined %}
+{% for unit in int_dict.delete_units %}
+delete interfaces {{ int }} unit {{ unit }}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endif %}
+
