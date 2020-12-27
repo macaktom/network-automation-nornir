@@ -26,10 +26,14 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from nornir.core import Task
+<pre><code class="python">import logging
+
+from colorama import Fore
+from nornir.core import Task
 from nornir.core.exceptions import NornirSubTaskError
 from nornir_jinja2.plugins.tasks import template_file
 from nornir_napalm.plugins.tasks import napalm_configure
+from nornir_utils.plugins.tasks.data import load_yaml
 
 
 class InterfacesConfiguration:
@@ -50,6 +54,11 @@ class InterfacesConfiguration:
         Returns:
             None
         &#34;&#34;&#34;
+
+        data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
+                        severity_level=logging.DEBUG)
+        task.host[&#34;interfaces_ipv4&#34;] = data[0].result[&#34;interfaces_ipv4&#34;]
+
         result = task.run(task=template_file,
                           name=&#34;IPv4 Intefaces Configuration&#34;,
                           template=&#34;interfaces_ipv4.j2&#34;,
@@ -76,6 +85,10 @@ class InterfacesConfiguration:
         Returns:
             None
         &#34;&#34;&#34;
+        data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
+                        severity_level=logging.DEBUG)
+        task.host[&#34;interfaces_ipv6&#34;] = data[0].result[&#34;interfaces_ipv6&#34;]
+
         r = task.run(task=template_file,
                      name=&#34;IPv6 Intefaces Configuration&#34;,
                      template=&#34;interfaces_ipv6.j2&#34;,
@@ -99,10 +112,19 @@ class InterfacesConfiguration:
             dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
                             (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
 
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+                konfiguraci na nepodporovaných zařízeních.
+
         Returns:
             None
         &#34;&#34;&#34;
         if task.host[&#34;dev_type&#34;] == &#34;L3_switch&#34; or task.host[&#34;dev_type&#34;] == &#34;switch&#34;:
+
+            data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
+                            severity_level=logging.DEBUG)
+            task.host[&#34;switching_interfaces&#34;] = data[0].result[&#34;switching_interfaces&#34;]
+            task.host[&#34;vlans_config&#34;] = data[0].result[&#34;vlans_config&#34;]
 
             interfaces_result = task.run(task=template_file,
                                          name=&#34;Switching Intefaces Configuration&#34;,
@@ -119,6 +141,7 @@ class InterfacesConfiguration:
                      configuration=task.host[&#34;switching_interfaces_config&#34;],
                      dry_run=dry_run)
         else:
+            print(f&#34;{Fore.RED} Device {task.host.name}: invalid device type.&#34;)
             raise NornirSubTaskError(&#34;Invalid device type. Only switches are supported.&#34;, task)</code></pre>
 </details>
 </section>
@@ -159,6 +182,11 @@ konfigurace switchovaných a routovaných portů).</p></div>
         Returns:
             None
         &#34;&#34;&#34;
+
+        data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
+                        severity_level=logging.DEBUG)
+        task.host[&#34;interfaces_ipv4&#34;] = data[0].result[&#34;interfaces_ipv4&#34;]
+
         result = task.run(task=template_file,
                           name=&#34;IPv4 Intefaces Configuration&#34;,
                           template=&#34;interfaces_ipv4.j2&#34;,
@@ -185,6 +213,10 @@ konfigurace switchovaných a routovaných portů).</p></div>
         Returns:
             None
         &#34;&#34;&#34;
+        data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
+                        severity_level=logging.DEBUG)
+        task.host[&#34;interfaces_ipv6&#34;] = data[0].result[&#34;interfaces_ipv6&#34;]
+
         r = task.run(task=template_file,
                      name=&#34;IPv6 Intefaces Configuration&#34;,
                      template=&#34;interfaces_ipv6.j2&#34;,
@@ -208,10 +240,19 @@ konfigurace switchovaných a routovaných portů).</p></div>
             dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
                             (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
 
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+                konfiguraci na nepodporovaných zařízeních.
+
         Returns:
             None
         &#34;&#34;&#34;
         if task.host[&#34;dev_type&#34;] == &#34;L3_switch&#34; or task.host[&#34;dev_type&#34;] == &#34;switch&#34;:
+
+            data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
+                            severity_level=logging.DEBUG)
+            task.host[&#34;switching_interfaces&#34;] = data[0].result[&#34;switching_interfaces&#34;]
+            task.host[&#34;vlans_config&#34;] = data[0].result[&#34;vlans_config&#34;]
 
             interfaces_result = task.run(task=template_file,
                                          name=&#34;Switching Intefaces Configuration&#34;,
@@ -228,6 +269,7 @@ konfigurace switchovaných a routovaných portů).</p></div>
                      configuration=task.host[&#34;switching_interfaces_config&#34;],
                      dry_run=dry_run)
         else:
+            print(f&#34;{Fore.RED} Device {task.host.name}: invalid device type.&#34;)
             raise NornirSubTaskError(&#34;Invalid device type. Only switches are supported.&#34;, task)</code></pre>
 </details>
 <h3>Methods</h3>
@@ -263,6 +305,11 @@ konfigurace switchovaných a routovaných portů).</p></div>
     Returns:
         None
     &#34;&#34;&#34;
+
+    data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
+                    severity_level=logging.DEBUG)
+    task.host[&#34;interfaces_ipv4&#34;] = data[0].result[&#34;interfaces_ipv4&#34;]
+
     result = task.run(task=template_file,
                       name=&#34;IPv4 Intefaces Configuration&#34;,
                       template=&#34;interfaces_ipv4.j2&#34;,
@@ -309,6 +356,10 @@ konfigurace switchovaných a routovaných portů).</p></div>
     Returns:
         None
     &#34;&#34;&#34;
+    data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
+                    severity_level=logging.DEBUG)
+    task.host[&#34;interfaces_ipv6&#34;] = data[0].result[&#34;interfaces_ipv6&#34;]
+
     r = task.run(task=template_file,
                  name=&#34;IPv6 Intefaces Configuration&#34;,
                  template=&#34;interfaces_ipv6.j2&#34;,
@@ -337,6 +388,12 @@ konfigurace switchovaných a routovaných portů).</p></div>
 <dd>argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
 (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.</dd>
 </dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NornirSubTaskError</code></dt>
+<dd>Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+konfiguraci na nepodporovaných zařízeních.</dd>
+</dl>
 <h2 id="returns">Returns</h2>
 <p>None</p></div>
 <details class="source">
@@ -352,10 +409,19 @@ konfigurace switchovaných a routovaných portů).</p></div>
         dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
                         (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
 
+    Raises:
+        NornirSubTaskError: Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+            konfiguraci na nepodporovaných zařízeních.
+
     Returns:
         None
     &#34;&#34;&#34;
     if task.host[&#34;dev_type&#34;] == &#34;L3_switch&#34; or task.host[&#34;dev_type&#34;] == &#34;switch&#34;:
+
+        data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
+                        severity_level=logging.DEBUG)
+        task.host[&#34;switching_interfaces&#34;] = data[0].result[&#34;switching_interfaces&#34;]
+        task.host[&#34;vlans_config&#34;] = data[0].result[&#34;vlans_config&#34;]
 
         interfaces_result = task.run(task=template_file,
                                      name=&#34;Switching Intefaces Configuration&#34;,
@@ -372,6 +438,7 @@ konfigurace switchovaných a routovaných portů).</p></div>
                  configuration=task.host[&#34;switching_interfaces_config&#34;],
                  dry_run=dry_run)
     else:
+        print(f&#34;{Fore.RED} Device {task.host.name}: invalid device type.&#34;)
         raise NornirSubTaskError(&#34;Invalid device type. Only switches are supported.&#34;, task)</code></pre>
 </details>
 </dd>

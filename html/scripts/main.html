@@ -32,8 +32,11 @@ from pprint import pprint
 from nornir import InitNornir
 from nornir.core import Task, Nornir
 from nornir.core.filter import F
+from nornir_napalm.plugins.tasks import napalm_cli
+from nornir_netmiko import netmiko_send_command
 from nornir_utils.plugins.functions import print_result
 
+from scripts.tasks.delete_configuration import DeleteConfiguration
 from scripts.tasks.eigrp_configuration import EIGRPConfiguration
 from scripts.tasks.interfaces_configuration import InterfacesConfiguration
 from scripts.tasks.nat_configuration import NATConfiguration
@@ -70,6 +73,11 @@ def configure_devices(nornir_devices: Nornir, task_func: callable, task_name: st
     print_result(result)
 
 
+def send_command(nornir_devices: Nornir, task_name: str, dry_run: bool) -&gt; None:
+    result = nornir_devices.run(task=netmiko_send_command, name=task_name, dry_run=dry_run)
+    print_result(result)
+
+
 def main() -&gt; None:
     &#34;&#34;&#34;
     Hlavní funkce skriptu, která se zavolá po spuštění skriptu main.py
@@ -94,43 +102,43 @@ def main() -&gt; None:
     interfaces_configuration = InterfacesConfiguration()
     packet_filter = PacketFilterConfiguration()
     nat_config = NATConfiguration()
-    #all_devices.run(task=viewer.show_device_configuration)
+    delete_config = DeleteConfiguration()
+    #z = juniper_devices.run(delete_config.delete_configuration, &#34;Delete Configuration&#34;, dry_run=False)
+    # print_result(z)
+    # juniper_devices.run(task=viewer.show_device_configuration)
     #all_devices.run(task=viewer.show_device_facts)
     # configure_devices(l3_cisco, static_routing_config.configure_static_routing_ipv4, &#34;Static routing config&#34;, False)
-    # configure_devices(all_devices, ospf_config.configure_ospf, &#34;OSPFv2 config&#34;, False)
-    # configure_devices(l3_cisco, eigrp_config.configure_eigrp_ipv4, &#34;EIGRP config&#34;, False)
-    # configure_devices(l3_switches, interfaces_configuration.configure_switching_interfaces, &#34;Switching interfaces config&#34;, False)
-    #configure_devices(all_devices, packet_filter.configure_ipv4_packet_filters, &#34;IPv4 packet filter config&#34;, False)
-    # configure_devices(l3_cisco, nat_config.configure_source_nat_overload, &#34;NAT Overload config&#34;, False)
+    # configure_devices(l3_cisco, ospf_config.configure_ospf, &#34;OSPFv2 config&#34;, False)
+    #configure_devices(l3_cisco, eigrp_config.configure_eigrp_ipv4, &#34;EIGRP config&#34;, False)
+
+    #configure_devices(l3_switches, interfaces_configuration.configure_switching_interfaces, &#34;Switching interfaces config&#34;, False)
+    #configure_devices(l3_cisco, packet_filter.configure_ipv4_packet_filters, &#34;IPv4 packet filter config&#34;, False)
+    #configure_devices(l3_cisco, nat_config.configure_source_nat_overload, &#34;NAT Overload config&#34;, False)
     # configure_devices(cisco_router, ospf_config.configure_ospfv3, &#34;OSPFv3 config&#34;, False)
-    # configure_devices(l3_cisco, eigrp_config.configure_eigrp_ipv6, &#34;EIGRP IPV6 config&#34;, False)
-    #configure_devices(cisco_router, interfaces_configuration.configure_ipv4_interfaces, &#34;IPv4 interfaces config&#34;, True)
-    #configure_devices(all_devices, interfaces_configuration.configure_ipv6_interfaces, &#34;IPv6 interfaces config&#34;, False)
-    # configure_devices(cisco_router, static_routing_config.configure_static_routing_ipv6, &#34;IPv6 Static Routing config&#34;, True)
-    #configure_devices(all_devices, packet_filter.configure_ipv6_packet_filters, &#34;IPv6 packet filter config&#34;, False)
+    #configure_devices(l3_cisco, eigrp_config.configure_eigrp_ipv6, &#34;EIGRP IPV6 config&#34;, False)
+    #configure_devices(l3_cisco, interfaces_configuration.configure_ipv4_interfaces, &#34;IPv4 interfaces config&#34;, False)
+    #configure_devices(l3_cisco, interfaces_configuration.configure_ipv6_interfaces, &#34;IPv6 interfaces config&#34;, False)
+    # configure_devices(l3_cisco, static_routing_config.configure_static_routing_ipv6, &#34;IPv6 Static Routing config&#34;, False)
+    #configure_devices(l3_cisco, packet_filter.configure_ipv6_packet_filters, &#34;IPv6 packet filter config&#34;, False)
 
     # configure_devices(juniper_devices, static_routing_config.configure_static_routing_ipv4, &#34;Static routing config&#34;, False)
     # configure_devices(juniper_devices, ospf_config.configure_ospf, &#34;OSPFv2 config&#34;, False)
-    # configure_devices(juniper_devices, ospf_config.configure_ospfv3, &#34;OSPFv3 config&#34;, False)
+    #configure_devices(routers, ospf_config.configure_ospfv3, &#34;OSPFv3 config&#34;, False)
     # configure_devices(juniper_devices, static_routing_config.configure_static_routing_ipv6, &#34;IPv6 Static Routing config&#34;, False)
     # configure_devices(juniper_devices, interfaces_configuration.configure_ipv4_interfaces, &#34;IPv4 interfaces config&#34;, False)
     # configure_devices(juniper_devices, interfaces_configuration.configure_ipv6_interfaces, &#34;IPv6 interfaces config&#34;, False)
     # configure_devices(juniper_devices, packet_filter.configure_ipv4_packet_filters, &#34;IPv4 packet filter config&#34;, False)
     # configure_devices(juniper_devices, packet_filter.configure_ipv6_packet_filters, &#34;IPv6 packet filter config&#34;, False)
-
-    # configure_devices(juniper_devices, nat_config.configure_source_nat_overload, &#34;NAT Overload config&#34;, True)
     #all_devices.run(task=exporter.export_device_configuration)
-    #all_devices.run(task=exporter.export_packet_filter_info)
-    #all_devices.run(task=exporter.export_ipv4_routes)
-    #all_devices.run(task=exporter.export_ipv6_routes)
-    #exporter.export_device_facts(all_devices)
-    #exporter.export_interfaces_packet_counters(all_devices)
+    # all_devices.run(task=exporter.export_packet_filter_info)
+    # all_devices.run(task=exporter.export_ipv4_routes)
+    # all_devices.run(task=exporter.export_ipv6_routes)
+    # exporter.export_device_facts(all_devices)
+    # exporter.export_interfaces_packet_counters(all_devices)
 
     # print(z[&#39;R1&#39;][1].result[&#39;facts&#39;])
     # print(z[&#39;R1&#39;][2].result)
     # all_devices.run(task=viewer.show_interfaces_packet_counters, json_out=True)
-
-    # exporter_xlsx = ExcelExporter(Workbook(), &#34;Testa&#34;)
 
 
 if __name__ == &#34;__main__&#34;:
@@ -194,7 +202,22 @@ if __name__ == &#34;__main__&#34;:
     static_routing_config = StaticRoutingConfiguration()
     interfaces_configuration = InterfacesConfiguration()
     packet_filter = PacketFilterConfiguration()
-    nat_config = NATConfiguration()</code></pre>
+    nat_config = NATConfiguration()
+    delete_config = DeleteConfiguration()</code></pre>
+</details>
+</dd>
+<dt id="scripts.main.send_command"><code class="name flex">
+<span>def <span class="ident">send_command</span></span>(<span>nornir_devices: nornir.core.Nornir, task_name: str, dry_run: bool) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def send_command(nornir_devices: Nornir, task_name: str, dry_run: bool) -&gt; None:
+    result = nornir_devices.run(task=netmiko_send_command, name=task_name, dry_run=dry_run)
+    print_result(result)</code></pre>
 </details>
 </dd>
 <dt id="scripts.main.std_print"><code class="name flex">
@@ -241,6 +264,7 @@ if __name__ == &#34;__main__&#34;:
 <ul class="">
 <li><code><a title="scripts.main.configure_devices" href="#scripts.main.configure_devices">configure_devices</a></code></li>
 <li><code><a title="scripts.main.main" href="#scripts.main.main">main</a></code></li>
+<li><code><a title="scripts.main.send_command" href="#scripts.main.send_command">send_command</a></code></li>
 <li><code><a title="scripts.main.std_print" href="#scripts.main.std_print">std_print</a></code></li>
 </ul>
 </li>

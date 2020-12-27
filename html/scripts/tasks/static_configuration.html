@@ -26,9 +26,14 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from nornir.core import Task
+<pre><code class="python">import logging
+
+from colorama import Fore
+from nornir.core import Task
+from nornir.core.exceptions import NornirSubTaskError
 from nornir_jinja2.plugins.tasks import template_file
 from nornir_napalm.plugins.tasks import napalm_configure
+from nornir_utils.plugins.tasks.data import load_yaml
 
 
 class StaticRoutingConfiguration:
@@ -45,22 +50,35 @@ class StaticRoutingConfiguration:
             dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
                             (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
 
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+                konfiguraci na nepodporovaných zařízeních.
+
         Returns:
             None
         &#34;&#34;&#34;
-        r = task.run(task=template_file,
-                     name=&#34;IPv4 Static Routing Template Loading&#34;,
-                     template=&#34;static_ipv4.j2&#34;,
-                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                     static_routing_config=task.host[&#34;static_routing_config&#34;])
 
-        task.host[&#34;ipv4_static&#34;] = r.result
+        if not task.host[&#34;dev_type&#34;] == &#34;switch&#34;:
+            data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
+                            severity_level=logging.DEBUG)
+            task.host[&#34;static_routing_config&#34;] = data[0].result[&#34;static_routing_config&#34;]
 
-        task.run(task=napalm_configure,
-                 name=&#34;Loading IPv4 Static Routing Configuration on the device&#34;,
-                 replace=False,
-                 configuration=task.host[&#34;ipv4_static&#34;],
-                 dry_run=dry_run)
+            r = task.run(task=template_file,
+                         name=&#34;IPv4 Static Routing Template Loading&#34;,
+                         template=&#34;static_ipv4.j2&#34;,
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                         static_routing_config=task.host[&#34;static_routing_config&#34;])
+
+            task.host[&#34;ipv4_static&#34;] = r.result
+
+            task.run(task=napalm_configure,
+                     name=&#34;Loading IPv4 Static Routing Configuration on the device&#34;,
+                     replace=False,
+                     configuration=task.host[&#34;ipv4_static&#34;],
+                     dry_run=dry_run)
+        else:
+            print(f&#34;{Fore.RED} Device {task.host.name}: invalid device type.&#34;)
+            raise NornirSubTaskError(&#34;Invalid device type. Switches are not supported.&#34;, task)
 
     def configure_static_routing_ipv6(self, task: Task, dry_run: bool = False) -&gt; None:
         &#34;&#34;&#34;
@@ -71,22 +89,35 @@ class StaticRoutingConfiguration:
             dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
                             (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
 
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+                konfiguraci na nepodporovaných zařízeních.
+
         Returns:
             None
         &#34;&#34;&#34;
-        r = task.run(task=template_file,
-                     name=&#34;IPv6 Static Routing Template Loading&#34;,
-                     template=&#34;static_ipv6.j2&#34;,
-                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                     static_routing_ipv6_config=task.host[&#34;static_routing_ipv6_config&#34;])
 
-        task.host[&#34;ipv6_static&#34;] = r.result
+        if not task.host[&#34;dev_type&#34;] == &#34;switch&#34;:
+            data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
+                            severity_level=logging.DEBUG)
+            task.host[&#34;static_routing_ipv6_config&#34;] = data[0].result[&#34;static_routing_ipv6_config&#34;]
 
-        task.run(task=napalm_configure,
-                 name=&#34;Loading IPv6 Static Routing Configuration on the device&#34;,
-                 replace=False,
-                 configuration=task.host[&#34;ipv6_static&#34;],
-                 dry_run=dry_run)</code></pre>
+            r = task.run(task=template_file,
+                         name=&#34;IPv6 Static Routing Template Loading&#34;,
+                         template=&#34;static_ipv6.j2&#34;,
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                         static_routing_ipv6_config=task.host[&#34;static_routing_ipv6_config&#34;])
+
+            task.host[&#34;ipv6_static&#34;] = r.result
+
+            task.run(task=napalm_configure,
+                     name=&#34;Loading IPv6 Static Routing Configuration on the device&#34;,
+                     replace=False,
+                     configuration=task.host[&#34;ipv6_static&#34;],
+                     dry_run=dry_run)
+        else:
+            print(f&#34;{Fore.RED} Device {task.host.name}: invalid device type.&#34;)
+            raise NornirSubTaskError(&#34;Invalid device type. Switches are not supported.&#34;, task)</code></pre>
 </details>
 </section>
 <section>
@@ -121,22 +152,35 @@ class StaticRoutingConfiguration:
             dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
                             (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
 
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+                konfiguraci na nepodporovaných zařízeních.
+
         Returns:
             None
         &#34;&#34;&#34;
-        r = task.run(task=template_file,
-                     name=&#34;IPv4 Static Routing Template Loading&#34;,
-                     template=&#34;static_ipv4.j2&#34;,
-                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                     static_routing_config=task.host[&#34;static_routing_config&#34;])
 
-        task.host[&#34;ipv4_static&#34;] = r.result
+        if not task.host[&#34;dev_type&#34;] == &#34;switch&#34;:
+            data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
+                            severity_level=logging.DEBUG)
+            task.host[&#34;static_routing_config&#34;] = data[0].result[&#34;static_routing_config&#34;]
 
-        task.run(task=napalm_configure,
-                 name=&#34;Loading IPv4 Static Routing Configuration on the device&#34;,
-                 replace=False,
-                 configuration=task.host[&#34;ipv4_static&#34;],
-                 dry_run=dry_run)
+            r = task.run(task=template_file,
+                         name=&#34;IPv4 Static Routing Template Loading&#34;,
+                         template=&#34;static_ipv4.j2&#34;,
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                         static_routing_config=task.host[&#34;static_routing_config&#34;])
+
+            task.host[&#34;ipv4_static&#34;] = r.result
+
+            task.run(task=napalm_configure,
+                     name=&#34;Loading IPv4 Static Routing Configuration on the device&#34;,
+                     replace=False,
+                     configuration=task.host[&#34;ipv4_static&#34;],
+                     dry_run=dry_run)
+        else:
+            print(f&#34;{Fore.RED} Device {task.host.name}: invalid device type.&#34;)
+            raise NornirSubTaskError(&#34;Invalid device type. Switches are not supported.&#34;, task)
 
     def configure_static_routing_ipv6(self, task: Task, dry_run: bool = False) -&gt; None:
         &#34;&#34;&#34;
@@ -147,22 +191,35 @@ class StaticRoutingConfiguration:
             dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
                             (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
 
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+                konfiguraci na nepodporovaných zařízeních.
+
         Returns:
             None
         &#34;&#34;&#34;
-        r = task.run(task=template_file,
-                     name=&#34;IPv6 Static Routing Template Loading&#34;,
-                     template=&#34;static_ipv6.j2&#34;,
-                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                     static_routing_ipv6_config=task.host[&#34;static_routing_ipv6_config&#34;])
 
-        task.host[&#34;ipv6_static&#34;] = r.result
+        if not task.host[&#34;dev_type&#34;] == &#34;switch&#34;:
+            data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
+                            severity_level=logging.DEBUG)
+            task.host[&#34;static_routing_ipv6_config&#34;] = data[0].result[&#34;static_routing_ipv6_config&#34;]
 
-        task.run(task=napalm_configure,
-                 name=&#34;Loading IPv6 Static Routing Configuration on the device&#34;,
-                 replace=False,
-                 configuration=task.host[&#34;ipv6_static&#34;],
-                 dry_run=dry_run)</code></pre>
+            r = task.run(task=template_file,
+                         name=&#34;IPv6 Static Routing Template Loading&#34;,
+                         template=&#34;static_ipv6.j2&#34;,
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                         static_routing_ipv6_config=task.host[&#34;static_routing_ipv6_config&#34;])
+
+            task.host[&#34;ipv6_static&#34;] = r.result
+
+            task.run(task=napalm_configure,
+                     name=&#34;Loading IPv6 Static Routing Configuration on the device&#34;,
+                     replace=False,
+                     configuration=task.host[&#34;ipv6_static&#34;],
+                     dry_run=dry_run)
+        else:
+            print(f&#34;{Fore.RED} Device {task.host.name}: invalid device type.&#34;)
+            raise NornirSubTaskError(&#34;Invalid device type. Switches are not supported.&#34;, task)</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
@@ -179,6 +236,12 @@ class StaticRoutingConfiguration:
 <dd>argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
 (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.</dd>
 </dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NornirSubTaskError</code></dt>
+<dd>Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+konfiguraci na nepodporovaných zařízeních.</dd>
+</dl>
 <h2 id="returns">Returns</h2>
 <p>None</p></div>
 <details class="source">
@@ -194,22 +257,35 @@ class StaticRoutingConfiguration:
         dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
                         (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
 
+    Raises:
+        NornirSubTaskError: Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+            konfiguraci na nepodporovaných zařízeních.
+
     Returns:
         None
     &#34;&#34;&#34;
-    r = task.run(task=template_file,
-                 name=&#34;IPv4 Static Routing Template Loading&#34;,
-                 template=&#34;static_ipv4.j2&#34;,
-                 path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                 static_routing_config=task.host[&#34;static_routing_config&#34;])
 
-    task.host[&#34;ipv4_static&#34;] = r.result
+    if not task.host[&#34;dev_type&#34;] == &#34;switch&#34;:
+        data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
+                        severity_level=logging.DEBUG)
+        task.host[&#34;static_routing_config&#34;] = data[0].result[&#34;static_routing_config&#34;]
 
-    task.run(task=napalm_configure,
-             name=&#34;Loading IPv4 Static Routing Configuration on the device&#34;,
-             replace=False,
-             configuration=task.host[&#34;ipv4_static&#34;],
-             dry_run=dry_run)</code></pre>
+        r = task.run(task=template_file,
+                     name=&#34;IPv4 Static Routing Template Loading&#34;,
+                     template=&#34;static_ipv4.j2&#34;,
+                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                     static_routing_config=task.host[&#34;static_routing_config&#34;])
+
+        task.host[&#34;ipv4_static&#34;] = r.result
+
+        task.run(task=napalm_configure,
+                 name=&#34;Loading IPv4 Static Routing Configuration on the device&#34;,
+                 replace=False,
+                 configuration=task.host[&#34;ipv4_static&#34;],
+                 dry_run=dry_run)
+    else:
+        print(f&#34;{Fore.RED} Device {task.host.name}: invalid device type.&#34;)
+        raise NornirSubTaskError(&#34;Invalid device type. Switches are not supported.&#34;, task)</code></pre>
 </details>
 </dd>
 <dt id="scripts.tasks.static_configuration.StaticRoutingConfiguration.configure_static_routing_ipv6"><code class="name flex">
@@ -224,6 +300,12 @@ class StaticRoutingConfiguration:
 <dt><strong><code>dry_run</code></strong> :&ensp;<code>bool</code></dt>
 <dd>argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
 (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NornirSubTaskError</code></dt>
+<dd>Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+konfiguraci na nepodporovaných zařízeních.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <p>None</p></div>
@@ -240,22 +322,35 @@ class StaticRoutingConfiguration:
         dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
                         (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
 
+    Raises:
+        NornirSubTaskError: Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+            konfiguraci na nepodporovaných zařízeních.
+
     Returns:
         None
     &#34;&#34;&#34;
-    r = task.run(task=template_file,
-                 name=&#34;IPv6 Static Routing Template Loading&#34;,
-                 template=&#34;static_ipv6.j2&#34;,
-                 path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                 static_routing_ipv6_config=task.host[&#34;static_routing_ipv6_config&#34;])
 
-    task.host[&#34;ipv6_static&#34;] = r.result
+    if not task.host[&#34;dev_type&#34;] == &#34;switch&#34;:
+        data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
+                        severity_level=logging.DEBUG)
+        task.host[&#34;static_routing_ipv6_config&#34;] = data[0].result[&#34;static_routing_ipv6_config&#34;]
 
-    task.run(task=napalm_configure,
-             name=&#34;Loading IPv6 Static Routing Configuration on the device&#34;,
-             replace=False,
-             configuration=task.host[&#34;ipv6_static&#34;],
-             dry_run=dry_run)</code></pre>
+        r = task.run(task=template_file,
+                     name=&#34;IPv6 Static Routing Template Loading&#34;,
+                     template=&#34;static_ipv6.j2&#34;,
+                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                     static_routing_ipv6_config=task.host[&#34;static_routing_ipv6_config&#34;])
+
+        task.host[&#34;ipv6_static&#34;] = r.result
+
+        task.run(task=napalm_configure,
+                 name=&#34;Loading IPv6 Static Routing Configuration on the device&#34;,
+                 replace=False,
+                 configuration=task.host[&#34;ipv6_static&#34;],
+                 dry_run=dry_run)
+    else:
+        print(f&#34;{Fore.RED} Device {task.host.name}: invalid device type.&#34;)
+        raise NornirSubTaskError(&#34;Invalid device type. Switches are not supported.&#34;, task)</code></pre>
 </details>
 </dd>
 </dl>
