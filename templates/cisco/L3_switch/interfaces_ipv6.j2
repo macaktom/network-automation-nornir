@@ -4,14 +4,15 @@ interface {{ int }}
 {% if int_dict.routed_port %}
  no switchport
 {% endif %}
- ipv6 enable
 {% for network in int_dict.networks %}
 {% if network.eui_format_auto %}
- ipv6 address {{ network.net }}{{ network.prefix_length }} eui-64
+ ipv6 address {{ network.net | upper }}{{ network.prefix_length }} eui-64
 {% else %}
- ipv6 address {{ network.net }}{{ network.prefix_length }}
+ ipv6 address {{ network.net | upper }}{{ network.prefix_length }}
 {% endif %}
 {% endfor %}
+ ipv6 enable
+ no shutdown
 !
 {% endfor %}
 end

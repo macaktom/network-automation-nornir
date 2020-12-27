@@ -1,7 +1,11 @@
+import logging
+
+from colorama import Fore
 from nornir.core import Task
 from nornir.core.exceptions import NornirSubTaskError
 from nornir_jinja2.plugins.tasks import template_file
 from nornir_napalm.plugins.tasks import napalm_configure
+from nornir_utils.plugins.tasks.data import load_yaml
 
 
 class InterfacesConfiguration:
@@ -22,6 +26,11 @@ class InterfacesConfiguration:
         Returns:
             None
         """
+
+        data = task.run(task=load_yaml, file=f'inventory/host_vars/{task.host.name}.yml', name="Load host data",
+                        severity_level=logging.DEBUG)
+        task.host["interfaces_ipv4"] = data[0].result["interfaces_ipv4"]
+
         result = task.run(task=template_file,
                           name="IPv4 Intefaces Configuration",
                           template="interfaces_ipv4.j2",
@@ -48,6 +57,10 @@ class InterfacesConfiguration:
         Returns:
             None
         """
+        data = task.run(task=load_yaml, file=f'inventory/host_vars/{task.host.name}.yml', name="Load host data",
+                        severity_level=logging.DEBUG)
+        task.host["interfaces_ipv6"] = data[0].result["interfaces_ipv6"]
+
         r = task.run(task=template_file,
                      name="IPv6 Intefaces Configuration",
                      template="interfaces_ipv6.j2",
@@ -71,10 +84,19 @@ class InterfacesConfiguration:
             dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
                             (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
 
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+                konfiguraci na nepodporovaných zařízeních.
+
         Returns:
             None
         """
         if task.host["dev_type"] == "L3_switch" or task.host["dev_type"] == "switch":
+
+            data = task.run(task=load_yaml, file=f'inventory/host_vars/{task.host.name}.yml', name="Load host data",
+                            severity_level=logging.DEBUG)
+            task.host["switching_interfaces"] = data[0].result["switching_interfaces"]
+            task.host["vlans_config"] = data[0].result["vlans_config"]
 
             interfaces_result = task.run(task=template_file,
                                          name="Switching Intefaces Configuration",
@@ -91,4 +113,5 @@ class InterfacesConfiguration:
                      configuration=task.host["switching_interfaces_config"],
                      dry_run=dry_run)
         else:
+            print(f"{Fore.RED} Device {task.host.name}: invalid device type.")
             raise NornirSubTaskError("Invalid device type. Only switches are supported.", task)

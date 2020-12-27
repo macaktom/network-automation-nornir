@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 from colorama import Fore
@@ -6,6 +7,7 @@ from nornir.core import Task
 from nornir.core.filter import F
 from nornir_napalm.plugins.tasks import napalm_configure
 from nornir_utils.plugins.functions import print_result
+from nornir_utils.plugins.tasks.data import load_yaml
 
 
 class RestoreConfiguration:
@@ -38,7 +40,8 @@ class RestoreConfiguration:
             None
         """
         try:
-            date = task.host["restore_config"]["running_config_date"]
+            data = task.run(task=load_yaml, file=f'inventory/host_vars/{task.host.name}.yml', name="Load host data", severity_level=logging.DEBUG)
+            date = data[0].result["restore_config"]["running_config_date"]
             file_path = Path(Path.cwd() / 'backups' / "running_configuration" / f"{task.host.name}" / f"{task.host.name}_{str(date)}.conf")
             task.host["restore_running_conf"] = self._get_data_from_file(file_path)
             task.run(task=napalm_configure,
@@ -47,8 +50,9 @@ class RestoreConfiguration:
                      configuration=task.host["restore_running_conf"],
                      dry_run=dry_run)
         except KeyError as err:
-            print(f"{Fore.RED}Device {task.host.name} was not restored - key (restore_config or running_config_date) is not "
-                  f"defined in config.yml for that device.")
+            print(
+                f"{Fore.RED}Device {task.host.name} was not restored - key (restore_config or running_config_date) is not "
+                f"defined in config.yml for that device.")
         except FileNotFoundError as err:
             print(
                 f"{Fore.RED}Device {task.host.name} was not restored - specified .conf file was not found.")
@@ -60,6 +64,9 @@ if __name__ == '__main__':
     restore_conf = RestoreConfiguration()
     nr = InitNornir(config_file="config.yml")
     all_devices = nr.filter(F(dev_type="router") | F(dev_type="L3_switch") | F(dev_type="switch"))
-    res = all_devices.run(restore_conf.restore_running_configuration, name="Restore backed up configuration",
-                          dry_run=False)
+    juniper_devices = nr.filter(F(groups__contains="junos_group"))
+    #res = all_devices.run(restore_conf.restore_running_configuration, name="Restore backed up configuration",
+                          #dry_run=True)
+    res = juniper_devices.run(restore_conf.restore_running_configuration, name="Restore backed up configuration",
+                    dry_run=False)
     print_result(res)

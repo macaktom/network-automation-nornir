@@ -4,6 +4,8 @@ from pprint import pprint
 from nornir import InitNornir
 from nornir.core import Task, Nornir
 from nornir.core.filter import F
+from nornir_napalm.plugins.tasks import napalm_cli
+from nornir_netmiko import netmiko_send_command
 from nornir_utils.plugins.functions import print_result
 
 from scripts.tasks.delete_configuration import DeleteConfiguration
@@ -43,6 +45,11 @@ def configure_devices(nornir_devices: Nornir, task_func: callable, task_name: st
     print_result(result)
 
 
+def send_command(nornir_devices: Nornir, task_name: str, dry_run: bool) -> None:
+    result = nornir_devices.run(task=netmiko_send_command, name=task_name, dry_run=dry_run)
+    print_result(result)
+
+
 def main() -> None:
     """
     Hlavní funkce skriptu, která se zavolá po spuštění skriptu main.py
@@ -68,43 +75,42 @@ def main() -> None:
     packet_filter = PacketFilterConfiguration()
     nat_config = NATConfiguration()
     delete_config = DeleteConfiguration()
-    z = juniper_devices.run(delete_config.delete_configuration, "Delete Configuration", dry_run=False)
-    #print_result(z)
-    juniper_devices.run(task=viewer.show_device_configuration)
+    #z = juniper_devices.run(delete_config.delete_configuration, "Delete Configuration", dry_run=False)
+    # print_result(z)
+    # juniper_devices.run(task=viewer.show_device_configuration)
     #all_devices.run(task=viewer.show_device_facts)
     # configure_devices(l3_cisco, static_routing_config.configure_static_routing_ipv4, "Static routing config", False)
-    # configure_devices(all_devices, ospf_config.configure_ospf, "OSPFv2 config", False)
-    # configure_devices(l3_cisco, eigrp_config.configure_eigrp_ipv4, "EIGRP config", False)
-    # configure_devices(l3_switches, interfaces_configuration.configure_switching_interfaces, "Switching interfaces config", False)
-    #configure_devices(all_devices, packet_filter.configure_ipv4_packet_filters, "IPv4 packet filter config", False)
-    # configure_devices(l3_cisco, nat_config.configure_source_nat_overload, "NAT Overload config", False)
-    # configure_devices(cisco_router, ospf_config.configure_ospfv3, "OSPFv3 config", False)
-    # configure_devices(l3_cisco, eigrp_config.configure_eigrp_ipv6, "EIGRP IPV6 config", False)
-    #configure_devices(juniper_devices, interfaces_configuration.configure_ipv4_interfaces, "IPv4 interfaces config", False)
-    #configure_devices(all_devices, interfaces_configuration.configure_ipv6_interfaces, "IPv6 interfaces config", False)
-    # configure_devices(cisco_router, static_routing_config.configure_static_routing_ipv6, "IPv6 Static Routing config", True)
-    #configure_devices(all_devices, packet_filter.configure_ipv6_packet_filters, "IPv6 packet filter config", False)
+    # configure_devices(l3_cisco, ospf_config.configure_ospf, "OSPFv2 config", False)
+    #configure_devices(l3_cisco, eigrp_config.configure_eigrp_ipv4, "EIGRP config", False)
 
-    #configure_devices(juniper_devices, static_routing_config.configure_static_routing_ipv4, "Static routing config", False)
-    #configure_devices(juniper_devices, ospf_config.configure_ospf, "OSPFv2 config", False)
-    #configure_devices(juniper_devices, ospf_config.configure_ospfv3, "OSPFv3 config", False)
-    #configure_devices(juniper_devices, static_routing_config.configure_static_routing_ipv6, "IPv6 Static Routing config", False)
-    #configure_devices(juniper_devices, interfaces_configuration.configure_ipv4_interfaces, "IPv4 interfaces config", False)
-    #configure_devices(juniper_devices, interfaces_configuration.configure_ipv6_interfaces, "IPv6 interfaces config", False)
-    #configure_devices(juniper_devices, packet_filter.configure_ipv4_packet_filters, "IPv4 packet filter config", False)
-    #configure_devices(juniper_devices, packet_filter.configure_ipv6_packet_filters, "IPv6 packet filter config", False)
+    #configure_devices(l3_switches, interfaces_configuration.configure_switching_interfaces, "Switching interfaces config", False)
+    #configure_devices(l3_cisco, packet_filter.configure_ipv4_packet_filters, "IPv4 packet filter config", False)
+    #configure_devices(l3_cisco, nat_config.configure_source_nat_overload, "NAT Overload config", False)
+    # configure_devices(cisco_router, ospf_config.configure_ospfv3, "OSPFv3 config", False)
+    #configure_devices(l3_cisco, eigrp_config.configure_eigrp_ipv6, "EIGRP IPV6 config", False)
+    #configure_devices(l3_cisco, interfaces_configuration.configure_ipv4_interfaces, "IPv4 interfaces config", False)
+    #configure_devices(l3_cisco, interfaces_configuration.configure_ipv6_interfaces, "IPv6 interfaces config", False)
+    # configure_devices(l3_cisco, static_routing_config.configure_static_routing_ipv6, "IPv6 Static Routing config", False)
+    #configure_devices(l3_cisco, packet_filter.configure_ipv6_packet_filters, "IPv6 packet filter config", False)
+
+    # configure_devices(juniper_devices, static_routing_config.configure_static_routing_ipv4, "Static routing config", False)
+    # configure_devices(juniper_devices, ospf_config.configure_ospf, "OSPFv2 config", False)
+    #configure_devices(routers, ospf_config.configure_ospfv3, "OSPFv3 config", False)
+    # configure_devices(juniper_devices, static_routing_config.configure_static_routing_ipv6, "IPv6 Static Routing config", False)
+    # configure_devices(juniper_devices, interfaces_configuration.configure_ipv4_interfaces, "IPv4 interfaces config", False)
+    # configure_devices(juniper_devices, interfaces_configuration.configure_ipv6_interfaces, "IPv6 interfaces config", False)
+    # configure_devices(juniper_devices, packet_filter.configure_ipv4_packet_filters, "IPv4 packet filter config", False)
+    # configure_devices(juniper_devices, packet_filter.configure_ipv6_packet_filters, "IPv6 packet filter config", False)
     #all_devices.run(task=exporter.export_device_configuration)
-    #all_devices.run(task=exporter.export_packet_filter_info)
-    #all_devices.run(task=exporter.export_ipv4_routes)
-    #all_devices.run(task=exporter.export_ipv6_routes)
-    #exporter.export_device_facts(all_devices)
-    #exporter.export_interfaces_packet_counters(all_devices)
+    # all_devices.run(task=exporter.export_packet_filter_info)
+    # all_devices.run(task=exporter.export_ipv4_routes)
+    # all_devices.run(task=exporter.export_ipv6_routes)
+    # exporter.export_device_facts(all_devices)
+    # exporter.export_interfaces_packet_counters(all_devices)
 
     # print(z['R1'][1].result['facts'])
     # print(z['R1'][2].result)
     # all_devices.run(task=viewer.show_interfaces_packet_counters, json_out=True)
-
-    # exporter_xlsx = ExcelExporter(Workbook(), "Testa")
 
 
 if __name__ == "__main__":

@@ -1,6 +1,9 @@
+import logging
+
 from nornir.core import Task
 from nornir_jinja2.plugins.tasks import template_file
 from nornir_napalm.plugins.tasks import napalm_configure
+from nornir_utils.plugins.tasks.data import load_yaml
 
 
 class DeleteConfiguration:
@@ -20,6 +23,10 @@ class DeleteConfiguration:
         Returns:
             None
         """
+        data = task.run(task=load_yaml, file=f'inventory/host_vars/{task.host.name}.yml', name="Load host data",
+                        severity_level=logging.DEBUG)
+        task.host["delete_config"] = data[0].result["delete_config"]
+
         r = task.run(task=template_file,
                      name="Delete Configuration Template Loading",
                      template="delete_configuration.j2",

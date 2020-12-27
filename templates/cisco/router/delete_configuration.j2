@@ -1,0 +1,16 @@
+no router eigrp 4
+no router ospf 3
+no ipv6 router ospf 1
+no ipv6 router eigrp 1
+no ipv6 access-list ACLName
+no access-list 1 permit 192.168.0.0 0.0.0.255
+no ip access-list extended ADMIN-ACL
+no ip access-list standard Student-ACL
+no ip nat inside source list 1 interface FastEthernet0/1 overload
+
+no interface Vlan10
+no Vlan10
+
+no ipv6 route ::/0 2001:db8:0:EE44::1
+no ipv6 route 2001:db9::/32 2001:db9::/32 FastEthernet0/1
+no ip route *

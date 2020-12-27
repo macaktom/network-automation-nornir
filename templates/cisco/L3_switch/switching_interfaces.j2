@@ -1,11 +1,12 @@
 {% for vlan in vlans_config %}
 vlan {{ vlan.number }}
  name {{ vlan.name }}
-!
 {% endfor %}
+!
 {% for int, int_dict in switching_interfaces.items() | sort %}
 interface {{ int }}
  description {{ int_dict.description }}
+ switchport
 {% if int_dict.mode == "access" %}
  switchport access vlan {{ int_dict.vlan }}
 {% elif int_dict.mode == "trunk" %}

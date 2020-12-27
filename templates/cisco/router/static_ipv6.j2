@@ -1,10 +1,18 @@
 ipv6 unicast-routing
 !
 {% for net in static_routing_ipv6_config.networks %}
-ipv6 route {{ net.dest_ip }}{{ net.prefix_length }} {{ net.next_hop }}
+{% if ":" in net.next_hop %}
+ipv6 route {{ net.dest_ip | upper }}{{ net.prefix_length }} {{ net.next_hop | upper }}
+{% else %}
+ipv6 route {{ net.dest_ip | upper }}{{ net.prefix_length }} {{ net.next_hop }}
+{% endif %}
 {% endfor %}
 {% if static_routing_ipv6_config.default is defined %}
+{% if ":" in static_routing_ipv6_config.default.next_hop %}
+ipv6 route ::/0 {{ static_routing_ipv6_config.default.next_hop | upper }}
+{% else %}
 ipv6 route ::/0 {{ static_routing_ipv6_config.default.next_hop }}
+{% endif %}
 {% endif %}
 !
 end
