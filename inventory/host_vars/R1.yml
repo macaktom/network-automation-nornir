@@ -9,7 +9,7 @@ interfaces_ipv4:
       net: 192.168.20.1
       mask: 255.255.255.0
   FastEthernet0/1:
-      description: connected to router1 FastEthernet0/0
+      description: connected to router1 FastEthernet0/1
       net: 192.168.50.1
       mask: 255.255.255.252
 static_routing_config:
@@ -23,7 +23,7 @@ static_routing_config:
     default:
         next_hop: 192.168.10.2
 ospf_config: # OSPFv2 konfigurace + redistribuce
-    process: 3
+    process: 1
     router_id: 7.7.7.7
     passive_interfaces: [ FastEthernet0/0, FastEthernet0/1 ]
     networks:
@@ -116,12 +116,12 @@ ospfv3_config: # OSPFv3 konfigurace + redistribuce
     router_id: 1.1.1.1
     passive_interfaces: [ FastEthernet0/0 ]
     interfaces:
-        Loopback0:
-            area_number: 0
-        FastEthernet0/0:
-            area_number: 0
-        FastEthernet0/1:
-            area_number: 0
+      - name: Loopback0
+        area_number: 0
+      - name: FastEthernet0/0
+        area_number: 0
+      - name: FastEthernet0/1
+        area_number: 0
     redistribute:
         static: true
         default: true
@@ -183,6 +183,8 @@ delete_config:
             - dest_ip: "2001:db9::"
               prefix_length: /32
               next_hop: FastEthernet0/1
+        default:
+          next_hop: "2001:db8:0:ee44::1"
     eigrp_ipv6_config:
         AS:
             - number: 1
@@ -202,16 +204,16 @@ delete_config:
         access_list_number: 1
         interface_types:
             inside:
-                routed_port: FastEthernet0/0
+                interface: FastEthernet0/0
             outside:
-                routed_port: FastEthernet0/1
+                interface: FastEthernet0/1
     ospfv3_config:
         processes:
             - number: 1
               interfaces:
-                Loopback0:
-                    area_number: 0
-                FastEthernet0/0:
-                    area_number: 0
-                FastEthernet0/1:
-                    area_number: 0
+                - name: Loopback0
+                  area_number: 0
+                - name: FastEthernet0/0
+                  area_number: 0
+                - name: FastEthernet0/1
+                  area_number: 0

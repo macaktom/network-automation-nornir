@@ -4,7 +4,7 @@ ip access-list {{ acl_dict.type }} {{ acl_name }}
  {{ rule | trim }}
 {% endfor %}
 !
-{% for interface in acl_dict.interfaces %}
+{% for interface in acl_dict.routed_interfaces %}
 interface {{ interface.name }}
  ip access-group {{ acl_name }} {{ interface.acl_direction }}
 !

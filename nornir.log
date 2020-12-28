@@ -9136,3 +9136,1178 @@ FileNotFoundError: [Errno 2] No such file or directory: 'host_vars/R3.yaml'
 2020-12-27 18:22:21,183 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
 2020-12-27 18:23:01,944 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
 2020-12-27 18:24:35,489 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-27 19:58:57,769 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-27 19:59:00,661 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'Loading Delete Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 834, in execute
+    rpc_rsp_e = self._rpc_reply(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 165, in wrapper
+    raise ex
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 117, in wrapper
+    rsp = function(self, *args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 1440, in _rpc_reply
+    return self._conn.rpc(rpc_cmd_e, filter_xml)._NCElement__doc
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/manager.py", line 226, in execute
+    return cls(self._session,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/third_party/juniper/rpc.py", line 52, in request
+    return self._request(rpc)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/rpc.py", line 358, in _request
+    raise RPCError(to_ele(self._reply._raw), errs=errors)
+ncclient.operations.rpc.RPCError: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: inet
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 490, in try_load
+    got = self.rpc.load_config(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/rpcmeta.py", line 288, in load_config
+    return self._junos.execute(rpc, ignore_warning=ignore_warning)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 76, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 31, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 854, in execute
+    raise EzErrors.RpcError(cmd=rpc_cmd_e, rsp=rsp, errs=ex)
+jnpr.junos.exception.RpcError: RpcError(severity: None, bad_element: None, message: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: inet
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 249, in _load_candidate
+    self.device.cu.load(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 579, in load
+    return try_load(rpc_contents, rpc_xattrs, ignore_warning=ignore_warning)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 496, in try_load
+    raise ConfigLoadError(cmd=err.cmd, rsp=err.rsp, errs=err.errs)
+jnpr.junos.exception.ConfigLoadError: ConfigLoadError(severity: None, bad_element: None, message: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: inet
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 34, in napalm_configure
+    device.load_merge_candidate(filename=filename, config=configuration)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 269, in load_merge_candidate
+    self._load_candidate(filename, config, False)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 259, in _load_candidate
+    raise MergeConfigException(e.errs)
+napalm.base.exceptions.MergeConfigException: [{'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': '[edit interfaces em2 unit 0 family]', 'bad_element': None, 'message': 'statement not found: inet'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': '[edit interfaces em1 unit 1 family inet6]', 'bad_element': None, 'message': 'statement not found: filter'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}]
+
+2020-12-27 19:59:00,661 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 38, in delete_configuration
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading Delete Configuration on the device (failed)
+
+
+2020-12-27 19:59:52,215 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 3 hosts
+2020-12-27 19:59:52,299 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Delete Configuration Template Loading' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_jinja2/plugins/tasks/template_file.py", line 41, in template_file
+    text = t.render(host=task.host, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 1090, in render
+    self.environment.handle_exception()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "templates/cisco/L3_switch/delete_configuration.j2", line 16, in top-level template code
+    {% for net in static_routing_ipv6_config.networks %}
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 471, in getattr
+    return getattr(obj, attribute)
+jinja2.exceptions.UndefinedError: 'static_routing_ipv6_config' is undefined
+
+2020-12-27 19:59:52,300 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 30, in delete_configuration
+    r = task.run(task=template_file,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Delete Configuration Template Loading (failed)
+
+
+2020-12-27 19:59:54,998 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'Loading Delete Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 834, in execute
+    rpc_rsp_e = self._rpc_reply(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 165, in wrapper
+    raise ex
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 117, in wrapper
+    rsp = function(self, *args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 1440, in _rpc_reply
+    return self._conn.rpc(rpc_cmd_e, filter_xml)._NCElement__doc
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/manager.py", line 226, in execute
+    return cls(self._session,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/third_party/juniper/rpc.py", line 52, in request
+    return self._request(rpc)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/rpc.py", line 358, in _request
+    raise RPCError(to_ele(self._reply._raw), errs=errors)
+ncclient.operations.rpc.RPCError: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: inet
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 490, in try_load
+    got = self.rpc.load_config(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/rpcmeta.py", line 288, in load_config
+    return self._junos.execute(rpc, ignore_warning=ignore_warning)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 76, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 31, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 854, in execute
+    raise EzErrors.RpcError(cmd=rpc_cmd_e, rsp=rsp, errs=ex)
+jnpr.junos.exception.RpcError: RpcError(severity: None, bad_element: None, message: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: inet
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 249, in _load_candidate
+    self.device.cu.load(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 579, in load
+    return try_load(rpc_contents, rpc_xattrs, ignore_warning=ignore_warning)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 496, in try_load
+    raise ConfigLoadError(cmd=err.cmd, rsp=err.rsp, errs=err.errs)
+jnpr.junos.exception.ConfigLoadError: ConfigLoadError(severity: None, bad_element: None, message: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: inet
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 34, in napalm_configure
+    device.load_merge_candidate(filename=filename, config=configuration)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 269, in load_merge_candidate
+    self._load_candidate(filename, config, False)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 259, in _load_candidate
+    raise MergeConfigException(e.errs)
+napalm.base.exceptions.MergeConfigException: [{'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': '[edit interfaces em2 unit 0 family]', 'bad_element': None, 'message': 'statement not found: inet'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': '[edit interfaces em1 unit 1 family inet6]', 'bad_element': None, 'message': 'statement not found: filter'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}]
+
+2020-12-27 19:59:54,999 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 38, in delete_configuration
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading Delete Configuration on the device (failed)
+
+
+2020-12-27 20:01:01,536 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 2 hosts
+2020-12-27 20:01:04,271 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'Loading Delete Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 834, in execute
+    rpc_rsp_e = self._rpc_reply(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 165, in wrapper
+    raise ex
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 117, in wrapper
+    rsp = function(self, *args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 1440, in _rpc_reply
+    return self._conn.rpc(rpc_cmd_e, filter_xml)._NCElement__doc
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/manager.py", line 226, in execute
+    return cls(self._session,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/third_party/juniper/rpc.py", line 52, in request
+    return self._request(rpc)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/operations/rpc.py", line 358, in _request
+    raise RPCError(to_ele(self._reply._raw), errs=errors)
+ncclient.operations.rpc.RPCError: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: inet
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 490, in try_load
+    got = self.rpc.load_config(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/rpcmeta.py", line 288, in load_config
+    return self._junos.execute(rpc, ignore_warning=ignore_warning)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 76, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/decorators.py", line 31, in wrapper
+    return function(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 854, in execute
+    raise EzErrors.RpcError(cmd=rpc_cmd_e, rsp=rsp, errs=ex)
+jnpr.junos.exception.RpcError: RpcError(severity: None, bad_element: None, message: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: inet
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 249, in _load_candidate
+    self.device.cu.load(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 579, in load
+    return try_load(rpc_contents, rpc_xattrs, ignore_warning=ignore_warning)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/utils/config.py", line 496, in try_load
+    raise ConfigLoadError(cmd=err.cmd, rsp=err.rsp, errs=err.errs)
+jnpr.junos.exception.ConfigLoadError: ConfigLoadError(severity: None, bad_element: None, message: warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found
+warning: statement not found: inet
+warning: statement not found
+warning: statement not found: filter
+warning: statement not found)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 34, in napalm_configure
+    device.load_merge_candidate(filename=filename, config=configuration)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 269, in load_merge_candidate
+    self._load_candidate(filename, config, False)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 259, in _load_candidate
+    raise MergeConfigException(e.errs)
+napalm.base.exceptions.MergeConfigException: [{'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': '[edit interfaces em2 unit 0 family]', 'bad_element': None, 'message': 'statement not found: inet'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}, {'severity': 'warning', 'source': None, 'edit_path': '[edit interfaces em1 unit 1 family inet6]', 'bad_element': None, 'message': 'statement not found: filter'}, {'severity': 'warning', 'source': None, 'edit_path': None, 'bad_element': None, 'message': 'statement not found'}]
+
+2020-12-27 20:01:04,271 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 38, in delete_configuration
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading Delete Configuration on the device (failed)
+
+
+2020-12-27 20:01:16,570 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-27 20:01:16,598 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Delete Configuration Template Loading' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_jinja2/plugins/tasks/template_file.py", line 41, in template_file
+    text = t.render(host=task.host, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 1090, in render
+    self.environment.handle_exception()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "templates/cisco/L3_switch/delete_configuration.j2", line 16, in top-level template code
+    {% for net in static_routing_ipv6_config.networks %}
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 471, in getattr
+    return getattr(obj, attribute)
+jinja2.exceptions.UndefinedError: 'static_routing_ipv6_config' is undefined
+
+2020-12-27 20:01:16,598 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 30, in delete_configuration
+    r = task.run(task=template_file,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Delete Configuration Template Loading (failed)
+
+
+2020-12-27 20:02:18,962 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-27 20:02:26,190 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-27 20:04:18,386 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-27 20:04:24,858 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-27 20:11:07,350 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-27 20:11:07,380 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Delete Configuration Template Loading' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_jinja2/plugins/tasks/template_file.py", line 41, in template_file
+    text = t.render(host=task.host, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 1090, in render
+    self.environment.handle_exception()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "templates/cisco/L3_switch/delete_configuration.j2", line 35, in top-level template code
+    no vlan {{ vlan.number }}
+jinja2.exceptions.UndefinedError: 'str object' has no attribute 'number'
+
+2020-12-27 20:11:07,380 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 30, in delete_configuration
+    r = task.run(task=template_file,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Delete Configuration Template Loading (failed)
+
+
+2020-12-27 20:12:09,839 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-27 20:12:16,863 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-27 20:16:03,274 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-27 20:16:10,381 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 08:43:17,458 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-28 08:43:23,590 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 10:44:26,848 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-28 10:44:33,791 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 10:45:39,439 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-28 10:45:45,612 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 10:46:37,800 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-28 10:46:44,032 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 10:47:41,645 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-28 10:51:36,562 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-28 10:51:36,594 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Delete Configuration Template Loading' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_jinja2/plugins/tasks/template_file.py", line 41, in template_file
+    text = t.render(host=task.host, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 1090, in render
+    self.environment.handle_exception()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "templates/cisco/L3_switch/delete_configuration.j2", line 32, in top-level template code
+    {% for virtual_int in delete_config.virtual %}
+jinja2.exceptions.UndefinedError: 'dict object' has no attribute 'virtual'
+
+2020-12-28 10:51:36,594 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 30, in delete_configuration
+    r = task.run(task=template_file,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Delete Configuration Template Loading (failed)
+
+
+2020-12-28 10:52:54,745 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-28 10:53:01,071 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 11:25:09,290 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-28 11:25:15,617 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 11:38:22,044 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-28 11:38:28,348 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 11:39:56,732 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-28 11:40:02,925 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 11:41:18,732 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-28 11:41:24,799 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 11:56:14,095 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-28 11:56:20,584 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 12:23:53,125 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-28 12:23:53,146 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Delete Configuration Template Loading' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_jinja2/plugins/tasks/template_file.py", line 40, in template_file
+    t = env.get_template(template)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 883, in get_template
+    return self._load_template(name, self.make_globals(globals))
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 857, in _load_template
+    template = self.loader.load(self, name, globals)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/loaders.py", line 127, in load
+    code = environment.compile(source, name, filename)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 638, in compile
+    self.handle_exception(source=source_hint)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "templates/cisco/L3_switch/delete_configuration.j2", line 31, in template
+    {% if delete_config.nat_overload_configis defined %}
+jinja2.exceptions.TemplateSyntaxError: expected token 'end of statement block', got 'defined'
+
+2020-12-28 12:23:53,146 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 30, in delete_configuration
+    r = task.run(task=template_file,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Delete Configuration Template Loading (failed)
+
+
+2020-12-28 12:24:27,418 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-28 12:24:27,462 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Delete Configuration Template Loading' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_jinja2/plugins/tasks/template_file.py", line 41, in template_file
+    text = t.render(host=task.host, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 1090, in render
+    self.environment.handle_exception()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "templates/cisco/L3_switch/delete_configuration.j2", line 32, in top-level template code
+    {% for type, int_dict in nat_overload_config.interface_types.items() %}
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 471, in getattr
+    return getattr(obj, attribute)
+jinja2.exceptions.UndefinedError: 'nat_overload_config' is undefined
+
+2020-12-28 12:24:27,462 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 30, in delete_configuration
+    r = task.run(task=template_file,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Delete Configuration Template Loading (failed)
+
+
+2020-12-28 12:24:39,667 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': True} on 1 hosts
+2020-12-28 12:24:45,864 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 13:27:28,732 -  nornir.core -     INFO -        run() - Running task 'Backup running configuration' with args {} on 3 hosts
+2020-12-28 13:30:29,556 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:30:37,571 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:30:44,541 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:30:52,876 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-28 13:31:00,496 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:31:07,958 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:31:13,899 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-28 13:31:18,831 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:31:28,528 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Loading EIGRP IPv6 Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 39, in napalm_configure
+    device.commit_config()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 550, in commit_config
+    raise MergeConfigException(merge_error)
+napalm.base.exceptions.MergeConfigException: Configuration merge failed; automatic rollback attempted:
+ ipv6 enable
+       ^
+% Invalid input detected at '^' marker.
+
+236 bytes copied in 0.047 secs (5021 bytes/sec)
+
+2020-12-28 13:31:28,528 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'EIGRP IPV6 config' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/eigrp_configuration.py", line 85, in configure_eigrp_ipv6
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading EIGRP IPv6 Configuration on the device (failed)
+
+
+2020-12-28 13:31:28,529 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:31:37,062 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:31:45,689 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:31:52,457 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:31:57,458 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 13:35:16,571 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:35:23,574 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:35:28,799 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:35:35,414 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:35:44,037 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:35:52,583 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-28 13:36:00,272 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:36:06,944 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:36:11,957 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-28 13:36:17,374 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:36:25,819 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Loading EIGRP IPv6 Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 39, in napalm_configure
+    device.commit_config()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 550, in commit_config
+    raise MergeConfigException(merge_error)
+napalm.base.exceptions.MergeConfigException: Configuration merge failed; automatic rollback attempted:
+ ipv6 enable
+       ^
+% Invalid input detected at '^' marker.
+
+236 bytes copied in 0.028 secs (8429 bytes/sec)
+
+2020-12-28 13:36:25,820 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'EIGRP IPV6 config' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/eigrp_configuration.py", line 85, in configure_eigrp_ipv6
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading EIGRP IPv6 Configuration on the device (failed)
+
+
+2020-12-28 13:36:25,821 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:36:30,944 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:36:36,020 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 13:42:05,013 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:42:12,188 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:42:17,313 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:42:24,141 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:42:32,594 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:42:41,272 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-28 13:42:49,064 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:42:56,243 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:43:01,511 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-28 13:43:06,775 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:43:12,901 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:43:20,360 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:43:26,020 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 13:43:35,167 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:43:42,340 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:43:47,680 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:43:54,814 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:44:03,489 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:44:12,109 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-28 13:44:20,096 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:44:26,930 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:44:32,106 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-28 13:44:37,069 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:44:42,275 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:44:47,634 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 13:44:53,104 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 15:17:50,889 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:17:57,958 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:18:03,248 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:18:10,119 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:18:19,152 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:18:28,049 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-28 15:18:36,143 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:18:42,946 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:18:48,335 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-28 15:18:53,361 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:18:58,788 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:19:04,175 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:19:09,432 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 15:20:16,030 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': False} on 1 hosts
+2020-12-28 15:20:25,388 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 15:22:25,058 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': False} on 1 hosts
+2020-12-28 15:22:37,415 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Loading Delete Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 39, in napalm_configure
+    device.commit_config()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 550, in commit_config
+    raise MergeConfigException(merge_error)
+napalm.base.exceptions.MergeConfigException: Configuration merge failed; automatic rollback attempted:
+no interface Vlan10
+                 ^
+% Invalid input detected at '^' marker.
+
+no interface Loopback0
+                     ^
+% Invalid input detected at '^' marker.
+
+Interface GigabitEthernet0/2 set to default configuration
+Interface GigabitEthernet0/3 set to default configuration
+Interface GigabitEthernet1/1 set to default configuration
+Interface GigabitEthernet1/2 set to default configuration
+195 bytes copied in 0.508 secs (384 bytes/sec)
+
+2020-12-28 15:22:37,416 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'delete_configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 38, in delete_configuration
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading Delete Configuration on the device (failed)
+
+
+2020-12-28 15:23:07,064 -  nornir.core -     INFO -        run() - Running task 'delete_configuration' with args {'dry_run': False} on 1 hosts
+2020-12-28 15:23:16,036 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 15:27:30,102 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:27:38,223 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:27:45,302 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:27:52,476 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:28:01,094 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:28:09,960 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-28 15:28:18,227 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:28:25,620 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:28:33,042 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-28 15:28:38,045 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:28:48,204 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Loading EIGRP IPv6 Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 39, in napalm_configure
+    device.commit_config()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 550, in commit_config
+    raise MergeConfigException(merge_error)
+napalm.base.exceptions.MergeConfigException: Configuration merge failed; automatic rollback attempted:
+ ipv6 enable
+       ^
+% Invalid input detected at '^' marker.
+
+236 bytes copied in 0.046 secs (5130 bytes/sec)
+
+2020-12-28 15:28:48,204 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'EIGRP IPV6 config' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/eigrp_configuration.py", line 85, in configure_eigrp_ipv6
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading EIGRP IPv6 Configuration on the device (failed)
+
+
+2020-12-28 15:28:48,205 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:28:53,282 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:28:58,284 -  nornir.core -     INFO -        run() - Running task 'Delete Configuration' with args {'dry_run': False} on 1 hosts
+2020-12-28 15:28:58,284 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 15:45:55,934 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-28 15:46:00,952 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Show device basic facts' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 920, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/client.py", line 349, in connect
+    retry_on_signal(lambda: sock.connect(addr))
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/util.py", line 283, in retry_on_signal
+    return function()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/client.py", line 349, in <lambda>
+    retry_on_signal(lambda: sock.connect(addr))
+socket.timeout: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/base.py", line 86, in _netmiko_open
+    self._netmiko_device = ConnectHandler(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/ssh_dispatcher.py", line 312, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/cisco/cisco_ios.py", line 17, in __init__
+    return super().__init__(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 346, in __init__
+    self._open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 351, in _open
+    self.establish_connection()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 942, in establish_connection
+    raise NetmikoTimeoutException(msg)
+netmiko.ssh_exception.NetmikoTimeoutException: TCP connection to device failed.
+
+Common causes of this problem are:
+1. Incorrect hostname or IP address.
+2. Wrong TCP port.
+3. Intermediate firewall blocking access.
+
+Device settings: cisco_ios 10.10.10.5:22
+
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_get.py", line 32, in napalm_get
+    device = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 440, in get_connection
+    self.open_connection(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 492, in open_connection
+    conn_obj.open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/connections/__init__.py", line 57, in open
+    connection.open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 169, in open
+    self.device = self._netmiko_open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/base.py", line 95, in _netmiko_open
+    raise ConnectionException("Cannot connect to {}".format(self.hostname))
+napalm.base.exceptions.ConnectionException: Cannot connect to 10.10.10.5
+
+2020-12-28 15:46:00,953 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'show_device_facts' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_viewer.py", line 236, in show_device_facts
+    result = task.run(task=napalm_get, name="Show device basic facts", getters=["facts"])
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Show device basic facts (failed)
+
+
+2020-12-28 15:46:00,954 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 15:47:46,141 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-28 15:47:50,750 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 15:50:02,688 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:50:12,021 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:50:20,951 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-28 15:50:29,245 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:50:36,687 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:50:44,197 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:50:51,948 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:50:59,600 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:51:07,226 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-28 15:51:12,301 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:51:12,338 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'EIGRP IPv6 Template Loading' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_jinja2/plugins/tasks/template_file.py", line 41, in template_file
+    text = t.render(host=task.host, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 1090, in render
+    self.environment.handle_exception()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "templates/cisco/L3_switch/eigrp_ipv6.j2", line 14, in top-level template code
+    {% for interface in eigrp_ipv6_config.routed_interfaces %}
+jinja2.exceptions.UndefinedError: 'dict object' has no attribute 'routed_interfaces'
+
+2020-12-28 15:51:12,339 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'EIGRP IPV6 config' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/eigrp_configuration.py", line 77, in configure_eigrp_ipv6
+    r = task.run(task=template_file,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: EIGRP IPv6 Template Loading (failed)
+
+
+2020-12-28 15:51:17,289 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:51:22,522 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:51:27,591 -  nornir.core -     INFO -        run() - Running task 'Delete Configuration' with args {'dry_run': False} on 1 hosts
+2020-12-28 15:51:27,592 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 15:53:15,194 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:53:24,348 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:53:33,034 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-28 15:53:41,022 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:53:47,848 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:53:53,177 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:54:00,238 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:54:07,505 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:54:13,069 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-28 15:54:18,156 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:54:24,809 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:54:32,917 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:54:41,035 -  nornir.core -     INFO -        run() - Running task 'Delete Configuration' with args {'dry_run': False} on 1 hosts
+2020-12-28 15:54:41,075 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Delete Configuration Template Loading' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_jinja2/plugins/tasks/template_file.py", line 41, in template_file
+    text = t.render(host=task.host, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 1090, in render
+    self.environment.handle_exception()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "templates/cisco/L3_switch/delete_configuration.j2", line 45, in top-level template code
+    {% for interface in acl_dict.interfaces %}
+jinja2.exceptions.UndefinedError: 'dict object' has no attribute 'interfaces'
+
+2020-12-28 15:54:41,075 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Delete Configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 30, in delete_configuration
+    r = task.run(task=template_file,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Delete Configuration Template Loading (failed)
+
+
+2020-12-28 15:54:41,076 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 15:56:10,804 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:56:20,264 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:56:29,323 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-28 15:56:37,384 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:56:44,466 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:56:49,719 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:56:56,591 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:57:03,619 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:57:09,035 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-28 15:57:14,258 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:57:19,465 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:57:24,946 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 15:57:30,226 -  nornir.core -     INFO -        run() - Running task 'Delete Configuration' with args {'dry_run': False} on 1 hosts
+2020-12-28 15:57:30,273 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Delete Configuration Template Loading' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_jinja2/plugins/tasks/template_file.py", line 41, in template_file
+    text = t.render(host=task.host, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 1090, in render
+    self.environment.handle_exception()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "templates/cisco/L3_switch/delete_configuration.j2", line 45, in top-level template code
+    {% for interface in acl_dict.interfaces %}
+jinja2.exceptions.UndefinedError: 'dict object' has no attribute 'interfaces'
+
+2020-12-28 15:57:30,273 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Delete Configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 30, in delete_configuration
+    r = task.run(task=template_file,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Delete Configuration Template Loading (failed)
+
+
+2020-12-28 15:57:30,274 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 16:03:18,626 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:03:27,417 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:03:36,150 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-28 16:03:44,311 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:03:51,497 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:03:57,066 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:04:03,983 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:04:11,141 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:04:16,560 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-28 16:04:21,575 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:04:27,128 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:04:32,356 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:04:37,712 -  nornir.core -     INFO -        run() - Running task 'Delete Configuration' with args {'dry_run': False} on 1 hosts
+2020-12-28 16:04:56,708 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Loading Delete Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 39, in napalm_configure
+    device.commit_config()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 550, in commit_config
+    raise MergeConfigException(merge_error)
+napalm.base.exceptions.MergeConfigException: Configuration merge failed; automatic rollback attempted:
+no interface Loopback0
+                     ^
+% Invalid input detected at '^' marker.
+
+Interface GigabitEthernet0/1 set to default configuration
+Interface GigabitEthernet0/2 set to default configuration
+Interface GigabitEthernet0/3 set to default configuration
+Interface GigabitEthernet1/0 set to default configuration
+Interface GigabitEthernet1/1 set to default configuration
+Interface GigabitEthernet1/2 set to default configuration
+1165 bytes copied in 2.026 secs (575 bytes/sec)
+
+2020-12-28 16:04:56,709 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Delete Configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 38, in delete_configuration
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading Delete Configuration on the device (failed)
+
+
+2020-12-28 16:04:56,710 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 16:08:46,600 -  nornir.core -     INFO -        run() - Running task 'Delete Configuration' with args {'dry_run': False} on 1 hosts
+2020-12-28 16:08:58,395 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:09:07,346 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:09:15,983 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-28 16:09:24,673 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:09:32,519 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:09:40,377 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:09:48,392 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:09:56,351 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:10:04,222 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-28 16:10:09,387 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:10:17,341 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:10:25,293 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:10:33,221 -  nornir.core -     INFO -        run() - Running task 'Delete Configuration' with args {'dry_run': False} on 1 hosts
+2020-12-28 16:10:50,851 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Loading Delete Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 39, in napalm_configure
+    device.commit_config()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 550, in commit_config
+    raise MergeConfigException(merge_error)
+napalm.base.exceptions.MergeConfigException: Configuration merge failed; automatic rollback attempted:
+no interface Loopback0
+                     ^
+% Invalid input detected at '^' marker.
+
+Interface GigabitEthernet0/1 set to default configuration
+Interface GigabitEthernet0/2 set to default configuration
+Interface GigabitEthernet0/3 set to default configuration
+Interface GigabitEthernet1/0 set to default configuration
+Interface GigabitEthernet1/1 set to default configuration
+Interface GigabitEthernet1/2 set to default configuration
+1165 bytes copied in 1.700 secs (685 bytes/sec)
+
+2020-12-28 16:10:50,852 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Delete Configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 38, in delete_configuration
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading Delete Configuration on the device (failed)
+
+
+2020-12-28 16:10:50,852 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 16:11:11,040 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:11:20,163 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:11:29,090 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-28 16:11:37,478 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:11:44,270 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:11:49,689 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:11:56,574 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:12:03,451 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:12:08,711 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-28 16:12:13,708 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:12:18,773 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:12:23,880 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:12:29,189 -  nornir.core -     INFO -        run() - Running task 'Delete Configuration' with args {'dry_run': False} on 1 hosts
+2020-12-28 16:12:38,628 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 16:17:29,654 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:17:38,799 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 16:17:45,269 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:17:53,554 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 16:21:28,713 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:21:37,564 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 16:21:44,039 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 16:21:52,162 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 17:15:01,497 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 17:15:01,539 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'IPv4 Intefaces Configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_jinja2/plugins/tasks/template_file.py", line 40, in template_file
+    t = env.get_template(template)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 883, in get_template
+    return self._load_template(name, self.make_globals(globals))
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 857, in _load_template
+    template = self.loader.load(self, name, globals)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/loaders.py", line 127, in load
+    code = environment.compile(source, name, filename)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 638, in compile
+    self.handle_exception(source=source_hint)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "templates/cisco/L3_switch/interfaces_ipv4.j2", line 15, in template
+    {% endfor %}
+jinja2.exceptions.TemplateSyntaxError: Encountered unknown tag 'endfor'. You probably made a nesting mistake. Jinja is expecting this tag, but currently looking for 'endif'. The innermost block that needs to be closed is 'if'.
+
+2020-12-28 17:15:01,540 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'IPv4 interfaces config' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/interfaces_configuration.py", line 34, in configure_ipv4_interfaces
+    result = task.run(task=template_file,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: IPv4 Intefaces Configuration (failed)
+
+
+2020-12-28 17:15:09,570 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 17:15:34,447 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 17:15:43,351 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 17:15:49,566 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 17:15:57,576 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 17:18:34,043 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 17:18:42,826 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 17:18:49,333 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 17:18:57,410 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 17:19:47,425 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 17:19:55,617 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 17:20:04,946 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-28 17:20:14,147 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 17:20:22,625 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 17:20:30,717 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-28 17:20:38,976 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 17:20:47,797 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-28 17:20:55,973 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-28 17:21:00,990 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 17:21:09,249 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 17:21:17,424 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 17:21:25,402 -  nornir.core -     INFO -        run() - Running task 'Delete Configuration' with args {'dry_run': False} on 1 hosts
+2020-12-28 17:21:36,337 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 19:41:13,214 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 19:41:33,331 - nornir.core.task -    ERROR -      start() - Host 'R1': task 'Loading IPv4 interfaces Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 39, in napalm_configure
+    device.commit_config()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 556, in commit_config
+    output += self.device.save_config()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/cisco/cisco_ios.py", line 36, in save_config
+    return super().save_config(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/cisco_base_connection.py", line 232, in save_config
+    output = self.send_command(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/utilities.py", line 429, in wrapper_decorator
+    return func(self, *args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 1523, in send_command
+    raise IOError(
+OSError: Search pattern never detected in send_command: R1\#
+
+2020-12-28 19:41:33,332 - nornir.core.task -    ERROR -      start() - Host 'R1': task 'IPv4 interfaces config' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/interfaces_configuration.py", line 42, in configure_ipv4_interfaces
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading IPv4 interfaces Configuration on the device (failed)
+
+
+2020-12-28 19:41:33,333 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 19:42:55,732 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 19:43:04,090 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 19:43:12,854 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-28 19:43:21,448 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 19:43:29,524 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 19:43:37,580 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-28 19:43:45,707 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 19:43:54,031 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-28 19:44:02,131 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-28 19:44:10,385 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 19:44:18,819 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 19:44:27,521 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 19:44:36,269 -  nornir.core -     INFO -        run() - Running task 'Delete Configuration' with args {'dry_run': False} on 2 hosts
+2020-12-28 19:44:36,369 - nornir.core.task -    ERROR -      start() - Host 'R1': task 'Delete Configuration Template Loading' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_jinja2/plugins/tasks/template_file.py", line 41, in template_file
+    text = t.render(host=task.host, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 1090, in render
+    self.environment.handle_exception()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "templates/cisco/router/delete_configuration.j2", line 79, in top-level template code
+    no ipv6 ospf {{ process.number }} area {{ int.area_number }}
+jinja2.exceptions.UndefinedError: 'str object' has no attribute 'area_number'
+
+2020-12-28 19:44:36,370 - nornir.core.task -    ERROR -      start() - Host 'R1': task 'Delete Configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 30, in delete_configuration
+    r = task.run(task=template_file,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Delete Configuration Template Loading (failed)
+
+
+2020-12-28 19:44:53,799 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Loading Delete Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 39, in napalm_configure
+    device.commit_config()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 550, in commit_config
+    raise MergeConfigException(merge_error)
+napalm.base.exceptions.MergeConfigException: Configuration merge failed; automatic rollback attempted:
+no interface Loopback0
+                     ^
+% Invalid input detected at '^' marker.
+
+Interface GigabitEthernet0/1 set to default configuration
+Interface GigabitEthernet0/2 set to default configuration
+Interface GigabitEthernet0/3 set to default configuration
+Interface GigabitEthernet1/0 set to default configuration
+Interface GigabitEthernet1/1 set to default configuration
+Interface GigabitEthernet1/2 set to default configuration
+1166 bytes copied in 1.783 secs (654 bytes/sec)
+
+2020-12-28 19:44:53,799 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Delete Configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/delete_configuration.py", line 38, in delete_configuration
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading Delete Configuration on the device (failed)
+
+
+2020-12-28 19:44:53,800 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 19:47:31,813 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 19:47:41,281 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 19:47:50,121 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-28 19:47:58,373 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 19:48:05,456 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 19:48:10,834 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-28 19:48:17,831 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 19:48:24,689 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-28 19:48:29,949 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-28 19:48:34,845 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 19:48:39,893 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 19:48:44,948 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 19:48:50,022 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 20:12:20,287 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 20:12:29,875 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-28 20:12:38,469 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-28 20:12:46,435 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 20:12:53,132 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 20:12:58,504 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-28 20:13:05,464 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 20:13:12,297 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-28 20:13:17,394 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-28 20:13:22,596 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-28 20:13:27,976 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 2 hosts
+2020-12-28 20:13:32,993 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-28 20:13:38,031 -  nornir.core -     INFO -        run() - Running task 'Delete Configuration' with args {'dry_run': False} on 2 hosts
+2020-12-28 20:13:47,626 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts

@@ -2,7 +2,7 @@
 interface {{ int }}
  description {{ int_dict.description }}
 {% for network in int_dict.networks %}
-{% if network.eui_format_auto%}
+{% if network.eui_format_auto %}
  ipv6 address {{ network.net | upper }}{{ network.prefix_length }} eui-64
 {% else %}
  ipv6 address {{ network.net | upper }}{{ network.prefix_length }}

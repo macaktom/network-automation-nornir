@@ -19,9 +19,9 @@ ipv6 router ospf {{ ospfv3_config.process }}
 {% endif %}
 {% endif %}
 !
-{% for int, int_dict in ospfv3_config.interfaces.items() | sort %}
-interface {{ int }}
- ipv6 ospf {{ ospfv3_config.process }} area {{ int_dict.area_number }}
+{% for int in ospfv3_config.interfaces %}
+interface {{ int.name }}
+ ipv6 ospf {{ ospfv3_config.process }} area {{ int.area_number }}
 !
 {% endfor %}
 end
