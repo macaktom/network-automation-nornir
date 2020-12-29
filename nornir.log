@@ -10311,3 +10311,350 @@ nornir.core.exceptions.NornirSubTaskError: Subtask: Loading Delete Configuration
 2020-12-28 20:13:32,993 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
 2020-12-28 20:13:38,031 -  nornir.core -     INFO -        run() - Running task 'Delete Configuration' with args {'dry_run': False} on 2 hosts
 2020-12-28 20:13:47,626 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-28 20:19:39,855 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-28 20:19:44,394 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-29 11:40:48,183 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-29 11:40:51,276 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Show device basic facts' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 920, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/client.py", line 368, in connect
+    raise NoValidConnectionsError(errors)
+paramiko.ssh_exception.NoValidConnectionsError: [Errno None] Unable to connect to port 22 on 10.10.10.5
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/base.py", line 86, in _netmiko_open
+    self._netmiko_device = ConnectHandler(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/ssh_dispatcher.py", line 312, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/cisco/cisco_ios.py", line 17, in __init__
+    return super().__init__(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 346, in __init__
+    self._open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 351, in _open
+    self.establish_connection()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 942, in establish_connection
+    raise NetmikoTimeoutException(msg)
+netmiko.ssh_exception.NetmikoTimeoutException: TCP connection to device failed.
+
+Common causes of this problem are:
+1. Incorrect hostname or IP address.
+2. Wrong TCP port.
+3. Intermediate firewall blocking access.
+
+Device settings: cisco_ios 10.10.10.5:22
+
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_get.py", line 32, in napalm_get
+    device = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 440, in get_connection
+    self.open_connection(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 492, in open_connection
+    conn_obj.open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/connections/__init__.py", line 57, in open
+    connection.open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 169, in open
+    self.device = self._netmiko_open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/base.py", line 95, in _netmiko_open
+    raise ConnectionException("Cannot connect to {}".format(self.hostname))
+napalm.base.exceptions.ConnectionException: Cannot connect to 10.10.10.5
+
+2020-12-29 11:40:51,277 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'show_device_facts' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_viewer.py", line 236, in show_device_facts
+    result = task.run(task=napalm_get, name="Show device basic facts", getters=["facts"])
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Show device basic facts (failed)
+
+
+2020-12-29 11:40:57,515 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-29 12:25:15,506 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-29 12:25:18,595 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'Show device basic facts' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 920, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/client.py", line 368, in connect
+    raise NoValidConnectionsError(errors)
+paramiko.ssh_exception.NoValidConnectionsError: [Errno None] Unable to connect to port 22 on 10.10.10.5
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/base.py", line 86, in _netmiko_open
+    self._netmiko_device = ConnectHandler(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/ssh_dispatcher.py", line 312, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/cisco/cisco_ios.py", line 17, in __init__
+    return super().__init__(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 346, in __init__
+    self._open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 351, in _open
+    self.establish_connection()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 942, in establish_connection
+    raise NetmikoTimeoutException(msg)
+netmiko.ssh_exception.NetmikoTimeoutException: TCP connection to device failed.
+
+Common causes of this problem are:
+1. Incorrect hostname or IP address.
+2. Wrong TCP port.
+3. Intermediate firewall blocking access.
+
+Device settings: cisco_ios 10.10.10.5:22
+
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_get.py", line 32, in napalm_get
+    device = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 440, in get_connection
+    self.open_connection(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 492, in open_connection
+    conn_obj.open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/connections/__init__.py", line 57, in open
+    connection.open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 169, in open
+    self.device = self._netmiko_open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/base.py", line 95, in _netmiko_open
+    raise ConnectionException("Cannot connect to {}".format(self.hostname))
+napalm.base.exceptions.ConnectionException: Cannot connect to 10.10.10.5
+
+2020-12-29 12:25:18,595 - nornir.core.task -    ERROR -      start() - Host 'SW1': task 'show_device_facts' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_viewer.py", line 236, in show_device_facts
+    result = task.run(task=napalm_get, name="Show device basic facts", getters=["facts"])
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Show device basic facts (failed)
+
+
+2020-12-29 12:25:21,007 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-29 12:26:43,934 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-29 12:26:48,835 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-29 18:05:58,805 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-29 18:06:03,180 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:06:11,906 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:06:23,787 - nornir.core.task -    ERROR -      start() - Host 'R1': task 'Loading IPv6 interfaces Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 39, in napalm_configure
+    device.commit_config()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 550, in commit_config
+    raise MergeConfigException(merge_error)
+napalm.base.exceptions.MergeConfigException: Configuration merge failed; automatic rollback attempted:
+ no negotiation auto
+      ^
+% Invalid input detected at '^' marker.
+
+ no negotiation auto
+      ^
+% Invalid input detected at '^' marker.
+
+559 bytes copied in 0.308 secs (1815 bytes/sec)
+
+2020-12-29 18:06:23,787 - nornir.core.task -    ERROR -      start() - Host 'R1': task 'IPv6 interfaces config' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/interfaces_configuration.py", line 72, in configure_ipv6_interfaces
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading IPv6 interfaces Configuration on the device (failed)
+
+
+2020-12-29 18:06:23,788 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-29 18:06:31,904 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:07:13,766 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:07:22,694 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:07:31,195 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-29 18:07:38,916 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:07:46,807 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:07:54,558 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:08:02,484 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:08:11,033 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:08:19,400 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-29 18:08:28,063 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:08:37,196 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:08:46,083 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:08:55,023 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-29 18:09:04,231 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:09:14,515 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:09:24,220 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-29 18:09:32,640 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:09:39,861 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:09:45,281 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:09:52,467 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:09:59,577 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:10:04,949 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-29 18:10:10,048 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:10:15,487 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:10:20,883 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:10:26,371 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-29 18:19:02,296 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:19:11,326 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:19:20,576 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-29 18:19:28,439 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:19:35,696 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:19:41,038 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:19:48,220 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:19:55,149 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:20:00,438 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-29 18:20:05,595 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:20:11,272 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:20:16,377 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:20:21,787 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-29 18:24:07,960 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:24:17,188 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:24:26,363 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-29 18:24:34,867 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:24:41,955 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:24:47,490 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:24:54,718 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:25:01,779 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:25:07,076 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-29 18:25:12,275 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:25:17,724 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:25:22,875 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:25:28,207 -  nornir.core -     INFO -        run() - Running task 'Delete Configuration' with args {'dry_run': False} on 2 hosts
+2020-12-29 18:25:38,086 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-29 19:16:56,947 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:17:07,047 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:17:16,113 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-29 19:17:24,551 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:17:32,961 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:17:35,476 - nornir.core.task -    ERROR -      start() - Host 'R1': task 'Loading OSPFv2 Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 34, in napalm_configure
+    device.load_merge_candidate(filename=filename, config=configuration)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 323, in load_merge_candidate
+    raise MergeConfigException(msg)
+napalm.base.exceptions.MergeConfigException: File transfer to remote device failed
+
+2020-12-29 19:17:35,477 - nornir.core.task -    ERROR -      start() - Host 'R1': task 'OSPFv2 config' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/ospf_configuration.py", line 47, in configure_ospf
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading OSPFv2 Configuration on the device (failed)
+
+
+2020-12-29 19:17:41,151 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:17:49,248 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:17:57,363 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:18:05,637 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-29 19:18:05,637 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:18:13,863 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:18:21,947 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:18:30,206 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-29 19:25:02,841 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:25:22,473 - nornir.core.task -    ERROR -      start() - Host 'R1': task 'Loading IPv4 interfaces Configuration on the device' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_configure.py", line 39, in napalm_configure
+    device.commit_config()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 556, in commit_config
+    output += self.device.save_config()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/cisco/cisco_ios.py", line 36, in save_config
+    return super().save_config(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/cisco_base_connection.py", line 232, in save_config
+    output = self.send_command(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/utilities.py", line 429, in wrapper_decorator
+    return func(self, *args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 1523, in send_command
+    raise IOError(
+OSError: Search pattern never detected in send_command: R1\#
+
+2020-12-29 19:25:22,473 - nornir.core.task -    ERROR -      start() - Host 'R1': task 'IPv4 interfaces config' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/interfaces_configuration.py", line 42, in configure_ipv4_interfaces
+    task.run(task=napalm_configure,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Loading IPv4 interfaces Configuration on the device (failed)
+
+
+2020-12-29 19:25:22,474 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:25:30,519 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-29 19:25:38,579 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:25:44,313 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:25:48,723 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:30:37,600 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:30:49,219 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:30:57,603 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-29 19:31:05,641 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:31:13,577 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:31:21,828 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:31:29,719 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:31:38,149 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:31:46,445 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-29 19:31:54,829 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:32:03,285 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:32:11,946 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:32:20,865 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-29 19:32:37,115 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:32:46,799 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:32:55,460 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-29 19:33:03,375 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:33:10,541 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:33:15,710 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:33:22,417 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:33:29,048 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:33:34,428 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-29 19:33:39,399 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:33:44,672 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:33:49,906 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:33:55,153 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-29 19:38:07,459 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:38:16,502 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:38:25,079 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-29 19:38:33,102 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:38:39,873 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:38:45,027 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:38:51,992 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:38:58,872 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:39:04,238 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 1 hosts
+2020-12-29 19:39:09,256 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:39:14,383 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:39:19,625 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:39:24,903 -  nornir.core -     INFO -        run() - Running task 'Delete Configuration' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:39:34,380 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2020-12-29 19:50:16,823 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 3 hosts
+2020-12-29 19:50:26,484 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 3 hosts
+2020-12-29 19:50:35,409 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-29 19:50:43,691 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 3 hosts
+2020-12-29 19:50:51,897 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 3 hosts
+2020-12-29 19:51:00,199 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:51:08,428 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 3 hosts
+2020-12-29 19:51:17,057 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:51:25,369 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:51:33,974 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-29 19:51:42,680 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 3 hosts
+2020-12-29 19:51:51,475 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 3 hosts
+2020-12-29 19:52:00,248 -  nornir.core -     INFO -        run() - Running task 'Delete Configuration' with args {'dry_run': False} on 3 hosts
+2020-12-29 19:52:11,183 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts

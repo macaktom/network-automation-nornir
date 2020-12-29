@@ -1,8 +1,14 @@
+{% if interfaces_ipv4 is defined %}
 {% for int, int_dict in interfaces_ipv4.items() | sort %}
 interface {{ int }}
  description {{ int_dict.description }}
  ip address {{ int_dict.net }} {{ int_dict.mask }}
+{% if int_dict.routed_physical_port is defined and int_dict.routed_physical_port and int_dict.duplex is defined and int_dict.speed is defined %}
+ duplex {{ int_dict.duplex }}
+ speed {{ int_dict.speed }}
+{% endif %}
  no shutdown
 !
 {% endfor %}
 end
+{% endif %}

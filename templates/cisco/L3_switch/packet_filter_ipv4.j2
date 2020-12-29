@@ -1,3 +1,4 @@
+{% if packet_filter_config is defined %}
 {% for acl_name, acl_dict in packet_filter_config.items() %}
 ip access-list {{ acl_dict.type }} {{ acl_name }}
 {% for rule in acl_dict.rules %}
@@ -11,3 +12,4 @@ interface {{ interface.name }}
 {% endfor %}
 {% endfor %}
 end
+{% endif %}

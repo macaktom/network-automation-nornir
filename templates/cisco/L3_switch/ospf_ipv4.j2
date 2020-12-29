@@ -1,3 +1,4 @@
+{% if ospf_config is defined %}
 router ospf {{ ospf_config.process }}
  router-id {{ ospf_config.router_id }}
 {% for interface in ospf_config.passive_interfaces %}
@@ -21,3 +22,4 @@ router ospf {{ ospf_config.process }}
 {% endif %}
 !
 end
+{% endif %}

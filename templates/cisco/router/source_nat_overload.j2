@@ -1,3 +1,4 @@
+{% if nat_overload_config is defined %}
 access-list {{ nat_overload_config.access_list_number }} permit {{ nat_overload_config.source_network.ip }} {{ nat_overload_config.source_network.wild_card }}
 !
 ip nat inside source list {{ nat_overload_config.access_list_number }} interface {{ nat_overload_config.interface_types.outside.name }} overload
@@ -8,3 +9,4 @@ interface {{ int_dict.name }}
 !
 {% endfor %}
 end
+{% endif %}

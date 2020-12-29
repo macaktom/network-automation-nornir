@@ -1,3 +1,4 @@
+{% if ospfv3_config is defined %}
 set routing-options router-id {{ ospfv3_config.router_id  }}
 {% for int, int_dict in ospfv3_config.interfaces.items() | sort %}
 {% if int_dict.passive %}
@@ -10,4 +11,5 @@ set protocols ospf3 area {{ int_dict.area_number }} interface {{ int }}
 set policy-options policy-statement {{ ospfv3_config.redistribute_static.policy_name }} term {{ ospfv3_config.redistribute_static.term_name }} from protocol static
 set policy-options policy-statement {{ ospfv3_config.redistribute_static.policy_name }} term {{ ospfv3_config.redistribute_static.term_name }} then accept
 set protocols ospf3 export {{ ospfv3_config.redistribute_static.policy_name }}
+{% endif %}
 {% endif %}

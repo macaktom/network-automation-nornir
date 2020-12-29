@@ -1,3 +1,4 @@
+{% if static_routing_ipv6_config is defined %}
 ipv6 unicast-routing
 !
 {% for net in static_routing_ipv6_config.networks %}
@@ -16,3 +17,4 @@ ipv6 route ::/0 {{ static_routing_ipv6_config.default.next_hop }}
 {% endif %}
 !
 end
+{% endif %}

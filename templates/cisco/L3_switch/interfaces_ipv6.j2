@@ -1,18 +1,25 @@
+{% if interfaces_ipv6 is defined %}
 {% for int, int_dict in interfaces_ipv6.items() | sort %}
 interface {{ int }}
  description {{ int_dict.description }}
-{% if int_dict.routed_port %}
+{% if int_dict.routed_physical_port is defined and int_dict.routed_physical_port %}
  no switchport
 {% endif %}
 {% for network in int_dict.networks %}
-{% if network.eui_format_auto %}
+{% if network.eui_format_auto is defined and network.eui_format_auto %}
  ipv6 address {{ network.net | upper }}{{ network.prefix_length }} eui-64
 {% else %}
  ipv6 address {{ network.net | upper }}{{ network.prefix_length }}
 {% endif %}
 {% endfor %}
  ipv6 enable
+{% if int_dict.routed_physical_port is defined and int_dict.routed_physical_port and int_dict.duplex is defined and int_dict.speed is defined %}
+ no negotiation auto
+ duplex {{ int_dict.duplex }}
+ speed {{ int_dict.speed }}
+{% endif %}
  no shutdown
 !
 {% endfor %}
 end
+{% endif %}

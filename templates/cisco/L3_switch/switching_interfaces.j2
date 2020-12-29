@@ -1,8 +1,11 @@
+{% if vlans_config is defined %}
 {% for vlan in vlans_config %}
 vlan {{ vlan.number }}
  name {{ vlan.name }}
 {% endfor %}
 !
+{% endif %}
+{% if switching_interfaces is defined %}
 {% for int, int_dict in switching_interfaces.items() | sort %}
 interface {{ int }}
  description {{ int_dict.description }}
@@ -14,7 +17,13 @@ interface {{ int }}
  switchport mode {{ int_dict.mode }}
  switchport {{ int_dict.mode }} allowed vlan {{ int_dict.trunk_vlans }}
 {% endif %}
+{% if int_dict.duplex is defined and int_dict.speed is defined %}
+ no negotiation auto
+ duplex {{ int_dict.duplex }}
+ speed {{ int_dict.speed }}
+{% endif %}
  no shutdown
 !
 {% endfor %}
+{% endif %}
 end

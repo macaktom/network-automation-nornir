@@ -5,34 +5,37 @@ vlans_config:
     name: AdminVLAN
 switching_interfaces: # konfigurace switchportů
   GigabitEthernet0/1:
-      description: popis rozhrani
-      mode: access
-      vlan: 10
+    description: popis rozhrani
+    mode: access
+    vlan: 10
+    duplex: full
   GigabitEthernet0/2:
-      description: popis rozhrani
-      mode: trunk
-      trunk_vlans: 10,20
-interfaces_ipv4: # konfigurace routing portů + VLAN - IPv4
+    description: popis rozhrani
+    mode: trunk
+    trunk_vlans: 10,20
+    duplex: full
+    speed: auto
+interfaces_ipv4: # konfigurace routing portů + VLAN - IPv4, pokud fyzické rozhraní bude routované (no switchport), tak musí být definovaný klíč routed_physical_port.
   Loopback0:
     description: popis rozhrani
     net: 192.168.41.1
     mask: 255.255.255.0
-    routed_physical_port: false
   GigabitEthernet0/3:
-      description: popis rozhrani
-      net: 192.168.70.1
-      mask: 255.255.255.0
-      routed_physical_port: true
+    description: popis rozhrani
+    net: 192.168.70.1
+    mask: 255.255.255.0
+    routed_physical_port: true
+    duplex: full
   GigabitEthernet1/0:
-      description: popis rozhrani
-      net: 192.168.80.3
-      mask: 255.255.255.0
-      routed_physical_port: true
+    description: popis rozhrani
+    net: 192.168.80.3
+    mask: 255.255.255.0
+    routed_physical_port: true
+    duplex: full
   Vlan10:
-      description: neco
-      net: 192.168.10.3
-      mask: 255.255.255.0
-      routed_physical_port: false
+    description: popis rozhrani
+    net: 192.168.10.3
+    mask: 255.255.255.0
 static_routing_config: # IPv4 statický routing
   networks:
       - dest_ip: 192.168.38.0
@@ -103,7 +106,6 @@ nat_overload_config: # source NAT typu PAT
 interfaces_ipv6: # konfigurace routing portů + VLAN - IPv6
   GigabitEthernet1/1:
       description: popis
-      routed_port: true
       networks:
           - net: "2001:bb9:aabb:1234:1111:2222:3333:4445"
             prefix_length: /64
@@ -111,16 +113,19 @@ interfaces_ipv6: # konfigurace routing portů + VLAN - IPv6
           - net: "2001:bb9:aabb:1235::"
             prefix_length: /64
             eui_format_auto: true  # povolení IEEE EUI-64 metody kalkulace IPv6 adresy
+      routed_physical_port: true
+      duplex: full
+      speed: auto
   GigabitEthernet1/2:
       description: popis rozhrani
-      routed_port: true
       networks:
           - net: "2001:718:6::2"
             prefix_length: /64
             eui_format_auto: false
+      routed_physical_port: true
+      duplex: full
   Vlan10:
       description: popis rozhrani
-      routed_port: false
       networks:
           - net: "2001:718:3::2"
             prefix_length: /64

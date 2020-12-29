@@ -1,3 +1,4 @@
+{% if eigrp_ipv6_config is defined %}
 ipv6 unicast-routing
 !
 ipv6 router eigrp {{ eigrp_ipv6_config.AS_number }}
@@ -23,3 +24,4 @@ interface {{ interface }}
 !
 {% endfor %}
 end
+{% endif %}

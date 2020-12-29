@@ -1,3 +1,4 @@
+{% if interfaces_ipv6 is defined %}
 {% for int, int_dict in interfaces_ipv6.items() | sort %}
 set interfaces {{ int }} description {{ int_dict.description }}
 {% for unit in int_dict.units %}
@@ -7,3 +8,4 @@ set interfaces {{ int }}.{{ unit.number }} description {{ unit.description }}
 set interfaces {{ int }} unit {{ unit.number }} family inet6 address {{ unit.net }}{{ unit.prefix_length }}
 {% endfor %}
 {% endfor %}
+{% endif %}

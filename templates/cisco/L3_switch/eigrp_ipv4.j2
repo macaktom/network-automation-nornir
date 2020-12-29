@@ -1,5 +1,5 @@
+{% if eigrp_config is defined %}
 router eigrp {{ eigrp_config.AS_number }}
- no auto-summary
 {% for interface in eigrp_config.passive_interfaces %}
  passive-interface {{ interface }}
 {% endfor %}
@@ -18,3 +18,4 @@ router eigrp {{ eigrp_config.AS_number }}
 {% endif %}
 !
 end
+{% endif %}

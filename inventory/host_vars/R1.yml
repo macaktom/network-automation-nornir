@@ -8,10 +8,16 @@ interfaces_ipv4:
       description: connected to switch_mgmt Ethernet10
       net: 192.168.20.1
       mask: 255.255.255.0
+      routed_physical_port: true
+      duplex: full
+      speed: auto
   FastEthernet0/1:
       description: connected to router1 FastEthernet0/1
       net: 192.168.50.1
       mask: 255.255.255.252
+      routed_physical_port: true
+      duplex: full
+      speed: auto
 static_routing_config:
     networks:
         - dest_ip: 192.168.38.0
@@ -95,12 +101,18 @@ interfaces_ipv6: # Základní nastavení rozhraní - IPv6
             - net: "2001:bb9:aabb:1234::"
               prefix_length: /64
               eui_format_auto: true  # povolení IEEE EUI-64 metody kalkulace IPv6 adresy
+        routed_physical_port: true
+        duplex: full
+        speed: auto
     FastEthernet0/1:
         description: connected to router1 FastEthernet0/1
         networks:
             - net: "2001:718:1::1"
               prefix_length: /64
               eui_format_auto: false
+        routed_physical_port: true
+        duplex: full
+        speed: auto
 static_routing_ipv6_config: # Statický routing - IPv6
     networks:
         - dest_ip: "2001:db8::"

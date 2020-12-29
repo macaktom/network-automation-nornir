@@ -1,3 +1,4 @@
+{% if static_routing_config is defined %}
 {% for net in static_routing_config.networks %}
 ip route {{ net.dest_ip }} {{ net.dest_mask }} {{ net.next_hop }}
 {% endfor %}
@@ -6,3 +7,4 @@ ip route 0.0.0.0 0.0.0.0 {{ static_routing_config.default.next_hop }}
 {% endif %}
 !
 end
+{% endif %}
