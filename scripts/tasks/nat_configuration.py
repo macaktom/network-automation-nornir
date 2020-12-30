@@ -39,8 +39,7 @@ class NATConfiguration:
             r = task.run(task=template_file,
                          name="NAT Overload Configuration",
                          template="source_nat_overload.j2",
-                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}",
-                         nat_overload_config=task.host["nat_overload_config"])
+                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
 
             task.host["nat_overload"] = r.result
 

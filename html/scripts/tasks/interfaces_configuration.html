@@ -62,8 +62,7 @@ class InterfacesConfiguration:
         result = task.run(task=template_file,
                           name=&#34;IPv4 Intefaces Configuration&#34;,
                           template=&#34;interfaces_ipv4.j2&#34;,
-                          path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                          interfaces_ipv4=task.host[&#34;interfaces_ipv4&#34;])
+                          path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
         task.host[&#34;ipv4_interfaces&#34;] = result.result
 
@@ -92,8 +91,7 @@ class InterfacesConfiguration:
         r = task.run(task=template_file,
                      name=&#34;IPv6 Intefaces Configuration&#34;,
                      template=&#34;interfaces_ipv6.j2&#34;,
-                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                     interfaces_ipv6=task.host[&#34;interfaces_ipv6&#34;])
+                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
         task.host[&#34;ipv6_interfaces&#34;] = r.result
 
@@ -129,9 +127,7 @@ class InterfacesConfiguration:
             interfaces_result = task.run(task=template_file,
                                          name=&#34;Switching Intefaces Configuration&#34;,
                                          template=&#34;switching_interfaces.j2&#34;,
-                                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                                         switching_interfaces=task.host[&#34;switching_interfaces&#34;],
-                                         vlans_config=task.host[&#34;vlans_config&#34;])
+                                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
             task.host[&#34;switching_interfaces_config&#34;] = interfaces_result.result
 
@@ -190,8 +186,7 @@ konfigurace switchovaných a routovaných portů).</p></div>
         result = task.run(task=template_file,
                           name=&#34;IPv4 Intefaces Configuration&#34;,
                           template=&#34;interfaces_ipv4.j2&#34;,
-                          path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                          interfaces_ipv4=task.host[&#34;interfaces_ipv4&#34;])
+                          path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
         task.host[&#34;ipv4_interfaces&#34;] = result.result
 
@@ -220,8 +215,7 @@ konfigurace switchovaných a routovaných portů).</p></div>
         r = task.run(task=template_file,
                      name=&#34;IPv6 Intefaces Configuration&#34;,
                      template=&#34;interfaces_ipv6.j2&#34;,
-                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                     interfaces_ipv6=task.host[&#34;interfaces_ipv6&#34;])
+                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
         task.host[&#34;ipv6_interfaces&#34;] = r.result
 
@@ -257,9 +251,7 @@ konfigurace switchovaných a routovaných portů).</p></div>
             interfaces_result = task.run(task=template_file,
                                          name=&#34;Switching Intefaces Configuration&#34;,
                                          template=&#34;switching_interfaces.j2&#34;,
-                                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                                         switching_interfaces=task.host[&#34;switching_interfaces&#34;],
-                                         vlans_config=task.host[&#34;vlans_config&#34;])
+                                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
             task.host[&#34;switching_interfaces_config&#34;] = interfaces_result.result
 
@@ -313,8 +305,7 @@ konfigurace switchovaných a routovaných portů).</p></div>
     result = task.run(task=template_file,
                       name=&#34;IPv4 Intefaces Configuration&#34;,
                       template=&#34;interfaces_ipv4.j2&#34;,
-                      path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                      interfaces_ipv4=task.host[&#34;interfaces_ipv4&#34;])
+                      path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
     task.host[&#34;ipv4_interfaces&#34;] = result.result
 
@@ -363,8 +354,7 @@ konfigurace switchovaných a routovaných portů).</p></div>
     r = task.run(task=template_file,
                  name=&#34;IPv6 Intefaces Configuration&#34;,
                  template=&#34;interfaces_ipv6.j2&#34;,
-                 path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                 interfaces_ipv6=task.host[&#34;interfaces_ipv6&#34;])
+                 path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
     task.host[&#34;ipv6_interfaces&#34;] = r.result
 
@@ -426,9 +416,7 @@ konfiguraci na nepodporovaných zařízeních.</dd>
         interfaces_result = task.run(task=template_file,
                                      name=&#34;Switching Intefaces Configuration&#34;,
                                      template=&#34;switching_interfaces.j2&#34;,
-                                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                                     switching_interfaces=task.host[&#34;switching_interfaces&#34;],
-                                     vlans_config=task.host[&#34;vlans_config&#34;])
+                                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
         task.host[&#34;switching_interfaces_config&#34;] = interfaces_result.result
 

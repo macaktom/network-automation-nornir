@@ -1,28 +1,28 @@
-{% if ospfv3_config is defined %}
+{% if host.ospfv3_config is defined %}
 ipv6 unicast-routing
 !
-ipv6 router ospf {{ ospfv3_config.process }}
- router-id {{ ospfv3_config.router_id }}
-{% for interface in ospfv3_config.passive_interfaces %}
+ipv6 router ospf {{ host.ospfv3_config.process }}
+ router-id {{ host.ospfv3_config.router_id }}
+{% for interface in host.ospfv3_config.passive_interfaces %}
  passive-interface {{ interface }}
 {% endfor %}
-{% if ospfv3_config.redistribute is defined %}
-{% if ospfv3_config.redistribute.static %}
+{% if host.ospfv3_config.redistribute is defined %}
+{% if host.ospfv3_config.redistribute.static %}
  redistribute static
 {% endif %}
-{% if ospfv3_config.redistribute.eigrp is defined %}
-{% for AS_number in ospfv3_config.redistribute.eigrp.AS_numbers %}
+{% if host.ospfv3_config.redistribute.eigrp is defined %}
+{% for AS_number in host.ospfv3_config.redistribute.eigrp.AS_numbers %}
  redistribute eigrp {{ AS_number }}
 {% endfor %}
 {% endif %}
-{% if ospfv3_config.redistribute.default %}
+{% if host.ospfv3_config.redistribute.default %}
  default-information originate always
 {% endif %}
 {% endif %}
 !
-{% for int in ospfv3_config.interfaces %}
+{% for int in host.ospfv3_config.interfaces %}
 interface {{ int.name }}
- ipv6 ospf {{ ospfv3_config.process }} area {{ int.area_number }}
+ ipv6 ospf {{ host.ospfv3_config.process }} area {{ int.area_number }}
 !
 {% endfor %}
 end

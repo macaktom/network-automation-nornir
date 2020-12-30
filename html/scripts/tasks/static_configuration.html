@@ -66,8 +66,7 @@ class StaticRoutingConfiguration:
             r = task.run(task=template_file,
                          name=&#34;IPv4 Static Routing Template Loading&#34;,
                          template=&#34;static_ipv4.j2&#34;,
-                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                         static_routing_config=task.host[&#34;static_routing_config&#34;])
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
             task.host[&#34;ipv4_static&#34;] = r.result
 
@@ -105,8 +104,7 @@ class StaticRoutingConfiguration:
             r = task.run(task=template_file,
                          name=&#34;IPv6 Static Routing Template Loading&#34;,
                          template=&#34;static_ipv6.j2&#34;,
-                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                         static_routing_ipv6_config=task.host[&#34;static_routing_ipv6_config&#34;])
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
             task.host[&#34;ipv6_static&#34;] = r.result
 
@@ -168,8 +166,7 @@ class StaticRoutingConfiguration:
             r = task.run(task=template_file,
                          name=&#34;IPv4 Static Routing Template Loading&#34;,
                          template=&#34;static_ipv4.j2&#34;,
-                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                         static_routing_config=task.host[&#34;static_routing_config&#34;])
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
             task.host[&#34;ipv4_static&#34;] = r.result
 
@@ -207,8 +204,7 @@ class StaticRoutingConfiguration:
             r = task.run(task=template_file,
                          name=&#34;IPv6 Static Routing Template Loading&#34;,
                          template=&#34;static_ipv6.j2&#34;,
-                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                         static_routing_ipv6_config=task.host[&#34;static_routing_ipv6_config&#34;])
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
             task.host[&#34;ipv6_static&#34;] = r.result
 
@@ -273,8 +269,7 @@ konfiguraci na nepodporovaných zařízeních.</dd>
         r = task.run(task=template_file,
                      name=&#34;IPv4 Static Routing Template Loading&#34;,
                      template=&#34;static_ipv4.j2&#34;,
-                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                     static_routing_config=task.host[&#34;static_routing_config&#34;])
+                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
         task.host[&#34;ipv4_static&#34;] = r.result
 
@@ -338,8 +333,7 @@ konfiguraci na nepodporovaných zařízeních.</dd>
         r = task.run(task=template_file,
                      name=&#34;IPv6 Static Routing Template Loading&#34;,
                      template=&#34;static_ipv6.j2&#34;,
-                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                     static_routing_ipv6_config=task.host[&#34;static_routing_ipv6_config&#34;])
+                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
         task.host[&#34;ipv6_static&#34;] = r.result
 

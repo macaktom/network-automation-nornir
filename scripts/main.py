@@ -78,19 +78,19 @@ def main() -> None:
     # juniper_devices.run(task=viewer.show_device_configuration)
     #all_devices.run(task=viewer.show_device_facts)
 
-    configure_devices(all_devices, interfaces_configuration.configure_ipv4_interfaces, "IPv4 interfaces config", False)
-    configure_devices(all_devices, interfaces_configuration.configure_ipv6_interfaces, "IPv6 interfaces config", False)
-    configure_devices(l3_switches, interfaces_configuration.configure_switching_interfaces,"Switching interfaces config", False)
-    configure_devices(all_devices, static_routing_config.configure_static_routing_ipv4, "Static routing config", False)
-    configure_devices(all_devices, ospf_config.configure_ospf, "OSPFv2 config", False)
-    configure_devices(l3_cisco, eigrp_config.configure_eigrp_ipv4, "EIGRP config", False)
-    configure_devices(all_devices, packet_filter.configure_ipv4_packet_filters, "IPv4 packet filter config", False)
-    configure_devices(l3_cisco, nat_config.configure_source_nat_overload, "NAT Overload config", False)
-    configure_devices(routers, ospf_config.configure_ospfv3, "OSPFv3 config", False)
-    configure_devices(l3_cisco, eigrp_config.configure_eigrp_ipv6, "EIGRP IPV6 config", False)
-    configure_devices(all_devices, static_routing_config.configure_static_routing_ipv6, "IPv6 Static Routing config",False)
-    configure_devices(all_devices, packet_filter.configure_ipv6_packet_filters, "IPv6 packet filter config", False)
-    configure_devices(all_devices, delete_config.delete_configuration, "Delete Configuration", dry_run=False)
+    #configure_devices(all_devices, interfaces_configuration.configure_ipv4_interfaces, "IPv4 interfaces config", False)
+    #configure_devices(all_devices, interfaces_configuration.configure_ipv6_interfaces, "IPv6 interfaces config", False)
+    #configure_devices(l3_switches, interfaces_configuration.configure_switching_interfaces,"Switching interfaces config", False)
+    #configure_devices(all_devices, static_routing_config.configure_static_routing_ipv4, "Static routing config", False)
+    #configure_devices(all_devices, ospf_config.configure_ospf, "OSPFv2 config", False)
+    #configure_devices(l3_cisco, eigrp_config.configure_eigrp_ipv4, "EIGRP config", False)
+    #configure_devices(all_devices, packet_filter.configure_ipv4_packet_filters, "IPv4 packet filter config", False)
+    #configure_devices(l3_cisco, nat_config.configure_source_nat_overload, "NAT Overload config", False)
+    #configure_devices(routers, ospf_config.configure_ospfv3, "OSPFv3 config", False)
+    #configure_devices(l3_cisco, eigrp_config.configure_eigrp_ipv6, "EIGRP IPV6 config", False)
+    #configure_devices(all_devices, static_routing_config.configure_static_routing_ipv6, "IPv6 Static Routing config",False)
+    #configure_devices(all_devices, packet_filter.configure_ipv6_packet_filters, "IPv6 packet filter config", False)
+    #configure_devices(all_devices, delete_config.delete_configuration, "Delete Configuration", dry_run=False)
 
     # configure_devices(juniper_devices, static_routing_config.configure_static_routing_ipv4, "Static routing config", False)
     # configure_devices(juniper_devices, ospf_config.configure_ospf, "OSPFv2 config", False)
@@ -106,10 +106,6 @@ def main() -> None:
     # all_devices.run(task=exporter.export_ipv6_routes)
     # exporter.export_device_facts(all_devices)
     # exporter.export_interfaces_packet_counters(all_devices)
-
-    # print(z['R1'][1].result['facts'])
-    # print(z['R1'][2].result)
-    # all_devices.run(task=viewer.show_interfaces_packet_counters, json_out=True)
 
 
 if __name__ == "__main__":

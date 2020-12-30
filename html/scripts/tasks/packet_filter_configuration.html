@@ -67,8 +67,7 @@ class PacketFilterConfiguration:
             r = task.run(task=template_file,
                          name=&#34;IPv4 Packet filter Configuration&#34;,
                          template=&#34;packet_filter_ipv4.j2&#34;,
-                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                         packet_filter_config=task.host[&#34;packet_filter_config&#34;])
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
             task.host[&#34;ipv4_packet_filter&#34;] = r.result
 
@@ -107,8 +106,7 @@ class PacketFilterConfiguration:
             r = task.run(task=template_file,
                          name=&#34;IPv6 Packet filter Configuration&#34;,
                          template=&#34;packet_filter_ipv6.j2&#34;,
-                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                         packet_filter_ipv6_config=task.host[&#34;packet_filter_ipv6_config&#34;])
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
             task.host[&#34;ipv6_packet_filter&#34;] = r.result
 
@@ -172,8 +170,7 @@ class PacketFilterConfiguration:
             r = task.run(task=template_file,
                          name=&#34;IPv4 Packet filter Configuration&#34;,
                          template=&#34;packet_filter_ipv4.j2&#34;,
-                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                         packet_filter_config=task.host[&#34;packet_filter_config&#34;])
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
             task.host[&#34;ipv4_packet_filter&#34;] = r.result
 
@@ -212,8 +209,7 @@ class PacketFilterConfiguration:
             r = task.run(task=template_file,
                          name=&#34;IPv6 Packet filter Configuration&#34;,
                          template=&#34;packet_filter_ipv6.j2&#34;,
-                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                         packet_filter_ipv6_config=task.host[&#34;packet_filter_ipv6_config&#34;])
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
             task.host[&#34;ipv6_packet_filter&#34;] = r.result
 
@@ -280,8 +276,7 @@ konfiguraci na nepodporovaných zařízeních.</dd>
         r = task.run(task=template_file,
                      name=&#34;IPv4 Packet filter Configuration&#34;,
                      template=&#34;packet_filter_ipv4.j2&#34;,
-                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                     packet_filter_config=task.host[&#34;packet_filter_config&#34;])
+                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
         task.host[&#34;ipv4_packet_filter&#34;] = r.result
 
@@ -346,8 +341,7 @@ konfiguraci na nepodporovaných zařízeních.</dd>
         r = task.run(task=template_file,
                      name=&#34;IPv6 Packet filter Configuration&#34;,
                      template=&#34;packet_filter_ipv6.j2&#34;,
-                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                     packet_filter_ipv6_config=task.host[&#34;packet_filter_ipv6_config&#34;])
+                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
         task.host[&#34;ipv6_packet_filter&#34;] = r.result
 

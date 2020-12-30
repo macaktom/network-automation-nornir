@@ -67,8 +67,7 @@ class OSPFConfiguration:
             r = task.run(task=template_file,
                          name=&#34;OSPF Template Loading&#34;,
                          template=&#34;ospf_ipv4.j2&#34;,
-                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                         ospf_config=task.host[&#34;ospf_config&#34;])
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
             task.host[&#34;ipv4_ospf&#34;] = r.result
 
@@ -108,8 +107,7 @@ class OSPFConfiguration:
             r = task.run(task=template_file,
                          name=&#34;OSPF Template Loading&#34;,
                          template=&#34;ospfv3.j2&#34;,
-                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                         ospfv3_config=task.host[&#34;ospfv3_config&#34;])
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
             task.host[&#34;ipv6_ospf&#34;] = r.result
 
@@ -171,8 +169,7 @@ class OSPFConfiguration:
             r = task.run(task=template_file,
                          name=&#34;OSPF Template Loading&#34;,
                          template=&#34;ospf_ipv4.j2&#34;,
-                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                         ospf_config=task.host[&#34;ospf_config&#34;])
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
             task.host[&#34;ipv4_ospf&#34;] = r.result
 
@@ -212,8 +209,7 @@ class OSPFConfiguration:
             r = task.run(task=template_file,
                          name=&#34;OSPF Template Loading&#34;,
                          template=&#34;ospfv3.j2&#34;,
-                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                         ospfv3_config=task.host[&#34;ospfv3_config&#34;])
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
             task.host[&#34;ipv6_ospf&#34;] = r.result
 
@@ -278,8 +274,7 @@ konfiguraci na nepodporovaných zařízeních.</dd>
         r = task.run(task=template_file,
                      name=&#34;OSPF Template Loading&#34;,
                      template=&#34;ospf_ipv4.j2&#34;,
-                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                     ospf_config=task.host[&#34;ospf_config&#34;])
+                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
         task.host[&#34;ipv4_ospf&#34;] = r.result
 
@@ -344,8 +339,7 @@ konfiguraci na nepodporovaných zařízeních.</dd>
         r = task.run(task=template_file,
                      name=&#34;OSPF Template Loading&#34;,
                      template=&#34;ospfv3.j2&#34;,
-                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                     ospfv3_config=task.host[&#34;ospfv3_config&#34;])
+                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
         task.host[&#34;ipv6_ospf&#34;] = r.result
 

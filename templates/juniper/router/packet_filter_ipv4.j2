@@ -1,5 +1,5 @@
-{% if packet_filter_config is defined %}
-{% for filter_name, filter_dict in packet_filter_config.items() %}
+{% if host.packet_filter_config is defined %}
+{% for filter_name, filter_dict in host.packet_filter_config.items() %}
 {% for rule in filter_dict.rules %}
 set firewall family inet filter {{ filter_name }} term {{ filter_dict.term_name }} {{ rule | trim }}
 {% endfor %}

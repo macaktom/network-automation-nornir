@@ -1,47 +1,47 @@
-{% if delete_config is defined %}
-{% if delete_config.static_routing_config is defined and delete_config.static_routing_config %}
+{% if host.delete_config is defined %}
+{% if host.delete_config.static_routing_config is defined and host.delete_config.static_routing_config %}
 no ip route *
 {% endif %}
-{% if delete_config.ospf_config is defined %}
-{% for process in delete_config.ospf_config.processes %}
+{% if host.delete_config.ospf_config is defined %}
+{% for process in host.delete_config.ospf_config.processes %}
 no router ospf {{ process }}
 {% endfor %}
 {% endif %}
-{% if delete_config.eigrp_config is defined %}
-{% for AS_number in delete_config.eigrp_config.AS_numbers %}
+{% if host.delete_config.eigrp_config is defined %}
+{% for AS_number in host.delete_config.eigrp_config.AS_numbers %}
 no router eigrp {{ AS_number }}
 {% endfor %}
 {% endif %}
-{% if delete_config.static_routing_ipv6_config is defined %}
-{% for net in delete_config.static_routing_ipv6_config.networks %}
+{% if host.delete_config.static_routing_ipv6_config is defined %}
+{% for net in host.delete_config.static_routing_ipv6_config.networks %}
 {% if ":" in net.next_hop %}
 no ipv6 route {{ net.dest_ip | upper }}{{ net.prefix_length }} {{ net.next_hop | upper }}
 {% else %}
 no ipv6 route {{ net.dest_ip | upper }}{{ net.prefix_length }} {{ net.next_hop }}
 {% endif %}
 {% endfor %}
-{% if delete_config.static_routing_ipv6_config.default is defined %}
-{% if ":" in delete_config.static_routing_ipv6_config.default.next_hop %}
-no ipv6 route ::/0 {{ delete_config.static_routing_ipv6_config.default.next_hop | upper }}
+{% if host.delete_config.static_routing_ipv6_config.default is defined %}
+{% if ":" in host.delete_config.static_routing_ipv6_config.default.next_hop %}
+no ipv6 route ::/0 {{ host.delete_config.static_routing_ipv6_config.default.next_hop | upper }}
 {% else %}
-no ipv6 route ::/0 {{ delete_config.static_routing_ipv6_config.default.next_hop }}
+no ipv6 route ::/0 {{ host.delete_config.static_routing_ipv6_config.default.next_hop }}
 {% endif %}
 {% endif %}
 {% endif %}
-{% if delete_config.nat_overload_config is defined %}
+{% if host.delete_config.nat_overload_config is defined %}
 !
-{% for type, int_dict in delete_config.nat_overload_config.interface_types.items() %}
+{% for type, int_dict in host.delete_config.nat_overload_config.interface_types.items() %}
 interface {{ int_dict.interface }}
  no ip nat {{ type }}
 !
 {% endfor %}
-no ip nat inside source list {{ delete_config.nat_overload_config.access_list_number }} interface {{ delete_config.nat_overload_config.interface_types.outside.interface }} overload
+no ip nat inside source list {{ host.delete_config.nat_overload_config.access_list_number }} interface {{ host.delete_config.nat_overload_config.interface_types.outside.interface }} overload
 !
-no access-list {{ delete_config.nat_overload_config.access_list_number }}
+no access-list {{ host.delete_config.nat_overload_config.access_list_number }}
 !
 {% endif %}
-{% if delete_config.packet_filter_config is defined %}
-{% for acl_name, acl_dict in delete_config.packet_filter_config.items() %}
+{% if host.delete_config.packet_filter_config is defined %}
+{% for acl_name, acl_dict in host.delete_config.packet_filter_config.items() %}
 {% for interface in acl_dict.interfaces %}
 interface {{ interface.name }}
  no ip access-group {{ acl_name }} {{ interface.acl_direction }}
@@ -51,8 +51,8 @@ no ip access-list {{ acl_dict.type }} {{ acl_name }}
 !
 {% endfor %}
 {% endif %}
-{% if delete_config.packet_filter_ipv6_config is defined %}
-{% for acl_name, acl_dict in delete_config.packet_filter_ipv6_config.items() %}
+{% if host.delete_config.packet_filter_ipv6_config is defined %}
+{% for acl_name, acl_dict in host.delete_config.packet_filter_ipv6_config.items() %}
 {% for interface in acl_dict.interfaces %}
 interface {{ interface.name }}
  no ipv6 traffic-filter {{ acl_name }} {{ interface.acl_direction }}
@@ -62,8 +62,8 @@ no ipv6 access-list {{ acl_name }}
 !
 {% endfor %}
 {% endif %}
-{% if delete_config.eigrp_ipv6_config is defined and delete_config.eigrp_ipv6_config.AS is defined and delete_config.eigrp_ipv6_config.AS %}
-{% for AS in delete_config.eigrp_ipv6_config.AS %}
+{% if host.delete_config.eigrp_ipv6_config is defined and host.delete_config.eigrp_ipv6_config.AS is defined and host.delete_config.eigrp_ipv6_config.AS %}
+{% for AS in host.delete_config.eigrp_ipv6_config.AS %}
 {% for interface in AS.interfaces %}
 interface {{ interface }}
  no ipv6 eigrp {{ AS.number }}
@@ -72,8 +72,8 @@ interface {{ interface }}
 no ipv6 router eigrp {{ AS.number }}
 {% endfor %}
 {% endif %}
-{% if delete_config.ospfv3_config is defined and delete_config.ospfv3_config.processes %}
-{% for process in delete_config.ospfv3_config.processes %}
+{% if host.delete_config.ospfv3_config is defined and host.delete_config.ospfv3_config.processes %}
+{% for process in host.delete_config.ospfv3_config.processes %}
 {% for int in process.interfaces %}
 interface {{ int.name }}
  no ipv6 ospf {{ process.number }} area {{ int.area_number }}
@@ -82,14 +82,14 @@ interface {{ int.name }}
 no ipv6 router ospf {{ process.number }}
 {% endfor %}
 {% endif %}
-{% if delete_config.interfaces is defined %}
-{% if delete_config.interfaces.virtual is defined and delete_config.interfaces.virtual %}
-{% for virtual_int in delete_config.interfaces.virtual %}
+{% if host.delete_config.interfaces is defined %}
+{% if host.delete_config.interfaces.virtual is defined and host.delete_config.interfaces.virtual %}
+{% for virtual_int in host.delete_config.interfaces.virtual %}
 no interface {{ virtual_int }}
 {% endfor %}
 {% endif %}
-{% if delete_config.interfaces.physical is defined and delete_config.interfaces.physical %}
-{% for physical_int in delete_config.interfaces.physical %}
+{% if host.delete_config.interfaces.physical is defined and host.delete_config.interfaces.physical %}
+{% for physical_int in host.delete_config.interfaces.physical %}
 default interface {{ physical_int }}
 {% endfor %}
 {% endif %}

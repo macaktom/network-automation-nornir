@@ -34,8 +34,7 @@ class InterfacesConfiguration:
         result = task.run(task=template_file,
                           name="IPv4 Intefaces Configuration",
                           template="interfaces_ipv4.j2",
-                          path=f"templates/{task.host['vendor']}/{task.host['dev_type']}",
-                          interfaces_ipv4=task.host["interfaces_ipv4"])
+                          path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
 
         task.host["ipv4_interfaces"] = result.result
 
@@ -64,8 +63,7 @@ class InterfacesConfiguration:
         r = task.run(task=template_file,
                      name="IPv6 Intefaces Configuration",
                      template="interfaces_ipv6.j2",
-                     path=f"templates/{task.host['vendor']}/{task.host['dev_type']}",
-                     interfaces_ipv6=task.host["interfaces_ipv6"])
+                     path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
 
         task.host["ipv6_interfaces"] = r.result
 
@@ -101,9 +99,7 @@ class InterfacesConfiguration:
             interfaces_result = task.run(task=template_file,
                                          name="Switching Intefaces Configuration",
                                          template="switching_interfaces.j2",
-                                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}",
-                                         switching_interfaces=task.host["switching_interfaces"],
-                                         vlans_config=task.host["vlans_config"])
+                                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
 
             task.host["switching_interfaces_config"] = interfaces_result.result
 

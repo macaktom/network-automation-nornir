@@ -39,8 +39,7 @@ class EIGRPConfiguration:
             r = task.run(task=template_file,
                          name="EIGRP IPv4 Template Loading",
                          template="eigrp_ipv4.j2",
-                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}",
-                         eigrp_config=task.host["eigrp_config"])
+                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
 
             task.host["ipv4_eigrp"] = r.result
 
@@ -77,8 +76,7 @@ class EIGRPConfiguration:
             r = task.run(task=template_file,
                          name="EIGRP IPv6 Template Loading",
                          template="eigrp_ipv6.j2",
-                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}",
-                         eigrp_ipv6_config=task.host["eigrp_ipv6_config"])
+                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
 
             task.host["ipv6_eigrp"] = r.result
 

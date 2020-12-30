@@ -1,9 +1,9 @@
-{% if nat_overload_config is defined %}
-access-list {{ nat_overload_config.access_list_number }} permit {{ nat_overload_config.source_network.ip }} {{ nat_overload_config.source_network.wild_card }}
+{% if host.nat_overload_config is defined %}
+access-list {{ host.nat_overload_config.access_list_number }} permit {{ host.nat_overload_config.source_network.ip }} {{ host.nat_overload_config.source_network.wild_card }}
 !
-ip nat inside source list {{ nat_overload_config.access_list_number }} interface {{ nat_overload_config.interface_types.outside.name }} overload
+ip nat inside source list {{ host.nat_overload_config.access_list_number }} interface {{ host.nat_overload_config.interface_types.outside.name }} overload
 !
-{% for type, int_dict in nat_overload_config.interface_types.items() %}
+{% for type, int_dict in host.nat_overload_config.interface_types.items() %}
 interface {{ int_dict.name }}
  ip nat {{ type }}
 !

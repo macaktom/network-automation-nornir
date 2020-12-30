@@ -1,18 +1,18 @@
-{% if static_routing_ipv6_config is defined %}
+{% if host.static_routing_ipv6_config is defined %}
 ipv6 unicast-routing
 !
-{% for net in static_routing_ipv6_config.networks %}
+{% for net in host.static_routing_ipv6_config.networks %}
 {% if ":" in net.next_hop %}
 ipv6 route {{ net.dest_ip | upper }}{{ net.prefix_length }} {{ net.next_hop | upper }}
 {% else %}
 ipv6 route {{ net.dest_ip | upper }}{{ net.prefix_length }} {{ net.next_hop }}
 {% endif %}
 {% endfor %}
-{% if static_routing_ipv6_config.default is defined %}
-{% if ":" in static_routing_ipv6_config.default.next_hop %}
-ipv6 route ::/0 {{ static_routing_ipv6_config.default.next_hop | upper }}
+{% if host.static_routing_ipv6_config.default is defined %}
+{% if ":" in host.static_routing_ipv6_config.default.next_hop %}
+ipv6 route ::/0 {{ host.static_routing_ipv6_config.default.next_hop | upper }}
 {% else %}
-ipv6 route ::/0 {{ static_routing_ipv6_config.default.next_hop }}
+ipv6 route ::/0 {{ host.static_routing_ipv6_config.default.next_hop }}
 {% endif %}
 {% endif %}
 !

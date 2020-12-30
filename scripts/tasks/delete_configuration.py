@@ -30,8 +30,7 @@ class DeleteConfiguration:
         r = task.run(task=template_file,
                      name="Delete Configuration Template Loading",
                      template="delete_configuration.j2",
-                     path=f"templates/{task.host['vendor']}/{task.host['dev_type']}",
-                     delete_config=task.host["delete_config"])
+                     path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
 
         task.host["conf_delete"] = r.result
 

@@ -1,5 +1,5 @@
-{% if interfaces_ipv6 is defined %}
-{% for int, int_dict in interfaces_ipv6.items() | sort %}
+{% if host.interfaces_ipv6 is defined %}
+{% for int, int_dict in host.interfaces_ipv6.items() | sort %}
 interface {{ int }}
  description {{ int_dict.description }}
 {% if int_dict.routed_physical_port is defined and int_dict.routed_physical_port %}

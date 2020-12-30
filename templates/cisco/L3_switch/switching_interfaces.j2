@@ -1,12 +1,12 @@
-{% if vlans_config is defined %}
-{% for vlan in vlans_config %}
+{% if host.vlans_config is defined %}
+{% for vlan in host.vlans_config %}
 vlan {{ vlan.number }}
  name {{ vlan.name }}
 {% endfor %}
 !
 {% endif %}
-{% if switching_interfaces is defined %}
-{% for int, int_dict in switching_interfaces.items() | sort %}
+{% if host.switching_interfaces is defined %}
+{% for int, int_dict in host.switching_interfaces.items() | sort %}
 interface {{ int }}
  description {{ int_dict.description }}
  switchport

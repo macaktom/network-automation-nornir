@@ -1,5 +1,5 @@
-{% if packet_filter_ipv6_config is defined %}
-{% for acl_name, acl_dict in packet_filter_ipv6_config.items() %}
+{% if host.packet_filter_ipv6_config is defined %}
+{% for acl_name, acl_dict in host.packet_filter_ipv6_config.items() %}
 ipv6 access-list {{ acl_name }}
 {% for rule in acl_dict.rules %}
  {{ rule | trim }}

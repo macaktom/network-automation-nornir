@@ -67,8 +67,7 @@ class NATConfiguration:
             r = task.run(task=template_file,
                          name=&#34;NAT Overload Configuration&#34;,
                          template=&#34;source_nat_overload.j2&#34;,
-                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                         nat_overload_config=task.host[&#34;nat_overload_config&#34;])
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
             task.host[&#34;nat_overload&#34;] = r.result
 
@@ -131,8 +130,7 @@ class NATConfiguration:
             r = task.run(task=template_file,
                          name=&#34;NAT Overload Configuration&#34;,
                          template=&#34;source_nat_overload.j2&#34;,
-                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                         nat_overload_config=task.host[&#34;nat_overload_config&#34;])
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
             task.host[&#34;nat_overload&#34;] = r.result
 
@@ -198,8 +196,7 @@ konfiguraci na nepodporovaných zařízeních.</dd>
         r = task.run(task=template_file,
                      name=&#34;NAT Overload Configuration&#34;,
                      template=&#34;source_nat_overload.j2&#34;,
-                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
-                     nat_overload_config=task.host[&#34;nat_overload_config&#34;])
+                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
         task.host[&#34;nat_overload&#34;] = r.result
 

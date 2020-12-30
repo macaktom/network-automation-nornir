@@ -39,8 +39,7 @@ class OSPFConfiguration:
             r = task.run(task=template_file,
                          name="OSPF Template Loading",
                          template="ospf_ipv4.j2",
-                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}",
-                         ospf_config=task.host["ospf_config"])
+                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
 
             task.host["ipv4_ospf"] = r.result
 
@@ -80,8 +79,7 @@ class OSPFConfiguration:
             r = task.run(task=template_file,
                          name="OSPF Template Loading",
                          template="ospfv3.j2",
-                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}",
-                         ospfv3_config=task.host["ospfv3_config"])
+                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
 
             task.host["ipv6_ospf"] = r.result
 

@@ -38,8 +38,7 @@ class StaticRoutingConfiguration:
             r = task.run(task=template_file,
                          name="IPv4 Static Routing Template Loading",
                          template="static_ipv4.j2",
-                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}",
-                         static_routing_config=task.host["static_routing_config"])
+                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
 
             task.host["ipv4_static"] = r.result
 
@@ -77,8 +76,7 @@ class StaticRoutingConfiguration:
             r = task.run(task=template_file,
                          name="IPv6 Static Routing Template Loading",
                          template="static_ipv6.j2",
-                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}",
-                         static_routing_ipv6_config=task.host["static_routing_ipv6_config"])
+                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
 
             task.host["ipv6_static"] = r.result
 

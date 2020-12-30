@@ -1,5 +1,5 @@
-{% if interfaces_ipv4 is defined %}
-{% for int, int_dict in interfaces_ipv4.items() | sort %}
+{% if host.interfaces_ipv4 is defined %}
+{% for int, int_dict in host.interfaces_ipv4.items() | sort %}
 interface {{ int }}
 {% if int_dict.routed_physical_port is defined and int_dict.routed_physical_port %}
  no switchport

@@ -1,17 +1,17 @@
-{% if eigrp_config is defined %}
-router eigrp {{ eigrp_config.AS_number }}
-{% for interface in eigrp_config.passive_interfaces %}
+{% if host.eigrp_config is defined %}
+router eigrp {{ host.eigrp_config.AS_number }}
+{% for interface in host.eigrp_config.passive_interfaces %}
  passive-interface {{ interface }}
 {% endfor %}
-{% for net in eigrp_config.networks %}
+{% for net in host.eigrp_config.networks %}
  network {{ net.ip }} {{ net.wildcard }}
 {% endfor %}
-{% if eigrp_config.redistribute is defined %}
-{% if eigrp_config.redistribute.static %}
+{% if host.eigrp_config.redistribute is defined %}
+{% if host.eigrp_config.redistribute.static %}
  redistribute static
 {% endif %}
-{% if eigrp_config.redistribute.ospf is defined%}
-{% for process in eigrp_config.redistribute.ospf.processes %}
+{% if host.eigrp_config.redistribute.ospf is defined%}
+{% for process in host.eigrp_config.redistribute.ospf.processes %}
  redistribute ospf {{ process }}
 {% endfor %}
 {% endif %}

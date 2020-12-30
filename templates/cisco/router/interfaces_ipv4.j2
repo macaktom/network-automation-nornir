@@ -1,5 +1,5 @@
-{% if interfaces_ipv4 is defined %}
-{% for int, int_dict in interfaces_ipv4.items() | sort %}
+{% if host.interfaces_ipv4 is defined %}
+{% for int, int_dict in host.interfaces_ipv4.items() | sort %}
 interface {{ int }}
  description {{ int_dict.description }}
  ip address {{ int_dict.net }} {{ int_dict.mask }}

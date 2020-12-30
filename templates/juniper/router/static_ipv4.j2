@@ -1,8 +1,8 @@
-{% if static_routing_config is defined %}
-{% for net in static_routing_config.networks %}
+{% if host.static_routing_config is defined %}
+{% for net in host.static_routing_config.networks %}
 set routing-options static route {{ net.dest_ip }}{{ net.prefix_length }} next-hop {{ net.next_hop }}
 {% endfor %}
-{% if static_routing_config.default is defined %}
-set routing-options static route 0.0.0.0/0 next-hop {{ static_routing_config.default.next_hop }}
+{% if host.static_routing_config.default is defined %}
+set routing-options static route 0.0.0.0/0 next-hop {{ host.static_routing_config.default.next_hop }}
 {% endif %}
 {% endif %}

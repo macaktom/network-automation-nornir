@@ -1,21 +1,21 @@
-{% if eigrp_ipv6_config is defined %}
+{% if host.eigrp_ipv6_config is defined %}
 ipv6 unicast-routing
 !
-ipv6 router eigrp {{ eigrp_ipv6_config.AS_number }}
- eigrp router-id {{ eigrp_ipv6_config.router_id }}
-{% for interface in eigrp_ipv6_config.passive_interfaces %}
+ipv6 router eigrp {{ host.eigrp_ipv6_config.AS_number }}
+ eigrp router-id {{ host.eigrp_ipv6_config.router_id }}
+{% for interface in host.eigrp_ipv6_config.passive_interfaces %}
  passive-interface {{ interface }}
 {% endfor %}
-{% if eigrp_ipv6_config.redistribute is defined %}
-{% if eigrp_ipv6_config.redistribute.static %}
+{% if host.eigrp_ipv6_config.redistribute is defined %}
+{% if host.eigrp_ipv6_config.redistribute.static %}
  redistribute static
 {% endif %}
 {% endif %}
 !
-{% for interface in eigrp_ipv6_config.routed_interfaces %}
+{% for interface in host.eigrp_ipv6_config.routed_interfaces %}
 interface {{ interface }}
  ipv6 enable
- ipv6 eigrp {{ eigrp_ipv6_config.AS_number }}
+ ipv6 eigrp {{ host.eigrp_ipv6_config.AS_number }}
 !
 {% endfor %}
 end
