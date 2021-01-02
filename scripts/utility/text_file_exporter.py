@@ -67,4 +67,4 @@ class FileExporter:
         mode = "a" if append else "w"
         with open(self._dest_file, mode) as file:
             file.write(self._content)
-            print(f"{Fore.GREEN}File {self._dest_file.relative_to(Path.cwd())} was exported successfully.")
+            print(f"{Fore.GREEN}Exporting data to {self._dest_file.relative_to(Path.cwd())} was successful.")

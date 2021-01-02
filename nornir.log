@@ -1,0 +1,980 @@
+2020-12-30 16:34:43,527 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-31 08:07:53,156 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-31 11:07:37,512 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 4 hosts
+2020-12-31 11:07:40,618 - nornir.core.task -    ERROR -      start() - Host 'Developer1': task 'Show device basic facts' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_get.py", line 32, in napalm_get
+    device = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 440, in get_connection
+    self.open_connection(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 492, in open_connection
+    conn_obj.open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/connections/__init__.py", line 57, in open
+    connection.open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/ios/ios.py", line 169, in open
+    self.device = self._netmiko_open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/base/base.py", line 86, in _netmiko_open
+    self._netmiko_device = ConnectHandler(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/ssh_dispatcher.py", line 312, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/cisco/cisco_ios.py", line 17, in __init__
+    return super().__init__(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 346, in __init__
+    self._open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 351, in _open
+    self.establish_connection()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 920, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/client.py", line 435, in connect
+    self._auth(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/client.py", line 764, in _auth
+    raise saved_exception
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/client.py", line 751, in _auth
+    self._transport.auth_password(username, password)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/transport.py", line 1509, in auth_password
+    return self.auth_handler.wait_for_response(my_event)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/auth_handler.py", line 250, in wait_for_response
+    raise e
+paramiko.ssh_exception.AuthenticationException: Authentication failed.
+
+2020-12-31 11:07:40,619 - nornir.core.task -    ERROR -      start() - Host 'Developer1': task 'show_device_facts' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_viewer.py", line 236, in show_device_facts
+    result = task.run(task=napalm_get, name="Show device basic facts", getters=["facts"])
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Show device basic facts (failed)
+
+
+2020-12-31 11:11:31,466 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'ls', 'dry_run': False} on 1 hosts
+2020-12-31 11:11:52,078 - nornir.core.task -    ERROR -      start() - Host 'Developer1': task 'List directories from current work directory' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_netmiko/tasks/netmiko_send_command.py", line 32, in netmiko_send_command
+    result = net_connect.send_command(command_string, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/utilities.py", line 429, in wrapper_decorator
+    return func(self, *args, **kwargs)
+TypeError: send_command() got an unexpected keyword argument 'dry_run'
+
+2020-12-31 11:12:18,502 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'ls'} on 1 hosts
+2020-12-31 11:13:38,045 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'ls'} on 1 hosts
+2020-12-31 11:14:44,567 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'ls'} on 1 hosts
+2020-12-31 11:16:23,498 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'ls'} on 1 hosts
+2020-12-31 11:17:48,503 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'ls'} on 1 hosts
+2020-12-31 11:18:17,119 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-31 11:18:21,408 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'ls'} on 1 hosts
+2020-12-31 11:23:57,076 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'ls'} on 1 hosts
+2020-12-31 11:24:40,665 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'ls'} on 1 hosts
+2020-12-31 11:40:45,659 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'pwd'} on 1 hosts
+2020-12-31 11:41:55,978 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'pwd', 'enable': True} on 1 hosts
+2020-12-31 11:42:24,361 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'List directories from current work directory' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_netmiko/tasks/netmiko_send_command.py", line 28, in netmiko_send_command
+    net_connect.enable()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/linux/linux_ssh.py", line 102, in enable
+    raise ValueError(msg)
+ValueError: Failed to enter enable mode. Please ensure you pass the 'secret' argument to ConnectHandler.
+
+2020-12-31 11:44:44,566 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'pwd', 'enable': True} on 1 hosts
+2020-12-31 11:45:13,156 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'List directories from current work directory' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_netmiko/tasks/netmiko_send_command.py", line 28, in netmiko_send_command
+    net_connect.enable()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/linux/linux_ssh.py", line 102, in enable
+    raise ValueError(msg)
+ValueError: Failed to enter enable mode. Please ensure you pass the 'secret' argument to ConnectHandler.
+
+2020-12-31 11:49:36,029 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'pwd', 'enable': True} on 1 hosts
+2020-12-31 11:50:03,481 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'List directories from current work directory' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_netmiko/tasks/netmiko_send_command.py", line 28, in netmiko_send_command
+    net_connect.enable()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/linux/linux_ssh.py", line 102, in enable
+    raise ValueError(msg)
+ValueError: Failed to enter enable mode. Please ensure you pass the 'secret' argument to ConnectHandler.
+
+2020-12-31 13:25:50,476 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'pwd', 'enable': True} on 1 hosts
+2020-12-31 13:26:22,284 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'List directories from current work directory' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_netmiko/tasks/netmiko_send_command.py", line 28, in netmiko_send_command
+    net_connect.enable()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/linux/linux_ssh.py", line 102, in enable
+    raise ValueError(msg)
+ValueError: Failed to enter enable mode. Please ensure you pass the 'secret' argument to ConnectHandler.
+
+2020-12-31 13:26:58,045 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'pwd', 'enable': True} on 1 hosts
+2020-12-31 13:27:26,136 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'List directories from current work directory' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_netmiko/tasks/netmiko_send_command.py", line 28, in netmiko_send_command
+    net_connect.enable()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/linux/linux_ssh.py", line 102, in enable
+    raise ValueError(msg)
+ValueError: Failed to enter enable mode. Please ensure you pass the 'secret' argument to ConnectHandler.
+
+2020-12-31 13:29:15,394 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'pwd', 'enable': True} on 1 hosts
+2020-12-31 13:29:42,676 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'List directories from current work directory' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_netmiko/tasks/netmiko_send_command.py", line 28, in netmiko_send_command
+    net_connect.enable()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/linux/linux_ssh.py", line 102, in enable
+    raise ValueError(msg)
+ValueError: Failed to enter enable mode. Please ensure you pass the 'secret' argument to ConnectHandler.
+
+2020-12-31 13:31:31,654 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'pwd', 'enable': True} on 1 hosts
+2020-12-31 13:32:01,465 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'List directories from current work directory' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_netmiko/tasks/netmiko_send_command.py", line 28, in netmiko_send_command
+    net_connect.enable()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/linux/linux_ssh.py", line 102, in enable
+    raise ValueError(msg)
+ValueError: Failed to enter enable mode. Please ensure you pass the 'secret' argument to ConnectHandler.
+
+2020-12-31 13:32:45,266 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'pwd', 'enable': True} on 1 hosts
+2020-12-31 13:43:53,711 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'pwd', 'enable': True} on 1 hosts
+2020-12-31 13:45:06,347 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'pwd', 'enable': True} on 1 hosts
+2020-12-31 13:45:36,967 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'List directories from current work directory' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_netmiko/tasks/netmiko_send_command.py", line 28, in netmiko_send_command
+    net_connect.enable()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/linux/linux_ssh.py", line 102, in enable
+    raise ValueError(msg)
+ValueError: Failed to enter enable mode. Please ensure you pass the 'secret' argument to ConnectHandler.
+
+2020-12-31 13:47:31,528 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'pwd', 'enable': True} on 1 hosts
+2020-12-31 13:47:59,765 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'List directories from current work directory' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_netmiko/tasks/netmiko_send_command.py", line 28, in netmiko_send_command
+    net_connect.enable()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/linux/linux_ssh.py", line 102, in enable
+    raise ValueError(msg)
+ValueError: Failed to enter enable mode. Please ensure you pass the 'secret' argument to ConnectHandler.
+
+2020-12-31 13:48:10,857 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'pwd', 'enable': True} on 1 hosts
+2020-12-31 13:58:17,101 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'pwd', 'enable': True} on 1 hosts
+2020-12-31 13:58:17,476 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'List directories from current work directory' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_netmiko/tasks/netmiko_send_command.py", line 26, in netmiko_send_command
+    net_connect = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 440, in get_connection
+    self.open_connection(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 492, in open_connection
+    conn_obj.open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_netmiko/connections/netmiko.py", line 59, in open
+    connection = ConnectHandler(**parameters)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/ssh_dispatcher.py", line 312, in ConnectHandler
+    return ConnectionClass(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 346, in __init__
+    self._open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 351, in _open
+    self.establish_connection()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 920, in establish_connection
+    self.remote_conn_pre.connect(**ssh_connect_params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/client.py", line 435, in connect
+    self._auth(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/paramiko/client.py", line 765, in _auth
+    raise SSHException("No authentication methods available")
+paramiko.ssh_exception.SSHException: No authentication methods available
+
+2020-12-31 13:58:24,923 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'pwd', 'enable': True} on 1 hosts
+2020-12-31 13:59:21,088 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'pwd', 'enable': False} on 1 hosts
+2020-12-31 20:41:30,757 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-31 20:41:33,832 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'Show device basic facts' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 1347, in open
+    self._conn = netconf_ssh.connect(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/manager.py", line 168, in connect
+    return connect_ssh(*args, **kwds)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/manager.py", line 135, in connect_ssh
+    session.connect(*args, **kwds)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/ncclient/transport/ssh.py", line 291, in connect
+    raise SSHError("Could not open socket to %s:%s" % (host, port))
+ncclient.transport.errors.SSHError: Could not open socket to 10.10.10.4:22
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 127, in open
+    self.device.open(auto_probe=self.auto_probe)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jnpr/junos/device.py", line 1385, in open
+    raise EzErrors.ConnectTimeoutError(self)
+jnpr.junos.exception.ConnectTimeoutError: ConnectTimeoutError(10.10.10.4)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/tasks/napalm_get.py", line 32, in napalm_get
+    device = task.host.get_connection(CONNECTION_NAME, task.nornir.config)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 440, in get_connection
+    self.open_connection(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 492, in open_connection
+    conn_obj.open(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_napalm/plugins/connections/__init__.py", line 57, in open
+    connection.open()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/napalm/junos/junos.py", line 129, in open
+    raise ConnectionException(cte.msg) from cte
+napalm.base.exceptions.ConnectionException: None
+
+2020-12-31 20:41:33,833 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'show_device_facts' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_viewer.py", line 236, in show_device_facts
+    result = task.run(task=napalm_get, name="Show device basic facts", getters=["facts"])
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: Show device basic facts (failed)
+
+
+2020-12-31 20:53:29,617 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2020-12-31 21:32:01,381 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 3 hosts
+2020-12-31 21:32:11,121 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 3 hosts
+2020-12-31 21:32:19,970 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-31 21:32:28,328 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 3 hosts
+2020-12-31 21:32:36,540 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 3 hosts
+2020-12-31 21:32:44,813 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-31 21:32:52,816 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 3 hosts
+2020-12-31 21:33:01,208 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-31 21:33:09,497 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 2 hosts
+2020-12-31 21:33:18,048 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-31 21:33:26,496 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 3 hosts
+2020-12-31 21:33:35,122 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 3 hosts
+2020-12-31 21:33:43,734 -  nornir.core -     INFO -        run() - Running task 'Delete Configuration' with args {'dry_run': False} on 3 hosts
+2020-12-31 21:41:13,542 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 3 hosts
+2020-12-31 21:41:23,363 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 3 hosts
+2020-12-31 21:41:32,148 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2020-12-31 21:41:40,629 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 3 hosts
+2020-12-31 21:41:48,925 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 3 hosts
+2020-12-31 21:41:57,330 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2020-12-31 21:42:05,660 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 3 hosts
+2020-12-31 21:42:14,403 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2020-12-31 21:42:22,946 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 2 hosts
+2020-12-31 21:42:31,129 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2020-12-31 21:42:39,603 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 3 hosts
+2020-12-31 21:42:48,304 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 3 hosts
+2020-12-31 21:42:56,934 -  nornir.core -     INFO -        run() - Running task 'Delete Configuration' with args {'dry_run': False} on 3 hosts
+2020-12-31 21:43:07,854 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2021-01-01 09:19:57,801 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'apt update', 'enable': True} on 1 hosts
+2021-01-01 09:22:23,886 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2021-01-01 12:39:26,185 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'pwd', 'enable': True} on 1 hosts
+2021-01-01 12:53:58,962 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'pwd', 'enable': True} on 1 hosts
+2021-01-01 12:54:44,396 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'apt update', 'enable': False} on 1 hosts
+2021-01-01 12:55:25,861 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'apt update', 'enable': True} on 1 hosts
+2021-01-01 12:57:24,771 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'List directories from current work directory' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_netmiko/tasks/netmiko_send_command.py", line 32, in netmiko_send_command
+    result = net_connect.send_command(command_string, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/utilities.py", line 429, in wrapper_decorator
+    return func(self, *args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/base_connection.py", line 1523, in send_command
+    raise IOError(
+OSError: Search pattern never detected in send_command: root@gns3:\~\#
+
+2021-01-01 12:57:44,134 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'apt update', 'enable': True} on 1 hosts
+2021-01-01 13:12:23,528 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'apt update', 'enable': True} on 1 hosts
+2021-01-01 13:22:09,078 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'ls', 'enable': True} on 1 hosts
+2021-01-01 13:22:44,273 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'ls -l', 'enable': True} on 1 hosts
+2021-01-01 13:23:41,783 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'ls /', 'enable': True} on 1 hosts
+2021-01-01 14:20:15,307 -  nornir.core -     INFO -        run() - Running task 'send_commands' with args {'command_lst': ['pwd', 'ls -l', 'apt update'], 'task_name': 'Task', 'enable': True} on 1 hosts
+2021-01-01 14:21:43,535 -  nornir.core -     INFO -        run() - Running task 'send_commands' with args {'command_lst': ['pwd', 'ls -l', 'apt update'], 'task_name': 'Task', 'enable': True} on 1 hosts
+2021-01-01 14:26:04,063 -  nornir.core -     INFO -        run() - Running task 'send_commands' with args {'command_lst': ['pwd', 'ls -l', 'apt update'], 'task_name': 'Task', 'enable': True} on 1 hosts
+2021-01-01 14:27:13,150 -  nornir.core -     INFO -        run() - Running task 'send_commands' with args {'command_lst': ['pwd', 'ls -l', 'apt update'], 'task_name': 'Task', 'enable': True} on 1 hosts
+2021-01-01 14:29:46,347 -  nornir.core -     INFO -        run() - Running task 'send_commands' with args {'command_lst': ['pwd', 'zim', 'apt update'], 'task_name': 'Task', 'enable': True} on 1 hosts
+2021-01-01 14:44:46,828 -  nornir.core -     INFO -        run() - Running task 'send_commands' with args {'command_lst': ['pwd', 'zim', 'apt update'], 'task_name': 'Task', 'enable': True} on 1 hosts
+2021-01-01 14:44:46,832 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'send_commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 12, in send_commands
+    if command_lst and task.host['platform'] == "linux":
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 296, in __getitem__
+    return self.data[item]
+KeyError: 'platform'
+
+2021-01-01 14:45:27,317 -  nornir.core -     INFO -        run() - Running task 'send_commands' with args {'command_lst': ['pwd', 'zim', 'apt update'], 'task_name': 'Task', 'enable': True} on 1 hosts
+2021-01-01 14:45:59,418 -  nornir.core -     INFO -        run() - Running task 'send_commands' with args {'command_lst': ['pwd', 'zim', 'apt update'], 'task_name': 'Task', 'enable': True} on 1 hosts
+2021-01-01 15:04:19,014 -  nornir.core -     INFO -        run() - Running task 'send_commands' with args {'task_name': 'Task', 'enable': True} on 1 hosts
+2021-01-01 15:23:42,616 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 15:23:42,617 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'Run commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+TypeError: send_commands() missing 1 required positional argument: 'task_name'
+
+2021-01-01 15:24:33,033 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 15:24:33,034 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'Run commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+TypeError: send_commands() missing 1 required positional argument: 'task_name'
+
+2021-01-01 15:25:49,238 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 15:25:49,239 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'Run commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+TypeError: send_commands() missing 1 required positional argument: 'name'
+
+2021-01-01 15:32:31,901 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 15:32:31,902 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'Run commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+TypeError: send_commands() missing 1 required positional argument: 'task_name'
+
+2021-01-01 15:33:31,980 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 15:33:31,983 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'Run commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 18, in send_commands
+    if not data.failed and len(data[0].result.commands) > 0:
+AttributeError: 'dict' object has no attribute 'commands'
+
+2021-01-01 15:34:12,253 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 15:34:12,259 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'Run commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 18, in send_commands
+    if not data.failed and len(data[0].result.commands) > 0:
+AttributeError: 'dict' object has no attribute 'commands'
+
+2021-01-01 15:34:22,426 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 15:42:15,427 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 15:42:15,428 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'Run commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+TypeError: send_commands() missing 1 required positional argument: 'name'
+
+2021-01-01 15:42:29,598 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 15:42:29,599 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'Run commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+TypeError: send_commands() missing 1 required positional argument: 'name'
+
+2021-01-01 15:43:29,167 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 15:43:29,169 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'Run commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 18, in send_commands
+    if not data.failed and len(data[0].result.commands) > 0:
+AttributeError: 'dict' object has no attribute 'commands'
+
+2021-01-01 15:44:20,206 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 15:46:05,259 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 15:46:21,134 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 15:54:57,045 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 16:40:54,903 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 16:42:05,242 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 16:42:32,899 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'netmiko_file_transfer' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_netmiko/tasks/netmiko_file_transfer.py", line 26, in netmiko_file_transfer
+    scp_result = file_transfer(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/scp_functions.py", line 107, in file_transfer
+    with TransferClass(**scp_args) as scp_transfer:
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/ssh_dispatcher.py", line 344, in FileTransfer
+    return FileTransferClass(*args, **kwargs)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/linux/linux_ssh.py", line 130, in __init__
+    return super().__init__(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/scp_handler.py", line 105, in __init__
+    self.source_md5 = self.file_md5(source_file) if hash_supported else None
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/scp_handler.py", line 308, in file_md5
+    with open(file_name, "rb") as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/home/macaktom/PycharmProjects/network_automation/backups/Server1/Server1_2021-01-01.conf'
+
+2021-01-01 16:42:32,900 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'Run commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 46, in create_file
+    task.run(task=netmiko_file_transfer, source_file=src_path, dest_file="/home/linux")
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: netmiko_file_transfer (failed)
+
+
+2021-01-01 16:42:58,491 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 16:43:39,657 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'netmiko_file_transfer' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_netmiko/tasks/netmiko_file_transfer.py", line 26, in netmiko_file_transfer
+    scp_result = file_transfer(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/scp_functions.py", line 134, in file_transfer
+    verifyspace_and_transferfile(scp_transfer)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/scp_functions.py", line 39, in verifyspace_and_transferfile
+    scp_transfer.transfer_file()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/scp_handler.py", line 360, in transfer_file
+    self.put_file()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/scp_handler.py", line 373, in put_file
+    self.scp_conn.scp_transfer_file(self.source_file, destination)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/scp_handler.py", line 46, in scp_transfer_file
+    self.scp_client.put(source_file, dest_file)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/scp.py", line 166, in put
+    self._send_files(files)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/scp.py", line 271, in _send_files
+    self._send_file(fl, name, mode, size)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/scp.py", line 281, in _send_file
+    self._recv_confirm()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/scp.py", line 363, in _recv_confirm
+    raise SCPException(asunicode(msg[1:]))
+scp.SCPException: scp: /var/tmp//home/linux: No such file or directory
+
+
+2021-01-01 16:43:39,658 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'Run commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 46, in create_file
+    task.run(task=netmiko_file_transfer, source_file=src_path, dest_file="/home/linux")
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: netmiko_file_transfer (failed)
+
+
+2021-01-01 16:45:10,554 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 16:45:31,774 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 16:46:11,777 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'netmiko_file_transfer' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_netmiko/tasks/netmiko_file_transfer.py", line 26, in netmiko_file_transfer
+    scp_result = file_transfer(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/scp_functions.py", line 134, in file_transfer
+    verifyspace_and_transferfile(scp_transfer)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/scp_functions.py", line 39, in verifyspace_and_transferfile
+    scp_transfer.transfer_file()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/scp_handler.py", line 360, in transfer_file
+    self.put_file()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/scp_handler.py", line 373, in put_file
+    self.scp_conn.scp_transfer_file(self.source_file, destination)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/scp_handler.py", line 46, in scp_transfer_file
+    self.scp_client.put(source_file, dest_file)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/scp.py", line 166, in put
+    self._send_files(files)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/scp.py", line 271, in _send_files
+    self._send_file(fl, name, mode, size)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/scp.py", line 281, in _send_file
+    self._recv_confirm()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/scp.py", line 363, in _recv_confirm
+    raise SCPException(asunicode(msg[1:]))
+scp.SCPException: scp: /var/tmp//home/linux/Server1.conf: No such file or directory
+
+
+2021-01-01 16:46:11,777 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'Run commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 46, in create_file
+    task.run(task=netmiko_file_transfer, source_file=src_path, dest_file=f"/home/linux/{task.host.name}.conf")
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: netmiko_file_transfer (failed)
+
+
+2021-01-01 16:50:02,283 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 16:53:01,267 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 16:55:20,544 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 21:28:50,888 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 21:28:50,892 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'VSFTPD configuration Template Loading' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_jinja2/plugins/tasks/template_file.py", line 40, in template_file
+    t = env.get_template(template)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 883, in get_template
+    return self._load_template(name, self.make_globals(globals))
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 857, in _load_template
+    template = self.loader.load(self, name, globals)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/loaders.py", line 115, in load
+    source, filename, uptodate = self.get_source(environment, name)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/loaders.py", line 197, in get_source
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: vsftpd.j2
+
+2021-01-01 21:28:50,892 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'Run commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 64, in configure_vsftpd
+    r = task.run(task=template_file,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: VSFTPD configuration Template Loading (failed)
+
+
+2021-01-01 21:29:47,744 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 21:29:47,748 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'Run commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 67, in configure_vsftpd
+    path=f"templates/{task.host['platform']}/{task.host['dev_type']}")
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 296, in __getitem__
+    return self.data[item]
+KeyError: 'platform'
+
+2021-01-01 21:30:57,245 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 21:30:57,249 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'Run commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 63, in configure_vsftpd
+    print(f"{task.host['platform']}")
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/inventory.py", line 296, in __getitem__
+    return self.data[item]
+KeyError: 'platform'
+
+2021-01-01 21:32:07,406 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 21:33:00,814 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 21:33:00,824 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'VSFTPD configuration Template Loading' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_jinja2/plugins/tasks/template_file.py", line 40, in template_file
+    t = env.get_template(template)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 883, in get_template
+    return self._load_template(name, self.make_globals(globals))
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 857, in _load_template
+    template = self.loader.load(self, name, globals)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/loaders.py", line 127, in load
+    code = environment.compile(source, name, filename)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 638, in compile
+    self.handle_exception(source=source_hint)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/jinja2/_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "templates/linux/ubuntu_server/vsftpd.j2", line 35, in template
+    {% endif %}
+jinja2.exceptions.TemplateSyntaxError: Unexpected end of template. Jinja was looking for the following tags: 'elif' or 'else' or 'endif'. The innermost block that needs to be closed is 'if'.
+
+2021-01-01 21:33:00,824 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'Run commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 63, in configure_vsftpd
+    r = task.run(task=template_file,
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: VSFTPD configuration Template Loading (failed)
+
+
+2021-01-01 21:34:52,344 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 21:37:07,481 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 21:38:58,600 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 21:39:23,084 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'netmiko_file_transfer' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir_netmiko/tasks/netmiko_file_transfer.py", line 26, in netmiko_file_transfer
+    scp_result = file_transfer(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/scp_functions.py", line 129, in file_transfer
+    if scp_transfer.verify_file():
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/scp_handler.py", line 379, in verify_file
+    return self.compare_md5()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/scp_handler.py", line 336, in compare_md5
+    remote_md5 = self.remote_md5()
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/linux/linux_ssh.py", line 163, in remote_md5
+    dest_md5 = self.process_md5(dest_md5)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/linux/linux_ssh.py", line 168, in process_md5
+    return super(LinuxFileTransfer, LinuxFileTransfer).process_md5(
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/netmiko/scp_handler.py", line 331, in process_md5
+    raise ValueError(f"Invalid output from MD5 command: {md5_output}")
+ValueError: Invalid output from MD5 command: 
+d3cb0c1eb364ef23868ee43eba375b44  /var/tmp/vsftpd.conf
+
+2021-01-01 21:39:23,085 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'Run commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 71, in configure_vsftpd
+    task.run(task=netmiko_file_transfer, source_file=file_path, dest_file=f"{file_path.name}")
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: netmiko_file_transfer (failed)
+
+
+2021-01-01 21:44:11,614 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 21:44:11,616 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'Run commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+TypeError: configure_vsftpd() got an unexpected keyword argument 'enable'
+
+2021-01-01 21:44:45,726 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 21:46:23,835 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 21:47:50,593 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 22:08:49,565 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 22:11:04,560 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 22:23:52,074 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 22:39:44,184 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-01 22:43:42,216 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-02 09:32:40,166 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-02 09:32:40,489 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'Run commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 63, in configure_vsftpd
+    self._testing_vsftpd(ftp_testing)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 77, in _testing_vsftpd
+    resp = ftp.dir()
+  File "/usr/lib/python3.8/ftplib.py", line 558, in dir
+    self.retrlines(cmd, func)
+  File "/usr/lib/python3.8/ftplib.py", line 451, in retrlines
+    with self.transfercmd(cmd) as conn, \
+  File "/usr/lib/python3.8/ftplib.py", line 382, in transfercmd
+    return self.ntransfercmd(cmd, rest)[0]
+  File "/usr/lib/python3.8/ftplib.py", line 781, in ntransfercmd
+    conn, size = FTP.ntransfercmd(self, cmd, rest)
+  File "/usr/lib/python3.8/ftplib.py", line 348, in ntransfercmd
+    resp = self.sendcmd(cmd)
+  File "/usr/lib/python3.8/ftplib.py", line 275, in sendcmd
+    return self.getresp()
+  File "/usr/lib/python3.8/ftplib.py", line 248, in getresp
+    raise error_perm(resp)
+ftplib.error_perm: 522 Data connections must be encrypted.
+
+2021-01-02 09:33:04,851 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-02 09:33:32,873 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-02 09:33:33,090 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'Run commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 65, in configure_vsftpd
+    print(f"{Fore.RED} Device {task.host.name}: invalid device type.")
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 76, in _testing_vsftpd
+    ftp.mkd("testdirectory")
+  File "/usr/lib/python3.8/ftplib.py", line 626, in mkd
+    resp = self.voidcmd('MKD ' + dirname)
+  File "/usr/lib/python3.8/ftplib.py", line 280, in voidcmd
+    return self.voidresp()
+  File "/usr/lib/python3.8/ftplib.py", line 253, in voidresp
+    resp = self.getresp()
+  File "/usr/lib/python3.8/ftplib.py", line 248, in getresp
+    raise error_perm(resp)
+ftplib.error_perm: 550 Create directory operation failed.
+
+2021-01-02 09:34:10,395 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-02 09:35:22,693 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-02 09:35:22,890 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'Run commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 63, in configure_vsftpd
+    self._testing_vsftpd(ftp_testing)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 76, in _testing_vsftpd
+    ftp.mkd("testdirectory")
+  File "/usr/lib/python3.8/ftplib.py", line 626, in mkd
+    resp = self.voidcmd('MKD ' + dirname)
+  File "/usr/lib/python3.8/ftplib.py", line 280, in voidcmd
+    return self.voidresp()
+  File "/usr/lib/python3.8/ftplib.py", line 253, in voidresp
+    resp = self.getresp()
+  File "/usr/lib/python3.8/ftplib.py", line 248, in getresp
+    raise error_perm(resp)
+ftplib.error_perm: 550 Create directory operation failed.
+
+2021-01-02 09:42:42,636 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-02 09:42:42,860 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'Run commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 63, in configure_vsftpd
+    self._testing_vsftpd(ftp_testing)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 78, in _testing_vsftpd
+    ftp.dir()
+  File "/usr/lib/python3.8/ftplib.py", line 558, in dir
+    self.retrlines(cmd, func)
+  File "/usr/lib/python3.8/ftplib.py", line 451, in retrlines
+    with self.transfercmd(cmd) as conn, \
+  File "/usr/lib/python3.8/ftplib.py", line 382, in transfercmd
+    return self.ntransfercmd(cmd, rest)[0]
+  File "/usr/lib/python3.8/ftplib.py", line 781, in ntransfercmd
+    conn, size = FTP.ntransfercmd(self, cmd, rest)
+  File "/usr/lib/python3.8/ftplib.py", line 348, in ntransfercmd
+    resp = self.sendcmd(cmd)
+  File "/usr/lib/python3.8/ftplib.py", line 275, in sendcmd
+    return self.getresp()
+  File "/usr/lib/python3.8/ftplib.py", line 248, in getresp
+    raise error_perm(resp)
+ftplib.error_perm: 522 Data connections must be encrypted.
+
+2021-01-02 09:44:30,108 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-02 09:44:30,319 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'Run commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 63, in configure_vsftpd
+    self._testing_vsftpd(ftp_testing)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 79, in _testing_vsftpd
+    path = ftp.mkd("python_test")
+  File "/usr/lib/python3.8/ftplib.py", line 626, in mkd
+    resp = self.voidcmd('MKD ' + dirname)
+  File "/usr/lib/python3.8/ftplib.py", line 280, in voidcmd
+    return self.voidresp()
+  File "/usr/lib/python3.8/ftplib.py", line 253, in voidresp
+    resp = self.getresp()
+  File "/usr/lib/python3.8/ftplib.py", line 248, in getresp
+    raise error_perm(resp)
+ftplib.error_perm: 550 Create directory operation failed.
+
+2021-01-02 09:45:24,789 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-02 09:53:15,531 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-02 09:54:00,889 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-02 09:54:01,096 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'Run commands' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 65, in configure_vsftpd
+    self._testing_vsftpd(ftp_testing)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 83, in _testing_vsftpd
+    path = ftp.mkd("python_test")
+  File "/usr/lib/python3.8/ftplib.py", line 626, in mkd
+    resp = self.voidcmd('MKD ' + dirname)
+  File "/usr/lib/python3.8/ftplib.py", line 280, in voidcmd
+    return self.voidresp()
+  File "/usr/lib/python3.8/ftplib.py", line 253, in voidresp
+    resp = self.getresp()
+  File "/usr/lib/python3.8/ftplib.py", line 248, in getresp
+    raise error_perm(resp)
+ftplib.error_perm: 550 Create directory operation failed.
+
+2021-01-02 09:54:11,766 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-02 10:03:24,618 -  nornir.core -     INFO -        run() - Running task 'Run commands' with args {'enable': True} on 1 hosts
+2021-01-02 10:06:52,314 -  nornir.core -     INFO -        run() - Running task 'VSFTPD Setup' with args {'enable': True} on 1 hosts
+2021-01-02 10:28:07,490 -  nornir.core -     INFO -        run() - Running task 'VSFTPD Setup' with args {'enable': True} on 1 hosts
+2021-01-02 10:43:43,639 -  nornir.core -     INFO -        run() - Running task 'VSFTPD Setup' with args {'enable': True} on 1 hosts
+2021-01-02 10:48:04,499 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'VSFTPD Setup' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 64, in configure_vsftpd
+    self._testing_vsftpd(ftp_testing)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 72, in _testing_vsftpd
+    ftp = FTP_TLS(f"{ftp_data['host']}") if ssl_enabled else FTP(f"{ftp_data['host']}")
+  File "/usr/lib/python3.8/ftplib.py", line 728, in __init__
+    FTP.__init__(self, host, user, passwd, acct, timeout, source_address)
+  File "/usr/lib/python3.8/ftplib.py", line 117, in __init__
+    self.connect(host)
+  File "/usr/lib/python3.8/ftplib.py", line 152, in connect
+    self.sock = socket.create_connection((self.host, self.port), self.timeout,
+  File "/usr/lib/python3.8/socket.py", line 808, in create_connection
+    raise err
+  File "/usr/lib/python3.8/socket.py", line 796, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [Errno 111] Connection refused
+
+2021-01-02 10:53:06,436 -  nornir.core -     INFO -        run() - Running task 'VSFTPD Setup' with args {'enable': True} on 1 hosts
+2021-01-02 11:03:41,316 -  nornir.core -     INFO -        run() - Running task 'VSFTPD Setup' with args {'enable': True} on 1 hosts
+2021-01-02 11:11:22,131 -  nornir.core -     INFO -        run() - Running task 'VSFTPD Setup' with args {'enable': True} on 1 hosts
+2021-01-02 11:16:58,786 -  nornir.core -     INFO -        run() - Running task 'VSFTPD Configuration' with args {'enable': True} on 1 hosts
+2021-01-02 11:17:29,814 -  nornir.core -     INFO -        run() - Running task 'VSFTPD Configuration' with args {'enable': True} on 1 hosts
+2021-01-02 11:17:38,987 -  nornir.core -     INFO -        run() - Running task 'VSFTPD Configuration' with args {'enable': True} on 1 hosts
+2021-01-02 11:17:39,195 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'VSFTPD Testing' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 82, in _testing_vsftpd
+    ftp.mkd(f"{ftp_data['test_folder']}")
+  File "/usr/lib/python3.8/ftplib.py", line 626, in mkd
+    resp = self.voidcmd('MKD ' + dirname)
+  File "/usr/lib/python3.8/ftplib.py", line 280, in voidcmd
+    return self.voidresp()
+  File "/usr/lib/python3.8/ftplib.py", line 253, in voidresp
+    resp = self.getresp()
+  File "/usr/lib/python3.8/ftplib.py", line 248, in getresp
+    raise error_perm(resp)
+ftplib.error_perm: 550 Create directory operation failed.
+
+2021-01-02 11:17:39,196 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'VSFTPD Configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 65, in configure_vsftpd
+    task.run(task=self._testing_vsftpd, name="VSFTPD Testing", ftp_data=ftp_testing)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: VSFTPD Testing (failed)
+
+
+2021-01-02 11:17:46,282 -  nornir.core -     INFO -        run() - Running task 'VSFTPD Configuration' with args {'enable': True} on 1 hosts
+2021-01-02 11:18:47,390 -  nornir.core -     INFO -        run() - Running task 'VSFTPD Configuration' with args {'enable': True} on 1 hosts
+2021-01-02 11:20:51,862 -  nornir.core -     INFO -        run() - Running task 'VSFTPD Configuration' with args {'enable': True} on 1 hosts
+2021-01-02 11:20:52,067 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'VSFTPD Testing' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 82, in _testing_vsftpd
+    ftp.mkd(f"{ftp_data['test_folder']}")
+  File "/usr/lib/python3.8/ftplib.py", line 626, in mkd
+    resp = self.voidcmd('MKD ' + dirname)
+  File "/usr/lib/python3.8/ftplib.py", line 280, in voidcmd
+    return self.voidresp()
+  File "/usr/lib/python3.8/ftplib.py", line 253, in voidresp
+    resp = self.getresp()
+  File "/usr/lib/python3.8/ftplib.py", line 248, in getresp
+    raise error_perm(resp)
+ftplib.error_perm: 550 Create directory operation failed.
+
+2021-01-02 11:20:52,067 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'VSFTPD Configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 65, in configure_vsftpd
+    task.run(task=self._testing_vsftpd, name="VSFTPD Testing", ftp_data=ftp_testing)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: VSFTPD Testing (failed)
+
+
+2021-01-02 11:21:44,218 -  nornir.core -     INFO -        run() - Running task 'VSFTPD Configuration' with args {'enable': True} on 1 hosts
+2021-01-02 11:21:44,473 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'VSFTPD Testing' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 83, in _testing_vsftpd
+    ftp.mkd(f"{ftp_data['test_folder']}")
+  File "/usr/lib/python3.8/ftplib.py", line 626, in mkd
+    resp = self.voidcmd('MKD ' + dirname)
+  File "/usr/lib/python3.8/ftplib.py", line 280, in voidcmd
+    return self.voidresp()
+  File "/usr/lib/python3.8/ftplib.py", line 253, in voidresp
+    resp = self.getresp()
+  File "/usr/lib/python3.8/ftplib.py", line 248, in getresp
+    raise error_perm(resp)
+ftplib.error_perm: 550 Create directory operation failed.
+
+2021-01-02 11:21:44,474 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'VSFTPD Configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 65, in configure_vsftpd
+    task.run(task=self._testing_vsftpd, name="VSFTPD Testing", ftp_data=ftp_testing)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: VSFTPD Testing (failed)
+
+
+2021-01-02 11:22:06,743 -  nornir.core -     INFO -        run() - Running task 'VSFTPD Configuration' with args {'enable': True} on 1 hosts
+2021-01-02 11:22:35,499 -  nornir.core -     INFO -        run() - Running task 'VSFTPD Configuration' with args {'enable': True} on 1 hosts
+2021-01-02 13:21:33,016 -  nornir.core -     INFO -        run() - Running task 'VSFTPD Configuration' with args {'enable': True} on 1 hosts
+2021-01-02 13:28:54,788 -  nornir.core -     INFO -        run() - Running task 'VSFTPD Configuration' with args {'enable': True} on 1 hosts
+2021-01-02 13:32:02,003 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'VSFTPD Testing' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 75, in _testing_vsftpd
+    ftp.login(user=f"{ftp_data['user']}", passwd=f"{ftp_data['password']}")
+  File "/usr/lib/python3.8/ftplib.py", line 733, in login
+    return FTP.login(self, user, passwd, acct)
+  File "/usr/lib/python3.8/ftplib.py", line 403, in login
+    resp = self.sendcmd('PASS ' + passwd)
+  File "/usr/lib/python3.8/ftplib.py", line 275, in sendcmd
+    return self.getresp()
+  File "/usr/lib/python3.8/ftplib.py", line 248, in getresp
+    raise error_perm(resp)
+ftplib.error_perm: 530 Login incorrect.
+
+2021-01-02 13:32:02,003 - nornir.core.task -    ERROR -      start() - Host 'Server1': task 'VSFTPD Configuration' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/tasks/linux_configuration.py", line 65, in configure_vsftpd
+    task.run(task=self._testing_vsftpd, name="VSFTPD Testing", ftp_data=ftp_testing)
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 168, in run
+    raise NornirSubTaskError(task=run_task, result=r)
+nornir.core.exceptions.NornirSubTaskError: Subtask: VSFTPD Testing (failed)
+
+
+2021-01-02 13:37:02,974 -  nornir.core -     INFO -        run() - Running task 'VSFTPD Configuration' with args {'enable': True} on 1 hosts
+2021-01-02 19:45:28,795 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2021-01-02 19:56:15,594 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2021-01-02 19:56:21,310 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2021-01-02 19:56:22,396 -  nornir.core -     INFO -        run() - Running task 'export_packet_filter_info' with args {} on 3 hosts
+2021-01-02 19:56:38,501 -  nornir.core -     INFO -        run() - Running task 'export_ipv4_routes' with args {} on 3 hosts
+2021-01-02 19:56:39,512 -  nornir.core -     INFO -        run() - Running task 'export_ipv6_routes' with args {} on 3 hosts
+2021-01-02 19:56:40,324 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'export_ipv6_routes' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_exporter.py", line 203, in export_ipv6_routes
+    ipv6_routes = parser.get_parsed_juniper_routes(result, ipv6_routes=True)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_parser.py", line 84, in get_parsed_juniper_routes
+    parsed_data = "inet6.0: " + split_inet6_part[1].strip()
+IndexError: list index out of range
+
+2021-01-02 19:56:40,325 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2021-01-02 19:56:40,723 -  nornir.core -     INFO -        run() - Running task 'Get interfaces packet counters' with args {'getters': ['interfaces_counters']} on 3 hosts
+2021-01-02 19:57:50,463 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2021-01-02 19:57:54,649 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'ls /', 'enable': True} on 1 hosts
+2021-01-02 19:58:40,180 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2021-01-02 19:58:44,255 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'ls /', 'enable': True} on 1 hosts
+2021-01-02 19:59:17,399 -  nornir.core -     INFO -        run() - Running task 'VSFTPD Configuration' with args {'enable': True} on 1 hosts
+2021-01-02 20:06:26,831 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2021-01-02 20:06:31,875 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 3 hosts
+2021-01-02 20:06:41,092 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 3 hosts
+2021-01-02 20:06:49,648 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2021-01-02 20:06:57,674 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 3 hosts
+2021-01-02 20:07:05,665 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 3 hosts
+2021-01-02 20:07:13,585 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2021-01-02 20:07:21,692 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 3 hosts
+2021-01-02 20:07:30,674 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2021-01-02 20:07:38,976 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 2 hosts
+2021-01-02 20:07:47,442 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2021-01-02 20:07:55,926 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 3 hosts
+2021-01-02 20:08:04,545 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 3 hosts
+2021-01-02 20:08:13,508 -  nornir.core -     INFO -        run() - Running task 'Delete Configuration' with args {'dry_run': False} on 3 hosts
+2021-01-02 20:08:24,747 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2021-01-02 20:08:25,734 -  nornir.core -     INFO -        run() - Running task 'export_packet_filter_info' with args {} on 3 hosts
+2021-01-02 20:08:42,473 -  nornir.core -     INFO -        run() - Running task 'export_ipv4_routes' with args {} on 3 hosts
+2021-01-02 20:08:43,483 -  nornir.core -     INFO -        run() - Running task 'export_ipv6_routes' with args {} on 3 hosts
+2021-01-02 20:08:44,292 - nornir.core.task -    ERROR -      start() - Host 'R3': task 'export_ipv6_routes' failed with traceback:
+Traceback (most recent call last):
+  File "/home/macaktom/.local/share/virtualenvs/network_automation-NLxdyicX/lib/python3.8/site-packages/nornir/core/task.py", line 98, in start
+    r = self.task(self, **self.params)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_exporter.py", line 203, in export_ipv6_routes
+    ipv6_routes = parser.get_parsed_juniper_routes(result, ipv6_routes=True)
+  File "/home/macaktom/PycharmProjects/network_automation/scripts/utility/network_info_parser.py", line 84, in get_parsed_juniper_routes
+    parsed_data = "inet6.0: " + split_inet6_part[1].strip()
+IndexError: list index out of range
+
+2021-01-02 20:08:44,293 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2021-01-02 20:08:44,723 -  nornir.core -     INFO -        run() - Running task 'Get interfaces packet counters' with args {'getters': ['interfaces_counters']} on 3 hosts
+2021-01-02 20:08:45,093 -  nornir.core -     INFO -        run() - Running task 'List directories from current work directory' with args {'command_string': 'ls /', 'enable': True} on 1 hosts
+2021-01-02 20:09:19,618 -  nornir.core -     INFO -        run() - Running task 'Running commands' with args {'enable': True} on 1 hosts
+2021-01-02 20:09:25,654 -  nornir.core -     INFO -        run() - Running task 'VSFTPD Configuration' with args {'enable': True} on 1 hosts

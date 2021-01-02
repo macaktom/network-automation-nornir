@@ -1,0 +1,33 @@
+family inet {
+    filter Student-FILTER {
+        term T2 {
+            from {
+                source-address {
+                    182.27.31.0/24;
+                }
+                destination-address {
+                    173.27.0.0/24;
+                }
+                protocol tcp;
+            }
+            then {
+                discard;
+            }
+        }
+    }
+}
+family inet6 {
+    filter ADMIN-Test {
+        term T1 {
+            from {
+                source-address {
+                    2001:db8::0/64;
+                }
+                destination-address {
+                    2001:db9::0/64;
+                }
+            }
+            then discard;
+        }
+    }
+}

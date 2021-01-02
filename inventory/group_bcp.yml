@@ -1,23 +1,32 @@
 ---
 cisco_group:
   platform: "ios"
+  username: "admin"
+  password: "automationDP"
   connection_options:
     napalm:
       extras:
         optional_args:
+          secret: "cisco"
           auto_file_prompt: True
           global_delay_factor: 1
     netmiko:
       extras:
+        secret: "cisco"
         global_delay_factor: 1
 
 junos_group:
   platform: "junos"
+  username: "juniper"
+  password: "Juniper"
 
 linux_group:
   platform: "linux"
+  username: "linux"
+  password: "gns3DP"
   connection_options:
     netmiko:
       extras:
+        secret: "gns3DP"
         global_delay_factor: 3
 

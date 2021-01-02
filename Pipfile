@@ -30,6 +30,7 @@ prettytable = "*"
 openpyxl = "*"
 pdoc3 = "*"
 jinja2 = "*"
+ansible = "*"
 
 [requires]
 python_version = "3.8"

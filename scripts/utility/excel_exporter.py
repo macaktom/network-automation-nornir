@@ -132,7 +132,7 @@ class ExcelExporter:
             None
         """
         self._workbook.save(self._dest_file)
-        print(f"{Fore.GREEN}Export data to {self._dest_file.relative_to(Path.cwd())} was successful.")
+        print(f"{Fore.GREEN}Exporting data to {self._dest_file.relative_to(Path.cwd())} was successful.")
 
     def _setup_export(self, sheet_title: str) -> None:
         """
