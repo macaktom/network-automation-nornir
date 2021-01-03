@@ -27,7 +27,7 @@ class BackupConfiguration:
         Složky jsou vytvořeny pouze tehdy, pokud nebyly dříve uživatelem vytvořeny.
 
         Args:
-            folder_path (Path): cesta obsahující všechny nadřazené složky, které jsou nutné pro nalezení výsledného .txt souboru
+            folder_path (Path): cesta obsahující všechny nadřazené složky, které jsou nutné pro nalezení výsledného .conf souboru
 
         Returns:
             None

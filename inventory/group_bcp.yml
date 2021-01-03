@@ -1,5 +1,5 @@
 ---
-cisco_group:
+cisco:
   platform: "ios"
   username: "admin"
   password: "automationDP"
@@ -15,12 +15,12 @@ cisco_group:
         secret: "cisco"
         global_delay_factor: 1
 
-junos_group:
-  platform: "junos"
+juniper:
+  platform: "juniper"
   username: "juniper"
   password: "Juniper"
 
-linux_group:
+linux:
   platform: "linux"
   username: "linux"
   password: "gns3DP"

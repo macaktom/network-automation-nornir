@@ -52,13 +52,13 @@ class CredentialHandler:
                 username, password, secret = self._get_group_credentials(group_name)
                 group_obj.username = username
                 group_obj.password = password
-                if secret and group_name != "junos_group":
+                if secret and group_name != "juniper":
                     netmiko_params = group_obj.get_connection_parameters("netmiko")
                     extras = deepcopy(netmiko_params.extras)
                     extras["secret"] = secret
                     netmiko_params.extras = extras
                     group_obj.connection_options["netmiko"] = netmiko_params
-                    if group_name == "cisco_group":
+                    if group_name == "cisco":
                         napalm_params = group_obj.get_connection_parameters("napalm")
                         extras = deepcopy(napalm_params.extras)
                         extras["optional_args"]["secret"] = secret

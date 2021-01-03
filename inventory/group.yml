@@ -1,5 +1,5 @@
 ---
-cisco_group:
+cisco:
   platform: "ios"
   connection_options:
     napalm:
@@ -11,10 +11,10 @@ cisco_group:
       extras:
         global_delay_factor: 1
 
-junos_group:
+juniper:
   platform: "junos"
 
-linux_group:
+linux:
   platform: "linux"
   connection_options:
     netmiko:

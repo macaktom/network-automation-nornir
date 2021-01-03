@@ -9,7 +9,7 @@ inventory/vault/.vault_pass
 # .nfs files are created when an open file is removed but is still being accessed
 .nfs*
 
-initial_setup/configuration/junos/olive.cfg
+initial_setup/configuration/juniper/olive.cfg
 initial_setup/configuration/cisco/c7200.cfg
 initial_setup/configuration/cisco/IOSvL2.cfg
 # Environments

@@ -78,10 +78,18 @@ class NetworkInfoParser:
 
         result_string = result[0].result
         parsed_data = ""
-        split_inet6_part = re.split(f"inet6.0:", result_string)
+        ipv4_pattern = "inet.0"
+        ipv6_pattern = "inet6.0:"
+
+        if ipv4_pattern not in result_string and not ipv6_routes:
+            return parsed_data
+        if ipv6_pattern not in result_string and ipv6_routes:
+            return parsed_data
+
+        split_inet6_part = re.split(ipv6_pattern, result_string)
         if split_inet6_part:
-            if ipv6_routes:
-                parsed_data = "inet6.0: " + split_inet6_part[1].strip()
+            if ipv6_routes and len(split_inet6_part) > 1:
+                parsed_data = f"{ipv6_pattern} {split_inet6_part[1].strip()}"
             else:
                 parsed_data = split_inet6_part[0].strip()
         return parsed_data

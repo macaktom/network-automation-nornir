@@ -49,12 +49,12 @@ def main() -> None:
     """
     nornir_obj = setup_inventory()
     routers = nornir_obj.filter(F(dev_type="router"))
-    juniper_devices = nornir_obj.filter(F(groups__contains="junos_group"))
+    juniper_devices = nornir_obj.filter(F(groups__contains="juniper"))
     l3_switches = nornir_obj.filter(F(dev_type="L3_switch"))
-    cisco_router = nornir_obj.filter(F(groups__contains="cisco_group") & F(dev_type="router"))
-    l3_cisco = nornir_obj.filter(F(groups__contains="cisco_group") & F(dev_type="router") | F(dev_type="L3_switch"))
+    cisco_router = nornir_obj.filter(F(groups__contains="cisco") & F(dev_type="router"))
+    l3_cisco = nornir_obj.filter(F(groups__contains="cisco") & F(dev_type="router") | F(dev_type="L3_switch"))
     all_devices = nornir_obj.filter(F(dev_type="router") | F(dev_type="L3_switch"))
-    ubuntu_servers = nornir_obj.filter(F(dev_type="ubuntu_server") | F(groups__contains="linux_group"))
+    ubuntu_servers = nornir_obj.filter(F(dev_type="ubuntu_server") | F(groups__contains="linux"))
     viewer = NetworkUtilityViewer()
     exporter = NetworkInfoExporter(NetworkInfoCollector())
     ospf_config = OSPFConfiguration()
@@ -65,7 +65,10 @@ def main() -> None:
     nat_config = NATConfiguration()
     delete_config = DeleteConfiguration()
     linux_config = LinuxConfiguration()
-    all_devices.run(task=viewer.show_device_facts)
+    #all_devices.run(task=viewer.show_device_facts, json_out=True)
+    #all_devices.run(task=viewer.show_ipv4_routes)
+    #all_devices.run(task=viewer.show_ipv6_routes)
+    all_devices.run(task=viewer.show_ospf_neighbors, ipv6=False)
     #configure_network_devices(all_devices, interfaces_configuration.configure_ipv4_interfaces, "IPv4 interfaces config", dry_run=False)
     #configure_network_devices(all_devices, interfaces_configuration.configure_ipv6_interfaces, "IPv6 interfaces config", dry_run=False)
     #configure_network_devices(l3_switches, interfaces_configuration.configure_switching_interfaces, "Switching interfaces config", dry_run=False)
@@ -87,10 +90,9 @@ def main() -> None:
     #exporter.export_device_facts(all_devices)
     #exporter.export_interfaces_packet_counters(all_devices)
 
-    #send_command(ubuntu_servers, command_string="ls /", task_name="List directories from current work directory",enable=True)
     #configure_linux_servers(ubuntu_servers, linux_config.send_commands, task_name="Running commands", enable=True)
     #configure_linux_servers(ubuntu_servers, linux_config.configure_vsftpd, "VSFTPD Configuration", enable=True)
-    # TODO dokumentace (Linux), komentare a dokumentace k yamlum
+    # TODO dokumentace (Linux, credentials handler, main), komentare a dokumentace k yamlum
 
 
 if __name__ == "__main__":

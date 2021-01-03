@@ -142,10 +142,11 @@ class NetworkUtilityViewer:
             command = "show route"
         else:
             raise NornirSubTaskError("Function was not implemented for particular vendor.", task)
-        result = task.run(task=netmiko_send_command, name="Show IP routes", command_string=command)
+        result = task.run(task=netmiko_send_command, name="Show IPv4 routes", command_string=command)
         if task.host['vendor'] == "juniper" and result[0].result:
             parser = NetworkInfoParser()
-            result[0].result = parser.get_parsed_juniper_routes(result)
+            parsed_routes = parser.get_parsed_juniper_routes(result)
+            result[0].result = parsed_routes if parsed_routes else f"{Fore.RED}Device {task.host.name}: No IPv4 routes were found."
         self._print_info_default(result)
 
     def show_packet_filter_info(self, task: Task) -> None:
@@ -196,10 +197,11 @@ class NetworkUtilityViewer:
             command = "show route"
         else:
             raise NornirSubTaskError("Function was not implemented for particular vendor.", task)
-        result = task.run(task=netmiko_send_command, name="Show IP routes", command_string=command)
+        result = task.run(task=netmiko_send_command, name="Show IPv6 routes", command_string=command)
         if task.host['vendor'] == "juniper" and result[0].result:
             parser = NetworkInfoParser()
-            result[0].result = parser.get_parsed_juniper_routes(result, ipv6_routes=True)
+            parsed_routes = parser.get_parsed_juniper_routes(result, ipv6_routes=True)
+            result[0].result = parsed_routes if parsed_routes else f"{Fore.RED}Device {task.host.name}: No IPv6 routes were found."
         self._print_info_default(result)
 
     def show_vlans(self, task: Task, json_out: bool = False) -> None:
@@ -323,8 +325,10 @@ class NetworkUtilityViewer:
                 command = "show ospf neighbor"
         else:
             raise NornirSubTaskError("Function was not implemented for particular vendor.", task)
-        result = task.run(task=netmiko_send_command, name="Show OSPF neighbors", command_string=command,
-                          use_textfsm=True)
+        if ipv6:
+            result = task.run(task=netmiko_send_command, name="Show OSPFv3 neighbors", command_string=command)
+        else:
+            result = task.run(task=netmiko_send_command, name="Show OSPF neighbors", command_string=command)
         self._print_info_default(result)
 
     def _print_info_default(self, result_list: MultiResult) -> None:
