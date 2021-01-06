@@ -51,7 +51,7 @@ def main() -> None:
     routers = nornir_obj.filter(F(dev_type="router"))
     juniper_devices = nornir_obj.filter(F(groups__contains="juniper"))
     l3_switches = nornir_obj.filter(F(dev_type="L3_switch"))
-    cisco_router = nornir_obj.filter(F(groups__contains="cisco") & F(dev_type="router"))
+    cisco_routers = nornir_obj.filter(F(groups__contains="cisco") & F(dev_type="router"))
     l3_cisco = nornir_obj.filter(F(groups__contains="cisco") & F(dev_type="router") | F(dev_type="L3_switch"))
     all_devices = nornir_obj.filter(F(dev_type="router") | F(dev_type="L3_switch"))
     ubuntu_servers = nornir_obj.filter(F(dev_type="ubuntu_server") | F(groups__contains="linux"))
@@ -65,10 +65,11 @@ def main() -> None:
     nat_config = NATConfiguration()
     delete_config = DeleteConfiguration()
     linux_config = LinuxConfiguration()
+
     #all_devices.run(task=viewer.show_device_facts, json_out=True)
-    #all_devices.run(task=viewer.show_ipv4_routes)
+    #all_devices.run(task=viewer.show_packet_filter_info)
     #all_devices.run(task=viewer.show_ipv6_routes)
-    all_devices.run(task=viewer.show_ospf_neighbors, ipv6=False)
+    #all_devices.run(task=viewer.show_ospf_neighbors, ipv6=False)
     #configure_network_devices(all_devices, interfaces_configuration.configure_ipv4_interfaces, "IPv4 interfaces config", dry_run=False)
     #configure_network_devices(all_devices, interfaces_configuration.configure_ipv6_interfaces, "IPv6 interfaces config", dry_run=False)
     #configure_network_devices(l3_switches, interfaces_configuration.configure_switching_interfaces, "Switching interfaces config", dry_run=False)
@@ -92,7 +93,7 @@ def main() -> None:
 
     #configure_linux_servers(ubuntu_servers, linux_config.send_commands, task_name="Running commands", enable=True)
     #configure_linux_servers(ubuntu_servers, linux_config.configure_vsftpd, "VSFTPD Configuration", enable=True)
-    # TODO dokumentace (Linux, credentials handler, main), komentare a dokumentace k yamlum
+    # TODO show funkce (bez facts atd.), dokumentace (Linux, credentials handler, main), komentare a dokumentace k yamlum
 
 
 if __name__ == "__main__":

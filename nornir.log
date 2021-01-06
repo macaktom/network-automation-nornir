@@ -1417,3 +1417,27 @@ nornir.core.exceptions.NornirSubTaskError: Subtask: Function was not implemented
 
 
 2021-01-03 15:47:24,065 -  nornir.core -     INFO -        run() - Running task 'show_ospf_neighbors' with args {'ipv6': False} on 3 hosts
+2021-01-03 19:23:07,803 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {'json_out': True} on 3 hosts
+2021-01-03 19:24:16,382 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2021-01-04 07:43:29,669 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {'json_out': True} on 3 hosts
+2021-01-04 08:27:46,951 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {'json_out': True} on 3 hosts
+2021-01-04 10:22:45,825 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {'json_out': True} on 3 hosts
+2021-01-04 13:37:45,677 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {'json_out': True} on 3 hosts
+2021-01-04 13:37:50,340 -  nornir.core -     INFO -        run() - Running task 'IPv4 interfaces config' with args {'dry_run': False} on 3 hosts
+2021-01-04 13:37:59,920 -  nornir.core -     INFO -        run() - Running task 'IPv6 interfaces config' with args {'dry_run': False} on 3 hosts
+2021-01-04 13:38:08,994 -  nornir.core -     INFO -        run() - Running task 'Switching interfaces config' with args {'dry_run': False} on 1 hosts
+2021-01-04 13:38:18,066 -  nornir.core -     INFO -        run() - Running task 'Static routing config' with args {'dry_run': False} on 3 hosts
+2021-01-04 13:38:26,492 -  nornir.core -     INFO -        run() - Running task 'OSPFv2 config' with args {'dry_run': False} on 3 hosts
+2021-01-04 13:38:34,874 -  nornir.core -     INFO -        run() - Running task 'EIGRP config' with args {'dry_run': False} on 2 hosts
+2021-01-04 13:38:43,284 -  nornir.core -     INFO -        run() - Running task 'IPv4 packet filter config' with args {'dry_run': False} on 3 hosts
+2021-01-04 13:38:51,880 -  nornir.core -     INFO -        run() - Running task 'NAT Overload config' with args {'dry_run': False} on 2 hosts
+2021-01-04 13:39:00,394 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 2 hosts
+2021-01-04 13:39:09,076 -  nornir.core -     INFO -        run() - Running task 'EIGRP IPV6 config' with args {'dry_run': False} on 2 hosts
+2021-01-04 13:39:17,790 -  nornir.core -     INFO -        run() - Running task 'IPv6 Static Routing config' with args {'dry_run': False} on 3 hosts
+2021-01-04 13:39:26,848 -  nornir.core -     INFO -        run() - Running task 'IPv6 packet filter config' with args {'dry_run': False} on 3 hosts
+2021-01-04 13:39:35,743 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2021-01-04 13:41:14,219 -  nornir.core -     INFO -        run() - Running task 'show_ipv4_routes' with args {} on 3 hosts
+2021-01-04 13:41:20,412 -  nornir.core -     INFO -        run() - Running task 'show_ipv6_routes' with args {} on 3 hosts
+2021-01-04 13:41:21,222 -  nornir.core -     INFO -        run() - Running task 'show_ospf_neighbors' with args {'ipv6': False} on 3 hosts
+2021-01-06 11:00:37,201 -  nornir.core -     INFO -        run() - Running task 'show_packet_filter_info' with args {} on 3 hosts
+2021-01-06 11:00:42,918 -  nornir.core -     INFO -        run() - Running task 'export_packet_filter_info' with args {} on 3 hosts

@@ -41,7 +41,7 @@ class NetworkUtilityViewer:
         Returns:
             None
         """
-        result = task.run(task=napalm_get, name="Show ntp info (servers, peers, statistics)",
+        result = task.run(task=napalm_get, name="Show NTP info (servers, peers, statistics)",
                           getters=["ntp_servers", "ntp_peers", "ntp_stats"])
         if json_out:
             self._print_info_json(result)
@@ -165,15 +165,12 @@ class NetworkUtilityViewer:
         command = ""
         if task.host['vendor'] == "cisco" and (
                 task.host['dev_type'] == "router" or task.host['dev_type'] == "L3_switch"):
-            command = "do show access-lists"
+            command = "show access-lists"
         elif task.host['vendor'] == "juniper" and task.host['dev_type'] == "router":
-            command = "show firewall"
+            command = "show configuration firewall"
         else:
             raise NornirSubTaskError("Function was not implemented for particular vendor.", task)
-        result = task.run(task=netmiko_send_config, name="Show packet filters info", config_commands=[command])
-        parser = NetworkInfoParser()
-        if result[0].result:
-            result[0].result = parser.get_parsed_packet_filter_data(task.host['vendor'], result)
+        result = task.run(task=netmiko_send_command, name="Show packet filters info", command_string=command)
         self._print_info_default(result)
 
     def show_ipv6_routes(self, task: Task) -> None:
@@ -346,6 +343,8 @@ class NetworkUtilityViewer:
             for result in result_list:
                 print_result(result)
                 print()
+        else:
+            print(f"{Fore.RED}Task failed for host {result_list.host}")
 
     def _print_info_json(self, result_list: MultiResult) -> None:
         """
@@ -361,3 +360,5 @@ class NetworkUtilityViewer:
             print_title(f"Device {result_list.host}:")
             for result in result_list:
                 print(json.dumps(result.result, sort_keys=True, indent=4))
+        else:
+            print(f"{Fore.RED}Task failed for host {result_list.host}")

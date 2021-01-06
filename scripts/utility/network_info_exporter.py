@@ -42,7 +42,7 @@ class NetworkInfoExporter:
             None
 
         """
-        sorted_headers_export = ["hostname", "FQDN", "vendor", "serial_number", "os_version", "uptime", "connection"]
+        sorted_headers_export = ["hostname", "FQDN", "vendor", "model", "serial_number", "os_version", "uptime", "connection"]
         wider_header_columns = ["os_version", "FQDN"]
         dest_file_path = Path(Path.cwd() / 'export' / "excel" / "facts.xlsx")
         try:
@@ -230,16 +230,15 @@ class NetworkInfoExporter:
         command = ""
         if task.host['vendor'] == "cisco" and (
                 task.host['dev_type'] == "router" or task.host['dev_type'] == "L3_switch"):
-            command = "do show access-lists"
+            command = "show access-lists"
         elif task.host['vendor'] == "juniper" and task.host['dev_type'] == "router":
-            command = "show firewall"
+            command = "show configuration firewall"
         else:
             print(f"{Fore.RED}Export failed for host {task.host.name} - not implemented for that vendor.")
             raise NornirSubTaskError(f"Function was not implemented for vendor {task.host.name}.", task)
-        result = task.run(task=netmiko_send_config, name="Get packet filters info", config_commands=[command])
+        result = task.run(task=netmiko_send_command, name="Get packet filters info", command_string=command)
         if not result.failed:
-            parser = NetworkInfoParser()
-            packet_filter_info = parser.get_parsed_packet_filter_data(task.host['vendor'], result)
+            packet_filter_info = result[0].result
             if packet_filter_info != "":
                 file_path = Path(Path.cwd() / 'export' / "packet_filter" / f"{task.host.name}.txt")
                 exporter = FileExporter(file_path, packet_filter_info)

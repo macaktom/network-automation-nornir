@@ -69,7 +69,7 @@ class NetworkUtilityViewer:
         Returns:
             None
         &#34;&#34;&#34;
-        result = task.run(task=napalm_get, name=&#34;Show ntp info (servers, peers, statistics)&#34;,
+        result = task.run(task=napalm_get, name=&#34;Show NTP info (servers, peers, statistics)&#34;,
                           getters=[&#34;ntp_servers&#34;, &#34;ntp_peers&#34;, &#34;ntp_stats&#34;])
         if json_out:
             self._print_info_json(result)
@@ -170,10 +170,11 @@ class NetworkUtilityViewer:
             command = &#34;show route&#34;
         else:
             raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
-        result = task.run(task=netmiko_send_command, name=&#34;Show IP routes&#34;, command_string=command)
+        result = task.run(task=netmiko_send_command, name=&#34;Show IPv4 routes&#34;, command_string=command)
         if task.host[&#39;vendor&#39;] == &#34;juniper&#34; and result[0].result:
             parser = NetworkInfoParser()
-            result[0].result = parser.get_parsed_juniper_routes(result)
+            parsed_routes = parser.get_parsed_juniper_routes(result)
+            result[0].result = parsed_routes if parsed_routes else f&#34;{Fore.RED}Device {task.host.name}: No IPv4 routes were found.&#34;
         self._print_info_default(result)
 
     def show_packet_filter_info(self, task: Task) -&gt; None:
@@ -192,15 +193,12 @@ class NetworkUtilityViewer:
         command = &#34;&#34;
         if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
                 task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
-            command = &#34;do show access-lists&#34;
+            command = &#34;show access-lists&#34;
         elif task.host[&#39;vendor&#39;] == &#34;juniper&#34; and task.host[&#39;dev_type&#39;] == &#34;router&#34;:
-            command = &#34;show firewall&#34;
+            command = &#34;show configuration firewall&#34;
         else:
             raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
-        result = task.run(task=netmiko_send_config, name=&#34;Show packet filters info&#34;, config_commands=[command])
-        parser = NetworkInfoParser()
-        if result[0].result:
-            result[0].result = parser.get_parsed_packet_filter_data(task.host[&#39;vendor&#39;], result)
+        result = task.run(task=netmiko_send_command, name=&#34;Show packet filters info&#34;, command_string=command)
         self._print_info_default(result)
 
     def show_ipv6_routes(self, task: Task) -&gt; None:
@@ -224,10 +222,11 @@ class NetworkUtilityViewer:
             command = &#34;show route&#34;
         else:
             raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
-        result = task.run(task=netmiko_send_command, name=&#34;Show IP routes&#34;, command_string=command)
+        result = task.run(task=netmiko_send_command, name=&#34;Show IPv6 routes&#34;, command_string=command)
         if task.host[&#39;vendor&#39;] == &#34;juniper&#34; and result[0].result:
             parser = NetworkInfoParser()
-            result[0].result = parser.get_parsed_juniper_routes(result, ipv6_routes=True)
+            parsed_routes = parser.get_parsed_juniper_routes(result, ipv6_routes=True)
+            result[0].result = parsed_routes if parsed_routes else f&#34;{Fore.RED}Device {task.host.name}: No IPv6 routes were found.&#34;
         self._print_info_default(result)
 
     def show_vlans(self, task: Task, json_out: bool = False) -&gt; None:
@@ -351,8 +350,10 @@ class NetworkUtilityViewer:
                 command = &#34;show ospf neighbor&#34;
         else:
             raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
-        result = task.run(task=netmiko_send_command, name=&#34;Show OSPF neighbors&#34;, command_string=command,
-                          use_textfsm=True)
+        if ipv6:
+            result = task.run(task=netmiko_send_command, name=&#34;Show OSPFv3 neighbors&#34;, command_string=command)
+        else:
+            result = task.run(task=netmiko_send_command, name=&#34;Show OSPF neighbors&#34;, command_string=command)
         self._print_info_default(result)
 
     def _print_info_default(self, result_list: MultiResult) -&gt; None:
@@ -370,6 +371,8 @@ class NetworkUtilityViewer:
             for result in result_list:
                 print_result(result)
                 print()
+        else:
+            print(f&#34;{Fore.RED}Task failed for host {result_list.host}&#34;)
 
     def _print_info_json(self, result_list: MultiResult) -&gt; None:
         &#34;&#34;&#34;
@@ -384,7 +387,9 @@ class NetworkUtilityViewer:
         if not result_list.failed:
             print_title(f&#34;Device {result_list.host}:&#34;)
             for result in result_list:
-                print(json.dumps(result.result, sort_keys=True, indent=4))</code></pre>
+                print(json.dumps(result.result, sort_keys=True, indent=4))
+        else:
+            print(f&#34;{Fore.RED}Task failed for host {result_list.host}&#34;)</code></pre>
 </details>
 </section>
 <section>
@@ -439,7 +444,7 @@ Data jsou zobrazována v konzoli (buď jako strukturovaný JSON string nebo nest
         Returns:
             None
         &#34;&#34;&#34;
-        result = task.run(task=napalm_get, name=&#34;Show ntp info (servers, peers, statistics)&#34;,
+        result = task.run(task=napalm_get, name=&#34;Show NTP info (servers, peers, statistics)&#34;,
                           getters=[&#34;ntp_servers&#34;, &#34;ntp_peers&#34;, &#34;ntp_stats&#34;])
         if json_out:
             self._print_info_json(result)
@@ -540,10 +545,11 @@ Data jsou zobrazována v konzoli (buď jako strukturovaný JSON string nebo nest
             command = &#34;show route&#34;
         else:
             raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
-        result = task.run(task=netmiko_send_command, name=&#34;Show IP routes&#34;, command_string=command)
+        result = task.run(task=netmiko_send_command, name=&#34;Show IPv4 routes&#34;, command_string=command)
         if task.host[&#39;vendor&#39;] == &#34;juniper&#34; and result[0].result:
             parser = NetworkInfoParser()
-            result[0].result = parser.get_parsed_juniper_routes(result)
+            parsed_routes = parser.get_parsed_juniper_routes(result)
+            result[0].result = parsed_routes if parsed_routes else f&#34;{Fore.RED}Device {task.host.name}: No IPv4 routes were found.&#34;
         self._print_info_default(result)
 
     def show_packet_filter_info(self, task: Task) -&gt; None:
@@ -562,15 +568,12 @@ Data jsou zobrazována v konzoli (buď jako strukturovaný JSON string nebo nest
         command = &#34;&#34;
         if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
                 task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
-            command = &#34;do show access-lists&#34;
+            command = &#34;show access-lists&#34;
         elif task.host[&#39;vendor&#39;] == &#34;juniper&#34; and task.host[&#39;dev_type&#39;] == &#34;router&#34;:
-            command = &#34;show firewall&#34;
+            command = &#34;show configuration firewall&#34;
         else:
             raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
-        result = task.run(task=netmiko_send_config, name=&#34;Show packet filters info&#34;, config_commands=[command])
-        parser = NetworkInfoParser()
-        if result[0].result:
-            result[0].result = parser.get_parsed_packet_filter_data(task.host[&#39;vendor&#39;], result)
+        result = task.run(task=netmiko_send_command, name=&#34;Show packet filters info&#34;, command_string=command)
         self._print_info_default(result)
 
     def show_ipv6_routes(self, task: Task) -&gt; None:
@@ -594,10 +597,11 @@ Data jsou zobrazována v konzoli (buď jako strukturovaný JSON string nebo nest
             command = &#34;show route&#34;
         else:
             raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
-        result = task.run(task=netmiko_send_command, name=&#34;Show IP routes&#34;, command_string=command)
+        result = task.run(task=netmiko_send_command, name=&#34;Show IPv6 routes&#34;, command_string=command)
         if task.host[&#39;vendor&#39;] == &#34;juniper&#34; and result[0].result:
             parser = NetworkInfoParser()
-            result[0].result = parser.get_parsed_juniper_routes(result, ipv6_routes=True)
+            parsed_routes = parser.get_parsed_juniper_routes(result, ipv6_routes=True)
+            result[0].result = parsed_routes if parsed_routes else f&#34;{Fore.RED}Device {task.host.name}: No IPv6 routes were found.&#34;
         self._print_info_default(result)
 
     def show_vlans(self, task: Task, json_out: bool = False) -&gt; None:
@@ -721,8 +725,10 @@ Data jsou zobrazována v konzoli (buď jako strukturovaný JSON string nebo nest
                 command = &#34;show ospf neighbor&#34;
         else:
             raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
-        result = task.run(task=netmiko_send_command, name=&#34;Show OSPF neighbors&#34;, command_string=command,
-                          use_textfsm=True)
+        if ipv6:
+            result = task.run(task=netmiko_send_command, name=&#34;Show OSPFv3 neighbors&#34;, command_string=command)
+        else:
+            result = task.run(task=netmiko_send_command, name=&#34;Show OSPF neighbors&#34;, command_string=command)
         self._print_info_default(result)
 
     def _print_info_default(self, result_list: MultiResult) -&gt; None:
@@ -740,6 +746,8 @@ Data jsou zobrazována v konzoli (buď jako strukturovaný JSON string nebo nest
             for result in result_list:
                 print_result(result)
                 print()
+        else:
+            print(f&#34;{Fore.RED}Task failed for host {result_list.host}&#34;)
 
     def _print_info_json(self, result_list: MultiResult) -&gt; None:
         &#34;&#34;&#34;
@@ -754,7 +762,9 @@ Data jsou zobrazována v konzoli (buď jako strukturovaný JSON string nebo nest
         if not result_list.failed:
             print_title(f&#34;Device {result_list.host}:&#34;)
             for result in result_list:
-                print(json.dumps(result.result, sort_keys=True, indent=4))</code></pre>
+                print(json.dumps(result.result, sort_keys=True, indent=4))
+        else:
+            print(f&#34;{Fore.RED}Task failed for host {result_list.host}&#34;)</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
@@ -1047,10 +1057,11 @@ Data jsou zobrazována v konzoli (buď jako strukturovaný JSON string nebo nest
         command = &#34;show route&#34;
     else:
         raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
-    result = task.run(task=netmiko_send_command, name=&#34;Show IP routes&#34;, command_string=command)
+    result = task.run(task=netmiko_send_command, name=&#34;Show IPv4 routes&#34;, command_string=command)
     if task.host[&#39;vendor&#39;] == &#34;juniper&#34; and result[0].result:
         parser = NetworkInfoParser()
-        result[0].result = parser.get_parsed_juniper_routes(result)
+        parsed_routes = parser.get_parsed_juniper_routes(result)
+        result[0].result = parsed_routes if parsed_routes else f&#34;{Fore.RED}Device {task.host.name}: No IPv4 routes were found.&#34;
     self._print_info_default(result)</code></pre>
 </details>
 </dd>
@@ -1096,10 +1107,11 @@ Data jsou zobrazována v konzoli (buď jako strukturovaný JSON string nebo nest
         command = &#34;show route&#34;
     else:
         raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
-    result = task.run(task=netmiko_send_command, name=&#34;Show IP routes&#34;, command_string=command)
+    result = task.run(task=netmiko_send_command, name=&#34;Show IPv6 routes&#34;, command_string=command)
     if task.host[&#39;vendor&#39;] == &#34;juniper&#34; and result[0].result:
         parser = NetworkInfoParser()
-        result[0].result = parser.get_parsed_juniper_routes(result, ipv6_routes=True)
+        parsed_routes = parser.get_parsed_juniper_routes(result, ipv6_routes=True)
+        result[0].result = parsed_routes if parsed_routes else f&#34;{Fore.RED}Device {task.host.name}: No IPv6 routes were found.&#34;
     self._print_info_default(result)</code></pre>
 </details>
 </dd>
@@ -1134,7 +1146,7 @@ serverů a peerů - zobrazení konfigurace není ještě implementované komunit
     Returns:
         None
     &#34;&#34;&#34;
-    result = task.run(task=napalm_get, name=&#34;Show ntp info (servers, peers, statistics)&#34;,
+    result = task.run(task=napalm_get, name=&#34;Show NTP info (servers, peers, statistics)&#34;,
                       getters=[&#34;ntp_servers&#34;, &#34;ntp_peers&#34;, &#34;ntp_stats&#34;])
     if json_out:
         self._print_info_json(result)
@@ -1198,8 +1210,10 @@ serverů a peerů - zobrazení konfigurace není ještě implementované komunit
             command = &#34;show ospf neighbor&#34;
     else:
         raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
-    result = task.run(task=netmiko_send_command, name=&#34;Show OSPF neighbors&#34;, command_string=command,
-                      use_textfsm=True)
+    if ipv6:
+        result = task.run(task=netmiko_send_command, name=&#34;Show OSPFv3 neighbors&#34;, command_string=command)
+    else:
+        result = task.run(task=netmiko_send_command, name=&#34;Show OSPF neighbors&#34;, command_string=command)
     self._print_info_default(result)</code></pre>
 </details>
 </dd>
@@ -1240,15 +1254,12 @@ serverů a peerů - zobrazení konfigurace není ještě implementované komunit
     command = &#34;&#34;
     if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
             task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
-        command = &#34;do show access-lists&#34;
+        command = &#34;show access-lists&#34;
     elif task.host[&#39;vendor&#39;] == &#34;juniper&#34; and task.host[&#39;dev_type&#39;] == &#34;router&#34;:
-        command = &#34;show firewall&#34;
+        command = &#34;show configuration firewall&#34;
     else:
         raise NornirSubTaskError(&#34;Function was not implemented for particular vendor.&#34;, task)
-    result = task.run(task=netmiko_send_config, name=&#34;Show packet filters info&#34;, config_commands=[command])
-    parser = NetworkInfoParser()
-    if result[0].result:
-        result[0].result = parser.get_parsed_packet_filter_data(task.host[&#39;vendor&#39;], result)
+    result = task.run(task=netmiko_send_command, name=&#34;Show packet filters info&#34;, command_string=command)
     self._print_info_default(result)</code></pre>
 </details>
 </dd>

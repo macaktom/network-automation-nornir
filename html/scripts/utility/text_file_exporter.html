@@ -95,7 +95,7 @@ class FileExporter:
         mode = &#34;a&#34; if append else &#34;w&#34;
         with open(self._dest_file, mode) as file:
             file.write(self._content)
-            print(f&#34;{Fore.GREEN}File {self._dest_file.relative_to(Path.cwd())} was exported successfully.&#34;)</code></pre>
+            print(f&#34;{Fore.GREEN}Exporting data to {self._dest_file.relative_to(Path.cwd())} was successful.&#34;)</code></pre>
 </details>
 </section>
 <section>
@@ -195,7 +195,7 @@ class FileExporter:
         mode = &#34;a&#34; if append else &#34;w&#34;
         with open(self._dest_file, mode) as file:
             file.write(self._content)
-            print(f&#34;{Fore.GREEN}File {self._dest_file.relative_to(Path.cwd())} was exported successfully.&#34;)</code></pre>
+            print(f&#34;{Fore.GREEN}Exporting data to {self._dest_file.relative_to(Path.cwd())} was successful.&#34;)</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
@@ -230,7 +230,7 @@ Defaultně nastaveno jako False (vytvoření nového souboru).</dd>
     mode = &#34;a&#34; if append else &#34;w&#34;
     with open(self._dest_file, mode) as file:
         file.write(self._content)
-        print(f&#34;{Fore.GREEN}File {self._dest_file.relative_to(Path.cwd())} was exported successfully.&#34;)</code></pre>
+        print(f&#34;{Fore.GREEN}Exporting data to {self._dest_file.relative_to(Path.cwd())} was successful.&#34;)</code></pre>
 </details>
 </dd>
 </dl>

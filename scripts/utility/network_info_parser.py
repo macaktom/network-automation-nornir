@@ -93,26 +93,3 @@ class NetworkInfoParser:
             else:
                 parsed_data = split_inet6_part[0].strip()
         return parsed_data
-
-    def get_parsed_packet_filter_data(self, vendor: str, result: MultiResult) -> str:
-        """
-        Metoda, která zparsuje string obsahující definované paketové filtry.
-
-        Args:
-            vendor (str): String obsahující informaci o výrobci daného zařízení.
-            result (MultiResult): Speciální nornir objekt (připomínající Python list), který obsahuje Result objekt s neparsovaným stringem.
-
-        Returns:
-            Vrátí string parsed_result, který obsahuje zparsované paketové filtry daného zařízení. V případě nepodporovaného vendora vrací prázdný string.
-        """
-        result_string = result[0].result
-        parsed_result = ""
-        if vendor.strip().lower() == "cisco":
-            split_access_command = re.split(r"do show access-lists\n", result_string)[1]
-            parsed_result = "" if "access list" not in split_access_command else \
-                re.split(f"\n{result[0].host}\(config\)\#end", split_access_command)[0]
-        elif vendor.strip().lower() == "juniper":
-            split_show_firewall_part = re.split(f"show firewall", result_string)[1]
-            parsed_result = "" if "inet" not in split_show_firewall_part else \
-                re.split(r"\n\[edit\]\n", split_show_firewall_part)[0].strip()
-        return parsed_result

@@ -27,54 +27,44 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">import datetime
-from pathlib import Path
-from pprint import pprint
 from nornir import InitNornir
-from nornir.core import Task, Nornir
+from nornir.core import Nornir
 from nornir.core.filter import F
-from nornir_napalm.plugins.tasks import napalm_cli
 from nornir_netmiko import netmiko_send_command
 from nornir_utils.plugins.functions import print_result
-
 from scripts.tasks.delete_configuration import DeleteConfiguration
 from scripts.tasks.eigrp_configuration import EIGRPConfiguration
 from scripts.tasks.interfaces_configuration import InterfacesConfiguration
+from scripts.tasks.linux_configuration import LinuxConfiguration
 from scripts.tasks.nat_configuration import NATConfiguration
 from scripts.tasks.ospf_configuration import OSPFConfiguration
 from scripts.tasks.packet_filter_configuration import PacketFilterConfiguration
 from scripts.tasks.static_configuration import StaticRoutingConfiguration
+from scripts.utility.credential_handler import CredentialHandler
 from scripts.utility.network_info_collector import NetworkInfoCollector
 from scripts.utility.network_info_exporter import NetworkInfoExporter
 from scripts.utility.network_info_viewer import NetworkUtilityViewer
 
 
-# Rozdelit SHOW commandy:
-# 1) Ty ktere jsou podporovany NAPALMem u OBOU vendoru (nutne udelat specialni tabulku pro printovani) - lze provest export do JSONu, .txt
-# 2) Ty ktere NAPALM nema nebo jsou podporovany pouze u nektereho vendora - print pouze neupraveneho textu do konzole + export .txt
-# Tři druhy metod teď budou (kromě potom Jinja2): GET, SHOW, EXPORT. Show commandy je ted nutne prepsat na GET commandy, vraci Resulty
-
-def std_print(agg_result):
-    print()
-    for k, multi_result in agg_result.items():
-        print(&#34;-&#34; * 50)
-        print(k)
-        for result_obj in multi_result:
-            if isinstance(result_obj.result, str):
-                print(result_obj.result)
-            else:
-                pprint(result_obj.result)
-        print(&#34;-&#34; * 50)
-        print()
-    print()
+def setup_inventory():
+    creds_handler = CredentialHandler()
+    nr = InitNornir(config_file=&#34;config.yml&#34;)  # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný (sub)task - více o chybě v nornir.log
+    creds_handler.insert_creds(nr)
+    return nr
 
 
-def configure_devices(nornir_devices: Nornir, task_func: callable, task_name: str, dry_run: bool) -&gt; None:
+def configure_linux_servers(nornir_devices: Nornir, task_func: callable, task_name: str, enable: bool = True) -&gt; None:
+    result = nornir_devices.run(task=task_func, name=task_name, enable=enable)
+    print_result(result)
+
+
+def configure_network_devices(nornir_devices: Nornir, task_func: callable, task_name: str, dry_run: bool) -&gt; None:
     result = nornir_devices.run(task=task_func, name=task_name, dry_run=dry_run)
     print_result(result)
 
 
-def send_command(nornir_devices: Nornir, task_name: str, dry_run: bool) -&gt; None:
-    result = nornir_devices.run(task=netmiko_send_command, name=task_name, dry_run=dry_run)
+def send_command(nornir_devices: Nornir, command_string: str, task_name: str, enable=False) -&gt; None:
+    result = nornir_devices.run(task=netmiko_send_command, command_string=command_string, name=task_name, enable=enable)
     print_result(result)
 
 
@@ -85,15 +75,14 @@ def main() -&gt; None:
     Returns:
         None
     &#34;&#34;&#34;
-    # nr = InitNornir(config_file=&#34;config.yml&#34;, core = {&#34;raise_on_error&#34;: True}) # Nornir objekt, který upozorní na chybu při provedení tasku
-    nr = InitNornir(
-        config_file=&#34;config.yml&#34;)  # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný task - více o chybě v nornir.log
-    routers = nr.filter(F(dev_type=&#34;router&#34;))
-    juniper_devices = nr.filter(F(groups__contains=&#34;junos_group&#34;))
-    l3_switches = nr.filter(F(dev_type=&#34;L3_switch&#34;))
-    cisco_router = nr.filter(F(groups__contains=&#34;cisco_group&#34;) &amp; F(dev_type=&#34;router&#34;))
-    l3_cisco = nr.filter(F(groups__contains=&#34;cisco_group&#34;) &amp; F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;))
-    all_devices = nr.filter(F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;))
+    nornir_obj = setup_inventory()
+    routers = nornir_obj.filter(F(dev_type=&#34;router&#34;))
+    juniper_devices = nornir_obj.filter(F(groups__contains=&#34;juniper&#34;))
+    l3_switches = nornir_obj.filter(F(dev_type=&#34;L3_switch&#34;))
+    cisco_routers = nornir_obj.filter(F(groups__contains=&#34;cisco&#34;) &amp; F(dev_type=&#34;router&#34;))
+    l3_cisco = nornir_obj.filter(F(groups__contains=&#34;cisco&#34;) &amp; F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;))
+    all_devices = nornir_obj.filter(F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;))
+    ubuntu_servers = nornir_obj.filter(F(dev_type=&#34;ubuntu_server&#34;) | F(groups__contains=&#34;linux&#34;))
     viewer = NetworkUtilityViewer()
     exporter = NetworkInfoExporter(NetworkInfoCollector())
     ospf_config = OSPFConfiguration()
@@ -103,37 +92,36 @@ def main() -&gt; None:
     packet_filter = PacketFilterConfiguration()
     nat_config = NATConfiguration()
     delete_config = DeleteConfiguration()
-    # juniper_devices.run(task=viewer.show_device_configuration)
-    #all_devices.run(task=viewer.show_device_facts)
+    linux_config = LinuxConfiguration()
 
-    #configure_devices(all_devices, interfaces_configuration.configure_ipv4_interfaces, &#34;IPv4 interfaces config&#34;, False)
-    #configure_devices(all_devices, interfaces_configuration.configure_ipv6_interfaces, &#34;IPv6 interfaces config&#34;, False)
-    #configure_devices(l3_switches, interfaces_configuration.configure_switching_interfaces,&#34;Switching interfaces config&#34;, False)
-    #configure_devices(all_devices, static_routing_config.configure_static_routing_ipv4, &#34;Static routing config&#34;, False)
-    #configure_devices(all_devices, ospf_config.configure_ospf, &#34;OSPFv2 config&#34;, False)
-    #configure_devices(l3_cisco, eigrp_config.configure_eigrp_ipv4, &#34;EIGRP config&#34;, False)
-    #configure_devices(all_devices, packet_filter.configure_ipv4_packet_filters, &#34;IPv4 packet filter config&#34;, False)
-    #configure_devices(l3_cisco, nat_config.configure_source_nat_overload, &#34;NAT Overload config&#34;, False)
-    #configure_devices(routers, ospf_config.configure_ospfv3, &#34;OSPFv3 config&#34;, False)
-    #configure_devices(l3_cisco, eigrp_config.configure_eigrp_ipv6, &#34;EIGRP IPV6 config&#34;, False)
-    #configure_devices(all_devices, static_routing_config.configure_static_routing_ipv6, &#34;IPv6 Static Routing config&#34;,False)
-    #configure_devices(all_devices, packet_filter.configure_ipv6_packet_filters, &#34;IPv6 packet filter config&#34;, False)
-    #configure_devices(all_devices, delete_config.delete_configuration, &#34;Delete Configuration&#34;, dry_run=False)
+    #all_devices.run(task=viewer.show_device_facts, json_out=True)
+    #all_devices.run(task=viewer.show_packet_filter_info)
+    #all_devices.run(task=viewer.show_ipv6_routes)
+    #all_devices.run(task=viewer.show_ospf_neighbors, ipv6=False)
+    #configure_network_devices(all_devices, interfaces_configuration.configure_ipv4_interfaces, &#34;IPv4 interfaces config&#34;, dry_run=False)
+    #configure_network_devices(all_devices, interfaces_configuration.configure_ipv6_interfaces, &#34;IPv6 interfaces config&#34;, dry_run=False)
+    #configure_network_devices(l3_switches, interfaces_configuration.configure_switching_interfaces, &#34;Switching interfaces config&#34;, dry_run=False)
+    #configure_network_devices(all_devices, static_routing_config.configure_static_routing_ipv4, &#34;Static routing config&#34;,dry_run=False)
+    #configure_network_devices(all_devices, ospf_config.configure_ospf, &#34;OSPFv2 config&#34;, dry_run=False)
+    #configure_network_devices(l3_cisco, eigrp_config.configure_eigrp_ipv4, &#34;EIGRP config&#34;, dry_run=False)
+    #configure_network_devices(all_devices, packet_filter.configure_ipv4_packet_filters, &#34;IPv4 packet filter config&#34;,dry_run=False)
+    #configure_network_devices(l3_cisco, nat_config.configure_source_nat_overload, &#34;NAT Overload config&#34;, dry_run=False)
+    #configure_network_devices(routers, ospf_config.configure_ospfv3, &#34;OSPFv3 config&#34;, dry_run=False)
+    #configure_network_devices(l3_cisco, eigrp_config.configure_eigrp_ipv6, &#34;EIGRP IPV6 config&#34;, dry_run=False)
+    #configure_network_devices(all_devices, static_routing_config.configure_static_routing_ipv6,&#34;IPv6 Static Routing config&#34;, dry_run=False)
+    #configure_network_devices(all_devices, packet_filter.configure_ipv6_packet_filters, &#34;IPv6 packet filter config&#34;,dry_run=False)
+    #configure_network_devices(all_devices, delete_config.delete_configuration, &#34;Delete Configuration&#34;, dry_run=False)
 
-    # configure_devices(juniper_devices, static_routing_config.configure_static_routing_ipv4, &#34;Static routing config&#34;, False)
-    # configure_devices(juniper_devices, ospf_config.configure_ospf, &#34;OSPFv2 config&#34;, False)
-    #configure_devices(routers, ospf_config.configure_ospfv3, &#34;OSPFv3 config&#34;, False)
-    # configure_devices(juniper_devices, static_routing_config.configure_static_routing_ipv6, &#34;IPv6 Static Routing config&#34;, False)
-    # configure_devices(juniper_devices, interfaces_configuration.configure_ipv4_interfaces, &#34;IPv4 interfaces config&#34;, False)
-    # configure_devices(juniper_devices, interfaces_configuration.configure_ipv6_interfaces, &#34;IPv6 interfaces config&#34;, False)
-    # configure_devices(juniper_devices, packet_filter.configure_ipv4_packet_filters, &#34;IPv4 packet filter config&#34;, False)
-    # configure_devices(juniper_devices, packet_filter.configure_ipv6_packet_filters, &#34;IPv6 packet filter config&#34;, False)
-    all_devices.run(task=exporter.export_device_configuration)
-    # all_devices.run(task=exporter.export_packet_filter_info)
-    # all_devices.run(task=exporter.export_ipv4_routes)
-    # all_devices.run(task=exporter.export_ipv6_routes)
-    # exporter.export_device_facts(all_devices)
-    # exporter.export_interfaces_packet_counters(all_devices)
+    #all_devices.run(task=exporter.export_device_configuration)
+    #all_devices.run(task=exporter.export_packet_filter_info)
+    #all_devices.run(task=exporter.export_ipv4_routes)
+    #all_devices.run(task=exporter.export_ipv6_routes)
+    #exporter.export_device_facts(all_devices)
+    #exporter.export_interfaces_packet_counters(all_devices)
+
+    #configure_linux_servers(ubuntu_servers, linux_config.send_commands, task_name=&#34;Running commands&#34;, enable=True)
+    #configure_linux_servers(ubuntu_servers, linux_config.configure_vsftpd, &#34;VSFTPD Configuration&#34;, enable=True)
+    # TODO show funkce (bez facts atd.), dokumentace (Linux, credentials handler, main), komentare a dokumentace k yamlum
 
 
 if __name__ == &#34;__main__&#34;:
@@ -149,8 +137,8 @@ if __name__ == &#34;__main__&#34;:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="scripts.main.configure_devices"><code class="name flex">
-<span>def <span class="ident">configure_devices</span></span>(<span>nornir_devices: nornir.core.Nornir, task_func: <built-in function callable>, task_name: str, dry_run: bool) ‑> NoneType</span>
+<dt id="scripts.main.configure_linux_servers"><code class="name flex">
+<span>def <span class="ident">configure_linux_servers</span></span>(<span>nornir_devices: nornir.core.Nornir, task_func: <built-in function callable>, task_name: str, enable: bool = True) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -158,7 +146,21 @@ if __name__ == &#34;__main__&#34;:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def configure_devices(nornir_devices: Nornir, task_func: callable, task_name: str, dry_run: bool) -&gt; None:
+<pre><code class="python">def configure_linux_servers(nornir_devices: Nornir, task_func: callable, task_name: str, enable: bool = True) -&gt; None:
+    result = nornir_devices.run(task=task_func, name=task_name, enable=enable)
+    print_result(result)</code></pre>
+</details>
+</dd>
+<dt id="scripts.main.configure_network_devices"><code class="name flex">
+<span>def <span class="ident">configure_network_devices</span></span>(<span>nornir_devices: nornir.core.Nornir, task_func: <built-in function callable>, task_name: str, dry_run: bool) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def configure_network_devices(nornir_devices: Nornir, task_func: callable, task_name: str, dry_run: bool) -&gt; None:
     result = nornir_devices.run(task=task_func, name=task_name, dry_run=dry_run)
     print_result(result)</code></pre>
 </details>
@@ -181,15 +183,14 @@ if __name__ == &#34;__main__&#34;:
     Returns:
         None
     &#34;&#34;&#34;
-    # nr = InitNornir(config_file=&#34;config.yml&#34;, core = {&#34;raise_on_error&#34;: True}) # Nornir objekt, který upozorní na chybu při provedení tasku
-    nr = InitNornir(
-        config_file=&#34;config.yml&#34;)  # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný task - více o chybě v nornir.log
-    routers = nr.filter(F(dev_type=&#34;router&#34;))
-    juniper_devices = nr.filter(F(groups__contains=&#34;junos_group&#34;))
-    l3_switches = nr.filter(F(dev_type=&#34;L3_switch&#34;))
-    cisco_router = nr.filter(F(groups__contains=&#34;cisco_group&#34;) &amp; F(dev_type=&#34;router&#34;))
-    l3_cisco = nr.filter(F(groups__contains=&#34;cisco_group&#34;) &amp; F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;))
-    all_devices = nr.filter(F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;))
+    nornir_obj = setup_inventory()
+    routers = nornir_obj.filter(F(dev_type=&#34;router&#34;))
+    juniper_devices = nornir_obj.filter(F(groups__contains=&#34;juniper&#34;))
+    l3_switches = nornir_obj.filter(F(dev_type=&#34;L3_switch&#34;))
+    cisco_routers = nornir_obj.filter(F(groups__contains=&#34;cisco&#34;) &amp; F(dev_type=&#34;router&#34;))
+    l3_cisco = nornir_obj.filter(F(groups__contains=&#34;cisco&#34;) &amp; F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;))
+    all_devices = nornir_obj.filter(F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;))
+    ubuntu_servers = nornir_obj.filter(F(dev_type=&#34;ubuntu_server&#34;) | F(groups__contains=&#34;linux&#34;))
     viewer = NetworkUtilityViewer()
     exporter = NetworkInfoExporter(NetworkInfoCollector())
     ospf_config = OSPFConfiguration()
@@ -199,36 +200,11 @@ if __name__ == &#34;__main__&#34;:
     packet_filter = PacketFilterConfiguration()
     nat_config = NATConfiguration()
     delete_config = DeleteConfiguration()
-    # juniper_devices.run(task=viewer.show_device_configuration)
-    #all_devices.run(task=viewer.show_device_facts)
-
-    #configure_devices(all_devices, interfaces_configuration.configure_ipv4_interfaces, &#34;IPv4 interfaces config&#34;, False)
-    #configure_devices(all_devices, interfaces_configuration.configure_ipv6_interfaces, &#34;IPv6 interfaces config&#34;, False)
-    #configure_devices(l3_switches, interfaces_configuration.configure_switching_interfaces,&#34;Switching interfaces config&#34;, False)
-    #configure_devices(all_devices, static_routing_config.configure_static_routing_ipv4, &#34;Static routing config&#34;, False)
-    #configure_devices(all_devices, ospf_config.configure_ospf, &#34;OSPFv2 config&#34;, False)
-    #configure_devices(l3_cisco, eigrp_config.configure_eigrp_ipv4, &#34;EIGRP config&#34;, False)
-    #configure_devices(all_devices, packet_filter.configure_ipv4_packet_filters, &#34;IPv4 packet filter config&#34;, False)
-    #configure_devices(l3_cisco, nat_config.configure_source_nat_overload, &#34;NAT Overload config&#34;, False)
-    #configure_devices(routers, ospf_config.configure_ospfv3, &#34;OSPFv3 config&#34;, False)
-    #configure_devices(l3_cisco, eigrp_config.configure_eigrp_ipv6, &#34;EIGRP IPV6 config&#34;, False)
-    #configure_devices(all_devices, static_routing_config.configure_static_routing_ipv6, &#34;IPv6 Static Routing config&#34;,False)
-    #configure_devices(all_devices, packet_filter.configure_ipv6_packet_filters, &#34;IPv6 packet filter config&#34;, False)
-    #configure_devices(all_devices, delete_config.delete_configuration, &#34;Delete Configuration&#34;, dry_run=False)
-
-    # configure_devices(juniper_devices, static_routing_config.configure_static_routing_ipv4, &#34;Static routing config&#34;, False)
-    # configure_devices(juniper_devices, ospf_config.configure_ospf, &#34;OSPFv2 config&#34;, False)
-    #configure_devices(routers, ospf_config.configure_ospfv3, &#34;OSPFv3 config&#34;, False)
-    # configure_devices(juniper_devices, static_routing_config.configure_static_routing_ipv6, &#34;IPv6 Static Routing config&#34;, False)
-    # configure_devices(juniper_devices, interfaces_configuration.configure_ipv4_interfaces, &#34;IPv4 interfaces config&#34;, False)
-    # configure_devices(juniper_devices, interfaces_configuration.configure_ipv6_interfaces, &#34;IPv6 interfaces config&#34;, False)
-    # configure_devices(juniper_devices, packet_filter.configure_ipv4_packet_filters, &#34;IPv4 packet filter config&#34;, False)
-    # configure_devices(juniper_devices, packet_filter.configure_ipv6_packet_filters, &#34;IPv6 packet filter config&#34;, False)
-    all_devices.run(task=exporter.export_device_configuration)</code></pre>
+    linux_config = LinuxConfiguration()</code></pre>
 </details>
 </dd>
 <dt id="scripts.main.send_command"><code class="name flex">
-<span>def <span class="ident">send_command</span></span>(<span>nornir_devices: nornir.core.Nornir, task_name: str, dry_run: bool) ‑> NoneType</span>
+<span>def <span class="ident">send_command</span></span>(<span>nornir_devices: nornir.core.Nornir, command_string: str, task_name: str, enable=False) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -236,13 +212,13 @@ if __name__ == &#34;__main__&#34;:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def send_command(nornir_devices: Nornir, task_name: str, dry_run: bool) -&gt; None:
-    result = nornir_devices.run(task=netmiko_send_command, name=task_name, dry_run=dry_run)
+<pre><code class="python">def send_command(nornir_devices: Nornir, command_string: str, task_name: str, enable=False) -&gt; None:
+    result = nornir_devices.run(task=netmiko_send_command, command_string=command_string, name=task_name, enable=enable)
     print_result(result)</code></pre>
 </details>
 </dd>
-<dt id="scripts.main.std_print"><code class="name flex">
-<span>def <span class="ident">std_print</span></span>(<span>agg_result)</span>
+<dt id="scripts.main.setup_inventory"><code class="name flex">
+<span>def <span class="ident">setup_inventory</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -250,19 +226,11 @@ if __name__ == &#34;__main__&#34;:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def std_print(agg_result):
-    print()
-    for k, multi_result in agg_result.items():
-        print(&#34;-&#34; * 50)
-        print(k)
-        for result_obj in multi_result:
-            if isinstance(result_obj.result, str):
-                print(result_obj.result)
-            else:
-                pprint(result_obj.result)
-        print(&#34;-&#34; * 50)
-        print()
-    print()</code></pre>
+<pre><code class="python">def setup_inventory():
+    creds_handler = CredentialHandler()
+    nr = InitNornir(config_file=&#34;config.yml&#34;)  # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný (sub)task - více o chybě v nornir.log
+    creds_handler.insert_creds(nr)
+    return nr</code></pre>
 </details>
 </dd>
 </dl>
@@ -283,10 +251,11 @@ if __name__ == &#34;__main__&#34;:
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="scripts.main.configure_devices" href="#scripts.main.configure_devices">configure_devices</a></code></li>
+<li><code><a title="scripts.main.configure_linux_servers" href="#scripts.main.configure_linux_servers">configure_linux_servers</a></code></li>
+<li><code><a title="scripts.main.configure_network_devices" href="#scripts.main.configure_network_devices">configure_network_devices</a></code></li>
 <li><code><a title="scripts.main.main" href="#scripts.main.main">main</a></code></li>
 <li><code><a title="scripts.main.send_command" href="#scripts.main.send_command">send_command</a></code></li>
-<li><code><a title="scripts.main.std_print" href="#scripts.main.std_print">std_print</a></code></li>
+<li><code><a title="scripts.main.setup_inventory" href="#scripts.main.setup_inventory">setup_inventory</a></code></li>
 </ul>
 </li>
 </ul>

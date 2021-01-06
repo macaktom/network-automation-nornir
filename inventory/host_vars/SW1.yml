@@ -1,3 +1,4 @@
+---
 vlans_config:
   - number: 10
     name: VLAN10

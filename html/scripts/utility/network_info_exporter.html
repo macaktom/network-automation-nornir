@@ -70,7 +70,7 @@ class NetworkInfoExporter:
             None
 
         &#34;&#34;&#34;
-        sorted_headers_export = [&#34;hostname&#34;, &#34;FQDN&#34;, &#34;vendor&#34;, &#34;serial_number&#34;, &#34;os_version&#34;, &#34;uptime&#34;, &#34;connection&#34;]
+        sorted_headers_export = [&#34;hostname&#34;, &#34;FQDN&#34;, &#34;vendor&#34;, &#34;model&#34;, &#34;serial_number&#34;, &#34;os_version&#34;, &#34;uptime&#34;, &#34;connection&#34;]
         wider_header_columns = [&#34;os_version&#34;, &#34;FQDN&#34;]
         dest_file_path = Path(Path.cwd() / &#39;export&#39; / &#34;excel&#34; / &#34;facts.xlsx&#34;)
         try:
@@ -258,16 +258,15 @@ class NetworkInfoExporter:
         command = &#34;&#34;
         if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
                 task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
-            command = &#34;do show access-lists&#34;
+            command = &#34;show access-lists&#34;
         elif task.host[&#39;vendor&#39;] == &#34;juniper&#34; and task.host[&#39;dev_type&#39;] == &#34;router&#34;:
-            command = &#34;show firewall&#34;
+            command = &#34;show configuration firewall&#34;
         else:
             print(f&#34;{Fore.RED}Export failed for host {task.host.name} - not implemented for that vendor.&#34;)
             raise NornirSubTaskError(f&#34;Function was not implemented for vendor {task.host.name}.&#34;, task)
-        result = task.run(task=netmiko_send_config, name=&#34;Get packet filters info&#34;, config_commands=[command])
+        result = task.run(task=netmiko_send_command, name=&#34;Get packet filters info&#34;, command_string=command)
         if not result.failed:
-            parser = NetworkInfoParser()
-            packet_filter_info = parser.get_parsed_packet_filter_data(task.host[&#39;vendor&#39;], result)
+            packet_filter_info = result[0].result
             if packet_filter_info != &#34;&#34;:
                 file_path = Path(Path.cwd() / &#39;export&#39; / &#34;packet_filter&#34; / f&#34;{task.host.name}.txt&#34;)
                 exporter = FileExporter(file_path, packet_filter_info)
@@ -338,7 +337,7 @@ několika MultiResult objektů z více Nornir podúloh (subtasků) s jiným type
             None
 
         &#34;&#34;&#34;
-        sorted_headers_export = [&#34;hostname&#34;, &#34;FQDN&#34;, &#34;vendor&#34;, &#34;serial_number&#34;, &#34;os_version&#34;, &#34;uptime&#34;, &#34;connection&#34;]
+        sorted_headers_export = [&#34;hostname&#34;, &#34;FQDN&#34;, &#34;vendor&#34;, &#34;model&#34;, &#34;serial_number&#34;, &#34;os_version&#34;, &#34;uptime&#34;, &#34;connection&#34;]
         wider_header_columns = [&#34;os_version&#34;, &#34;FQDN&#34;]
         dest_file_path = Path(Path.cwd() / &#39;export&#39; / &#34;excel&#34; / &#34;facts.xlsx&#34;)
         try:
@@ -526,16 +525,15 @@ několika MultiResult objektů z více Nornir podúloh (subtasků) s jiným type
         command = &#34;&#34;
         if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
                 task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
-            command = &#34;do show access-lists&#34;
+            command = &#34;show access-lists&#34;
         elif task.host[&#39;vendor&#39;] == &#34;juniper&#34; and task.host[&#39;dev_type&#39;] == &#34;router&#34;:
-            command = &#34;show firewall&#34;
+            command = &#34;show configuration firewall&#34;
         else:
             print(f&#34;{Fore.RED}Export failed for host {task.host.name} - not implemented for that vendor.&#34;)
             raise NornirSubTaskError(f&#34;Function was not implemented for vendor {task.host.name}.&#34;, task)
-        result = task.run(task=netmiko_send_config, name=&#34;Get packet filters info&#34;, config_commands=[command])
+        result = task.run(task=netmiko_send_command, name=&#34;Get packet filters info&#34;, command_string=command)
         if not result.failed:
-            parser = NetworkInfoParser()
-            packet_filter_info = parser.get_parsed_packet_filter_data(task.host[&#39;vendor&#39;], result)
+            packet_filter_info = result[0].result
             if packet_filter_info != &#34;&#34;:
                 file_path = Path(Path.cwd() / &#39;export&#39; / &#34;packet_filter&#34; / f&#34;{task.host.name}.txt&#34;)
                 exporter = FileExporter(file_path, packet_filter_info)
@@ -613,7 +611,7 @@ Export je proveden paralelně. Výsledná cesta je ./export/running_configuratio
         None
 
     &#34;&#34;&#34;
-    sorted_headers_export = [&#34;hostname&#34;, &#34;FQDN&#34;, &#34;vendor&#34;, &#34;serial_number&#34;, &#34;os_version&#34;, &#34;uptime&#34;, &#34;connection&#34;]
+    sorted_headers_export = [&#34;hostname&#34;, &#34;FQDN&#34;, &#34;vendor&#34;, &#34;model&#34;, &#34;serial_number&#34;, &#34;os_version&#34;, &#34;uptime&#34;, &#34;connection&#34;]
     wider_header_columns = [&#34;os_version&#34;, &#34;FQDN&#34;]
     dest_file_path = Path(Path.cwd() / &#39;export&#39; / &#34;excel&#34; / &#34;facts.xlsx&#34;)
     try:
@@ -872,16 +870,15 @@ export na nepodporovaných zařízeních.</dd>
     command = &#34;&#34;
     if task.host[&#39;vendor&#39;] == &#34;cisco&#34; and (
             task.host[&#39;dev_type&#39;] == &#34;router&#34; or task.host[&#39;dev_type&#39;] == &#34;L3_switch&#34;):
-        command = &#34;do show access-lists&#34;
+        command = &#34;show access-lists&#34;
     elif task.host[&#39;vendor&#39;] == &#34;juniper&#34; and task.host[&#39;dev_type&#39;] == &#34;router&#34;:
-        command = &#34;show firewall&#34;
+        command = &#34;show configuration firewall&#34;
     else:
         print(f&#34;{Fore.RED}Export failed for host {task.host.name} - not implemented for that vendor.&#34;)
         raise NornirSubTaskError(f&#34;Function was not implemented for vendor {task.host.name}.&#34;, task)
-    result = task.run(task=netmiko_send_config, name=&#34;Get packet filters info&#34;, config_commands=[command])
+    result = task.run(task=netmiko_send_command, name=&#34;Get packet filters info&#34;, command_string=command)
     if not result.failed:
-        parser = NetworkInfoParser()
-        packet_filter_info = parser.get_parsed_packet_filter_data(task.host[&#39;vendor&#39;], result)
+        packet_filter_info = result[0].result
         if packet_filter_info != &#34;&#34;:
             file_path = Path(Path.cwd() / &#39;export&#39; / &#34;packet_filter&#34; / f&#34;{task.host.name}.txt&#34;)
             exporter = FileExporter(file_path, packet_filter_info)

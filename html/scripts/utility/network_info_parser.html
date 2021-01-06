@@ -106,36 +106,21 @@ class NetworkInfoParser:
 
         result_string = result[0].result
         parsed_data = &#34;&#34;
-        split_inet6_part = re.split(f&#34;inet6.0:&#34;, result_string)
+        ipv4_pattern = &#34;inet.0&#34;
+        ipv6_pattern = &#34;inet6.0:&#34;
+
+        if ipv4_pattern not in result_string and not ipv6_routes:
+            return parsed_data
+        if ipv6_pattern not in result_string and ipv6_routes:
+            return parsed_data
+
+        split_inet6_part = re.split(ipv6_pattern, result_string)
         if split_inet6_part:
-            if ipv6_routes:
-                parsed_data = &#34;inet6.0: &#34; + split_inet6_part[1].strip()
+            if ipv6_routes and len(split_inet6_part) &gt; 1:
+                parsed_data = f&#34;{ipv6_pattern} {split_inet6_part[1].strip()}&#34;
             else:
                 parsed_data = split_inet6_part[0].strip()
-        return parsed_data
-
-    def get_parsed_packet_filter_data(self, vendor: str, result: MultiResult) -&gt; str:
-        &#34;&#34;&#34;
-        Metoda, která zparsuje string obsahující definované paketové filtry.
-
-        Args:
-            vendor (str): String obsahující informaci o výrobci daného zařízení.
-            result (MultiResult): Speciální nornir objekt (připomínající Python list), který obsahuje Result objekt s neparsovaným stringem.
-
-        Returns:
-            Vrátí string parsed_result, který obsahuje zparsované paketové filtry daného zařízení. V případě nepodporovaného vendora vrací prázdný string.
-        &#34;&#34;&#34;
-        result_string = result[0].result
-        parsed_result = &#34;&#34;
-        if vendor.strip().lower() == &#34;cisco&#34;:
-            split_access_command = re.split(r&#34;do show access-lists\n&#34;, result_string)[1]
-            parsed_result = &#34;&#34; if &#34;access list&#34; not in split_access_command else \
-                re.split(f&#34;\n{result[0].host}\(config\)\#end&#34;, split_access_command)[0]
-        elif vendor.strip().lower() == &#34;juniper&#34;:
-            split_show_firewall_part = re.split(f&#34;show firewall&#34;, result_string)[1]
-            parsed_result = &#34;&#34; if &#34;inet&#34; not in split_show_firewall_part else \
-                re.split(r&#34;\n\[edit\]\n&#34;, split_show_firewall_part)[0].strip()
-        return parsed_result</code></pre>
+        return parsed_data</code></pre>
 </details>
 </section>
 <section>
@@ -231,36 +216,21 @@ nestrukturovaného stringu atd.).</p></div>
 
         result_string = result[0].result
         parsed_data = &#34;&#34;
-        split_inet6_part = re.split(f&#34;inet6.0:&#34;, result_string)
+        ipv4_pattern = &#34;inet.0&#34;
+        ipv6_pattern = &#34;inet6.0:&#34;
+
+        if ipv4_pattern not in result_string and not ipv6_routes:
+            return parsed_data
+        if ipv6_pattern not in result_string and ipv6_routes:
+            return parsed_data
+
+        split_inet6_part = re.split(ipv6_pattern, result_string)
         if split_inet6_part:
-            if ipv6_routes:
-                parsed_data = &#34;inet6.0: &#34; + split_inet6_part[1].strip()
+            if ipv6_routes and len(split_inet6_part) &gt; 1:
+                parsed_data = f&#34;{ipv6_pattern} {split_inet6_part[1].strip()}&#34;
             else:
                 parsed_data = split_inet6_part[0].strip()
-        return parsed_data
-
-    def get_parsed_packet_filter_data(self, vendor: str, result: MultiResult) -&gt; str:
-        &#34;&#34;&#34;
-        Metoda, která zparsuje string obsahující definované paketové filtry.
-
-        Args:
-            vendor (str): String obsahující informaci o výrobci daného zařízení.
-            result (MultiResult): Speciální nornir objekt (připomínající Python list), který obsahuje Result objekt s neparsovaným stringem.
-
-        Returns:
-            Vrátí string parsed_result, který obsahuje zparsované paketové filtry daného zařízení. V případě nepodporovaného vendora vrací prázdný string.
-        &#34;&#34;&#34;
-        result_string = result[0].result
-        parsed_result = &#34;&#34;
-        if vendor.strip().lower() == &#34;cisco&#34;:
-            split_access_command = re.split(r&#34;do show access-lists\n&#34;, result_string)[1]
-            parsed_result = &#34;&#34; if &#34;access list&#34; not in split_access_command else \
-                re.split(f&#34;\n{result[0].host}\(config\)\#end&#34;, split_access_command)[0]
-        elif vendor.strip().lower() == &#34;juniper&#34;:
-            split_show_firewall_part = re.split(f&#34;show firewall&#34;, result_string)[1]
-            parsed_result = &#34;&#34; if &#34;inet&#34; not in split_show_firewall_part else \
-                re.split(r&#34;\n\[edit\]\n&#34;, split_show_firewall_part)[0].strip()
-        return parsed_result</code></pre>
+        return parsed_data</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
@@ -347,55 +317,21 @@ oddělí obě tabulky a uživateli vrátí string se směrovací tabulkou, ktero
 
     result_string = result[0].result
     parsed_data = &#34;&#34;
-    split_inet6_part = re.split(f&#34;inet6.0:&#34;, result_string)
+    ipv4_pattern = &#34;inet.0&#34;
+    ipv6_pattern = &#34;inet6.0:&#34;
+
+    if ipv4_pattern not in result_string and not ipv6_routes:
+        return parsed_data
+    if ipv6_pattern not in result_string and ipv6_routes:
+        return parsed_data
+
+    split_inet6_part = re.split(ipv6_pattern, result_string)
     if split_inet6_part:
-        if ipv6_routes:
-            parsed_data = &#34;inet6.0: &#34; + split_inet6_part[1].strip()
+        if ipv6_routes and len(split_inet6_part) &gt; 1:
+            parsed_data = f&#34;{ipv6_pattern} {split_inet6_part[1].strip()}&#34;
         else:
             parsed_data = split_inet6_part[0].strip()
     return parsed_data</code></pre>
-</details>
-</dd>
-<dt id="scripts.utility.network_info_parser.NetworkInfoParser.get_parsed_packet_filter_data"><code class="name flex">
-<span>def <span class="ident">get_parsed_packet_filter_data</span></span>(<span>self, vendor: str, result: nornir.core.task.MultiResult) ‑> str</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Metoda, která zparsuje string obsahující definované paketové filtry.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>vendor</code></strong> :&ensp;<code>str</code></dt>
-<dd>String obsahující informaci o výrobci daného zařízení.</dd>
-<dt><strong><code>result</code></strong> :&ensp;<code>MultiResult</code></dt>
-<dd>Speciální nornir objekt (připomínající Python list), který obsahuje Result objekt s neparsovaným stringem.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<p>Vrátí string parsed_result, který obsahuje zparsované paketové filtry daného zařízení. V případě nepodporovaného vendora vrací prázdný string.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_parsed_packet_filter_data(self, vendor: str, result: MultiResult) -&gt; str:
-    &#34;&#34;&#34;
-    Metoda, která zparsuje string obsahující definované paketové filtry.
-
-    Args:
-        vendor (str): String obsahující informaci o výrobci daného zařízení.
-        result (MultiResult): Speciální nornir objekt (připomínající Python list), který obsahuje Result objekt s neparsovaným stringem.
-
-    Returns:
-        Vrátí string parsed_result, který obsahuje zparsované paketové filtry daného zařízení. V případě nepodporovaného vendora vrací prázdný string.
-    &#34;&#34;&#34;
-    result_string = result[0].result
-    parsed_result = &#34;&#34;
-    if vendor.strip().lower() == &#34;cisco&#34;:
-        split_access_command = re.split(r&#34;do show access-lists\n&#34;, result_string)[1]
-        parsed_result = &#34;&#34; if &#34;access list&#34; not in split_access_command else \
-            re.split(f&#34;\n{result[0].host}\(config\)\#end&#34;, split_access_command)[0]
-    elif vendor.strip().lower() == &#34;juniper&#34;:
-        split_show_firewall_part = re.split(f&#34;show firewall&#34;, result_string)[1]
-        parsed_result = &#34;&#34; if &#34;inet&#34; not in split_show_firewall_part else \
-            re.split(r&#34;\n\[edit\]\n&#34;, split_show_firewall_part)[0].strip()
-    return parsed_result</code></pre>
 </details>
 </dd>
 <dt id="scripts.utility.network_info_parser.NetworkInfoParser.parse_interfaces_packet_counters_data"><code class="name flex">
@@ -465,7 +401,6 @@ jednotlivé síťové zařízení (hosti) a hodnotou jsou výsledky z jednotliv�
 <ul class="">
 <li><code><a title="scripts.utility.network_info_parser.NetworkInfoParser.get_parsed_facts_data" href="#scripts.utility.network_info_parser.NetworkInfoParser.get_parsed_facts_data">get_parsed_facts_data</a></code></li>
 <li><code><a title="scripts.utility.network_info_parser.NetworkInfoParser.get_parsed_juniper_routes" href="#scripts.utility.network_info_parser.NetworkInfoParser.get_parsed_juniper_routes">get_parsed_juniper_routes</a></code></li>
-<li><code><a title="scripts.utility.network_info_parser.NetworkInfoParser.get_parsed_packet_filter_data" href="#scripts.utility.network_info_parser.NetworkInfoParser.get_parsed_packet_filter_data">get_parsed_packet_filter_data</a></code></li>
 <li><code><a title="scripts.utility.network_info_parser.NetworkInfoParser.parse_interfaces_packet_counters_data" href="#scripts.utility.network_info_parser.NetworkInfoParser.parse_interfaces_packet_counters_data">parse_interfaces_packet_counters_data</a></code></li>
 </ul>
 </li>
