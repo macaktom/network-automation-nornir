@@ -34,20 +34,26 @@ class OSPFConfiguration:
         if not task.host["dev_type"] == "switch":
             data = task.run(task=load_yaml, file=f'inventory/host_vars/{task.host.name}.yml', name="Load host data",
                             severity_level=logging.DEBUG)
-            task.host["ospf_config"] = data[0].result["ospf_config"]
 
-            r = task.run(task=template_file,
-                         name="OSPF Template Loading",
-                         template="ospf_ipv4.j2",
-                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
+            ospf_key = "ospf_config"
 
-            task.host["ipv4_ospf"] = r.result
+            if ospf_key in data[0].result:
+                task.host[ospf_key] = data[0].result[ospf_key]
 
-            task.run(task=napalm_configure,
-                     name="Loading OSPFv2 Configuration on the device",
-                     replace=False,
-                     configuration=task.host["ipv4_ospf"],
-                     dry_run=dry_run)
+                r = task.run(task=template_file,
+                             name="OSPF Template Loading",
+                             template="ospf_ipv4.j2",
+                             path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
+
+                task.host["ipv4_ospf"] = r.result
+
+                task.run(task=napalm_configure,
+                         name="Loading OSPFv2 Configuration on the device",
+                         replace=False,
+                         configuration=task.host["ipv4_ospf"],
+                         dry_run=dry_run)
+            else:
+                print(f"{Fore.RED}Device {task.host.name}: No {ospf_key} key was found in host data.")
         else:
             print(f"{Fore.RED} Device {task.host.name}: invalid device type.")
             raise NornirSubTaskError("Invalid device type. Only routers and L3_switches are supported.", task)
@@ -74,20 +80,25 @@ class OSPFConfiguration:
 
             data = task.run(task=load_yaml, file=f'inventory/host_vars/{task.host.name}.yml', name="Load host data",
                             severity_level=logging.DEBUG)
-            task.host["ospfv3_config"] = data[0].result["ospfv3_config"]
+            ospfv3_key = "ospfv3_config"
 
-            r = task.run(task=template_file,
-                         name="OSPF Template Loading",
-                         template="ospfv3.j2",
-                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
+            if ospfv3_key in data[0].result:
+                task.host[ospfv3_key] = data[0].result[ospfv3_key]
 
-            task.host["ipv6_ospf"] = r.result
+                r = task.run(task=template_file,
+                             name="OSPF Template Loading",
+                             template="ospfv3.j2",
+                             path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
 
-            task.run(task=napalm_configure,
-                     name="Loading OSPFv3 Configuration on the device",
-                     replace=False,
-                     configuration=task.host["ipv6_ospf"],
-                     dry_run=dry_run)
+                task.host["ipv6_ospf"] = r.result
+
+                task.run(task=napalm_configure,
+                         name="Loading OSPFv3 Configuration on the device",
+                         replace=False,
+                         configuration=task.host["ipv6_ospf"],
+                         dry_run=dry_run)
+            else:
+                print(f"{Fore.RED}Device {task.host.name}: No {ospfv3_key} key was found in host data.")
         else:
             print(f"{Fore.RED} Device {task.host.name}: invalid device type.")
             raise NornirSubTaskError("Invalid device type. Only routers are supported.", task)

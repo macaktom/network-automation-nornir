@@ -8,10 +8,12 @@ from nornir.core.filter import F
 from nornir_napalm.plugins.tasks import napalm_get
 from nornir_utils.plugins.tasks.files import write_file
 
+from scripts.utility.credential_handler import CredentialHandler
+
 
 class BackupConfiguration:
     """
-    Třida určená pro pravidelný backup konfigurace síťových zařízení (využití pro automatický backup pomocí nástroje cron).
+    Třida určená pro pravidelný backup konfigurace síťových zařízení (využití pro automatický backup např. pomocí nástroje cron).
 
     Attributes:
         date (datetime.date): datum provedení backupu
@@ -20,6 +22,18 @@ class BackupConfiguration:
 
     def __init__(self):
         self._date = datetime.now().date()
+
+    def setup_inventory(self) -> Nornir:
+        """
+        Funkce, která umožňuje načíst veškeré informace o hostech a využívaných skupinách (groups). Podporuje dynamické načítání citlivých údajů (pouze pro citlivé údaje skupin).
+
+        Returns:
+            Nornir - nornir objekt, který obsahuje zparsované informace o hostech, skupinách. Dále zajišťuje multithreading funkcionalitu.
+        """
+        creds_handler = CredentialHandler()
+        nr = InitNornir(config_file="config.yml")  # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný (sub)task - více o chybě v nornir.log
+        creds_handler.insert_creds(nr)
+        return nr
 
     def _create_parent_folders(self, folder_path: Path) -> None:
         """
@@ -47,7 +61,7 @@ class BackupConfiguration:
         result = task.run(task=napalm_get, name="Get configuration", getters=["config"])
         if not result.failed:
             running_configuration = result[0].result["config"]['running'].strip()
-            file_path = Path(Path.cwd() / 'backups' / "running_configuration" / f"{task.host.name}" / f"{task.host.name}_{str(self._date)}.conf")
+            file_path = Path(Path.cwd() / 'backups' / f"{task.host.name}" / f"{task.host.name}_{str(self._date)}.conf")
             self._create_parent_folders(file_path.parent)
             res = task.run(write_file, filename=str(file_path), content=running_configuration, append=False)
             if not res.failed:
@@ -59,7 +73,7 @@ class BackupConfiguration:
 
 
 if __name__ == '__main__':
-    nr = InitNornir(config_file="config.yml")
-    all_devices = nr.filter(F(dev_type="router") | F(dev_type="L3_switch") | F(dev_type="switch"))
     backup_configuration = BackupConfiguration()
+    nr = backup_configuration.setup_inventory()
+    all_devices = nr.filter(F(dev_type="router") | F(dev_type="L3_switch") | F(dev_type="switch"))
     all_devices.run(backup_configuration.backup_device_running_configuration, name="Backup running configuration")

@@ -1,5 +1,6 @@
 import logging
 
+from colorama import Fore
 from nornir.core import Task
 from nornir_jinja2.plugins.tasks import template_file
 from nornir_napalm.plugins.tasks import napalm_configure
@@ -25,17 +26,22 @@ class DeleteConfiguration:
         """
         data = task.run(task=load_yaml, file=f'inventory/host_vars/{task.host.name}.yml', name="Load host data",
                         severity_level=logging.DEBUG)
-        task.host["delete_config"] = data[0].result["delete_config"]
+        delete_key = "delete_config"
 
-        r = task.run(task=template_file,
-                     name="Delete Configuration Template Loading",
-                     template="delete_configuration.j2",
-                     path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
-
-        task.host["conf_delete"] = r.result
-
-        task.run(task=napalm_configure,
-                 name="Loading Delete Configuration on the device",
-                 replace=False,
-                 configuration=task.host["conf_delete"],
-                 dry_run=dry_run)
+        if delete_key in data[0].result:
+            task.host[delete_key] = data[0].result[delete_key]
+        
+            r = task.run(task=template_file,
+                         name="Delete Configuration Template Loading",
+                         template="delete_configuration.j2",
+                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
+        
+            task.host["conf_delete"] = r.result
+        
+            task.run(task=napalm_configure,
+                     name="Loading Delete Configuration on the device",
+                     replace=False,
+                     configuration=task.host["conf_delete"],
+                     dry_run=dry_run)
+        else:
+            print(f"{Fore.RED}Device {task.host.name}: No {delete_key} key was found in host data.")

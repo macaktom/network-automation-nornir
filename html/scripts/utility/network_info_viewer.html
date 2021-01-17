@@ -26,7 +26,8 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import json
+<pre><code class="python">import datetime
+import json
 from colorama import Fore
 from nornir.core.exceptions import NornirSubTaskError
 from nornir.core.task import MultiResult, Task
@@ -261,6 +262,11 @@ class NetworkUtilityViewer:
             None
         &#34;&#34;&#34;
         result = task.run(task=napalm_get, name=&#34;Show device basic facts&#34;, getters=[&#34;facts&#34;])
+
+        if not result.failed:
+            uptime = result[0].result[&#39;facts&#39;][&#39;uptime&#39;]
+            result[0].result[&#39;facts&#39;][&#39;uptime&#39;] = str(datetime.timedelta(seconds=uptime))
+
         if json_out:
             self._print_info_json(result)
         else:
@@ -636,6 +642,11 @@ Data jsou zobrazována v konzoli (buď jako strukturovaný JSON string nebo nest
             None
         &#34;&#34;&#34;
         result = task.run(task=napalm_get, name=&#34;Show device basic facts&#34;, getters=[&#34;facts&#34;])
+
+        if not result.failed:
+            uptime = result[0].result[&#39;facts&#39;][&#39;uptime&#39;]
+            result[0].result[&#39;facts&#39;][&#39;uptime&#39;] = str(datetime.timedelta(seconds=uptime))
+
         if json_out:
             self._print_info_json(result)
         else:
@@ -862,6 +873,11 @@ Data jsou zobrazována v konzoli (buď jako strukturovaný JSON string nebo nest
         None
     &#34;&#34;&#34;
     result = task.run(task=napalm_get, name=&#34;Show device basic facts&#34;, getters=[&#34;facts&#34;])
+
+    if not result.failed:
+        uptime = result[0].result[&#39;facts&#39;][&#39;uptime&#39;]
+        result[0].result[&#39;facts&#39;][&#39;uptime&#39;] = str(datetime.timedelta(seconds=uptime))
+
     if json_out:
         self._print_info_json(result)
     else:

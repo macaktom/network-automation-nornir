@@ -29,20 +29,25 @@ class InterfacesConfiguration:
 
         data = task.run(task=load_yaml, file=f'inventory/host_vars/{task.host.name}.yml', name="Load host data",
                         severity_level=logging.DEBUG)
-        task.host["interfaces_ipv4"] = data[0].result["interfaces_ipv4"]
+        interface_key = "interfaces_ipv4"
 
-        result = task.run(task=template_file,
-                          name="IPv4 Intefaces Configuration",
-                          template="interfaces_ipv4.j2",
-                          path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
+        if interface_key in data[0].result:
+            task.host[interface_key] = data[0].result[interface_key]
 
-        task.host["ipv4_interfaces"] = result.result
+            result = task.run(task=template_file,
+                              name="IPv4 Interfaces Configuration",
+                              template="interfaces_ipv4.j2",
+                              path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
 
-        task.run(task=napalm_configure,
-                 name="Loading IPv4 interfaces Configuration on the device",
-                 replace=False,
-                 configuration=task.host["ipv4_interfaces"],
-                 dry_run=dry_run)
+            task.host["ipv4_interfaces"] = result.result
+
+            task.run(task=napalm_configure,
+                     name="Loading IPv4 interfaces Configuration on the device",
+                     replace=False,
+                     configuration=task.host["ipv4_interfaces"],
+                     dry_run=dry_run)
+        else:
+            print(f"{Fore.RED}Device {task.host.name}: No {interface_key} key was found in host data.")
 
     def configure_ipv6_interfaces(self, task: Task, dry_run: bool = False) -> None:
         """
@@ -58,20 +63,25 @@ class InterfacesConfiguration:
         """
         data = task.run(task=load_yaml, file=f'inventory/host_vars/{task.host.name}.yml', name="Load host data",
                         severity_level=logging.DEBUG)
-        task.host["interfaces_ipv6"] = data[0].result["interfaces_ipv6"]
+        interface_key = "interfaces_ipv6"
+        if interface_key in data[0].result:
+            task.host[interface_key] = data[0].result[interface_key]
 
-        r = task.run(task=template_file,
-                     name="IPv6 Intefaces Configuration",
-                     template="interfaces_ipv6.j2",
-                     path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
+            r = task.run(task=template_file,
+                         name="IPv6 Interfaces Configuration",
+                         template="interfaces_ipv6.j2",
+                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
 
-        task.host["ipv6_interfaces"] = r.result
+            task.host["ipv6_interfaces"] = r.result
 
-        task.run(task=napalm_configure,
-                 name="Loading IPv6 interfaces Configuration on the device",
-                 replace=False,
-                 configuration=task.host["ipv6_interfaces"],
-                 dry_run=dry_run)
+            task.run(task=napalm_configure,
+                     name="Loading IPv6 interfaces Configuration on the device",
+                     replace=False,
+                     configuration=task.host["ipv6_interfaces"],
+                     dry_run=dry_run)
+        else:
+            print(f"{Fore.RED}Device {task.host.name}: No {interface_key} key was found in host data.")
+
 
     def configure_switching_interfaces(self, task: Task, dry_run: bool = False) -> None:
         """
@@ -93,21 +103,27 @@ class InterfacesConfiguration:
 
             data = task.run(task=load_yaml, file=f'inventory/host_vars/{task.host.name}.yml', name="Load host data",
                             severity_level=logging.DEBUG)
-            task.host["switching_interfaces"] = data[0].result["switching_interfaces"]
-            task.host["vlans_config"] = data[0].result["vlans_config"]
+            switching_interface_key = "switching_interfaces"
+            vlans_key = "vlans_config"
 
-            interfaces_result = task.run(task=template_file,
-                                         name="Switching Intefaces Configuration",
-                                         template="switching_interfaces.j2",
-                                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
+            if switching_interface_key in data[0].result and vlans_key in data[0].result:
+                task.host[switching_interface_key] = data[0].result[switching_interface_key]
+                task.host[vlans_key] = data[0].result[vlans_key]
 
-            task.host["switching_interfaces_config"] = interfaces_result.result
+                interfaces_result = task.run(task=template_file,
+                                             name="Switching Interfaces Configuration",
+                                             template="switching_interfaces.j2",
+                                             path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
 
-            task.run(task=napalm_configure,
-                     name="Loading Switching Interfaces Configuration on the device",
-                     replace=False,
-                     configuration=task.host["switching_interfaces_config"],
-                     dry_run=dry_run)
+                task.host["switching_interfaces_config"] = interfaces_result.result
+
+                task.run(task=napalm_configure,
+                         name="Loading Switching Interfaces Configuration on the device",
+                         replace=False,
+                         configuration=task.host["switching_interfaces_config"],
+                         dry_run=dry_run)
+            else:
+                print(f"{Fore.RED}Device {task.host.name}: No {switching_interface_key} or {vlans_key} key was found in host data.")
         else:
             print(f"{Fore.RED} Device {task.host.name}: invalid device type.")
             raise NornirSubTaskError("Invalid device type. Only switches are supported.", task)

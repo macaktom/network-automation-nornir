@@ -33,20 +33,25 @@ class StaticRoutingConfiguration:
         if not task.host["dev_type"] == "switch":
             data = task.run(task=load_yaml, file=f'inventory/host_vars/{task.host.name}.yml', name="Load host data",
                             severity_level=logging.DEBUG)
-            task.host["static_routing_config"] = data[0].result["static_routing_config"]
+            static_routing_key = "static_routing_config"
 
-            r = task.run(task=template_file,
-                         name="IPv4 Static Routing Template Loading",
-                         template="static_ipv4.j2",
-                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
+            if static_routing_key in data[0].result:
+                task.host[static_routing_key] = data[0].result[static_routing_key]
 
-            task.host["ipv4_static"] = r.result
+                r = task.run(task=template_file,
+                             name="IPv4 Static Routing Template Loading",
+                             template="static_ipv4.j2",
+                             path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
 
-            task.run(task=napalm_configure,
-                     name="Loading IPv4 Static Routing Configuration on the device",
-                     replace=False,
-                     configuration=task.host["ipv4_static"],
-                     dry_run=dry_run)
+                task.host["ipv4_static"] = r.result
+
+                task.run(task=napalm_configure,
+                         name="Loading IPv4 Static Routing Configuration on the device",
+                         replace=False,
+                         configuration=task.host["ipv4_static"],
+                         dry_run=dry_run)
+            else:
+                print(f"{Fore.RED}Device {task.host.name}: No {static_routing_key} key was found in host data.")
         else:
             print(f"{Fore.RED} Device {task.host.name}: invalid device type.")
             raise NornirSubTaskError("Invalid device type. Switches are not supported.", task)
@@ -71,20 +76,26 @@ class StaticRoutingConfiguration:
         if not task.host["dev_type"] == "switch":
             data = task.run(task=load_yaml, file=f'inventory/host_vars/{task.host.name}.yml', name="Load host data",
                             severity_level=logging.DEBUG)
-            task.host["static_routing_ipv6_config"] = data[0].result["static_routing_ipv6_config"]
 
-            r = task.run(task=template_file,
-                         name="IPv6 Static Routing Template Loading",
-                         template="static_ipv6.j2",
-                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
+            static_routing_key = "static_routing_ipv6_config"
 
-            task.host["ipv6_static"] = r.result
+            if static_routing_key in data[0].result:
+                task.host[static_routing_key] = data[0].result[static_routing_key]
 
-            task.run(task=napalm_configure,
-                     name="Loading IPv6 Static Routing Configuration on the device",
-                     replace=False,
-                     configuration=task.host["ipv6_static"],
-                     dry_run=dry_run)
+                r = task.run(task=template_file,
+                             name="IPv6 Static Routing Template Loading",
+                             template="static_ipv6.j2",
+                             path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
+
+                task.host["ipv6_static"] = r.result
+
+                task.run(task=napalm_configure,
+                         name="Loading IPv6 Static Routing Configuration on the device",
+                         replace=False,
+                         configuration=task.host["ipv6_static"],
+                         dry_run=dry_run)
+            else:
+                print(f"{Fore.RED}Device {task.host.name}: No {static_routing_key} key was found in host data.")
         else:
             print(f"{Fore.RED} Device {task.host.name}: invalid device type.")
             raise NornirSubTaskError("Invalid device type. Switches are not supported.", task)

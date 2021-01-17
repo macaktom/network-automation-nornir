@@ -28,6 +28,7 @@
 </summary>
 <pre><code class="python">import logging
 
+from colorama import Fore
 from nornir.core import Task
 from nornir_jinja2.plugins.tasks import template_file
 from nornir_napalm.plugins.tasks import napalm_configure
@@ -53,20 +54,25 @@ class DeleteConfiguration:
         &#34;&#34;&#34;
         data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
                         severity_level=logging.DEBUG)
-        task.host[&#34;delete_config&#34;] = data[0].result[&#34;delete_config&#34;]
+        delete_key = &#34;delete_config&#34;
 
-        r = task.run(task=template_file,
-                     name=&#34;Delete Configuration Template Loading&#34;,
-                     template=&#34;delete_configuration.j2&#34;,
-                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
-
-        task.host[&#34;conf_delete&#34;] = r.result
-
-        task.run(task=napalm_configure,
-                 name=&#34;Loading Delete Configuration on the device&#34;,
-                 replace=False,
-                 configuration=task.host[&#34;conf_delete&#34;],
-                 dry_run=dry_run)</code></pre>
+        if delete_key in data[0].result:
+            task.host[delete_key] = data[0].result[delete_key]
+        
+            r = task.run(task=template_file,
+                         name=&#34;Delete Configuration Template Loading&#34;,
+                         template=&#34;delete_configuration.j2&#34;,
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
+        
+            task.host[&#34;conf_delete&#34;] = r.result
+        
+            task.run(task=napalm_configure,
+                     name=&#34;Loading Delete Configuration on the device&#34;,
+                     replace=False,
+                     configuration=task.host[&#34;conf_delete&#34;],
+                     dry_run=dry_run)
+        else:
+            print(f&#34;{Fore.RED}Device {task.host.name}: No {delete_key} key was found in host data.&#34;)</code></pre>
 </details>
 </section>
 <section>
@@ -106,20 +112,25 @@ class DeleteConfiguration:
         &#34;&#34;&#34;
         data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
                         severity_level=logging.DEBUG)
-        task.host[&#34;delete_config&#34;] = data[0].result[&#34;delete_config&#34;]
+        delete_key = &#34;delete_config&#34;
 
-        r = task.run(task=template_file,
-                     name=&#34;Delete Configuration Template Loading&#34;,
-                     template=&#34;delete_configuration.j2&#34;,
-                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
-
-        task.host[&#34;conf_delete&#34;] = r.result
-
-        task.run(task=napalm_configure,
-                 name=&#34;Loading Delete Configuration on the device&#34;,
-                 replace=False,
-                 configuration=task.host[&#34;conf_delete&#34;],
-                 dry_run=dry_run)</code></pre>
+        if delete_key in data[0].result:
+            task.host[delete_key] = data[0].result[delete_key]
+        
+            r = task.run(task=template_file,
+                         name=&#34;Delete Configuration Template Loading&#34;,
+                         template=&#34;delete_configuration.j2&#34;,
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
+        
+            task.host[&#34;conf_delete&#34;] = r.result
+        
+            task.run(task=napalm_configure,
+                     name=&#34;Loading Delete Configuration on the device&#34;,
+                     replace=False,
+                     configuration=task.host[&#34;conf_delete&#34;],
+                     dry_run=dry_run)
+        else:
+            print(f&#34;{Fore.RED}Device {task.host.name}: No {delete_key} key was found in host data.&#34;)</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
@@ -156,20 +167,25 @@ class DeleteConfiguration:
     &#34;&#34;&#34;
     data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
                     severity_level=logging.DEBUG)
-    task.host[&#34;delete_config&#34;] = data[0].result[&#34;delete_config&#34;]
+    delete_key = &#34;delete_config&#34;
 
-    r = task.run(task=template_file,
-                 name=&#34;Delete Configuration Template Loading&#34;,
-                 template=&#34;delete_configuration.j2&#34;,
-                 path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
-
-    task.host[&#34;conf_delete&#34;] = r.result
-
-    task.run(task=napalm_configure,
-             name=&#34;Loading Delete Configuration on the device&#34;,
-             replace=False,
-             configuration=task.host[&#34;conf_delete&#34;],
-             dry_run=dry_run)</code></pre>
+    if delete_key in data[0].result:
+        task.host[delete_key] = data[0].result[delete_key]
+    
+        r = task.run(task=template_file,
+                     name=&#34;Delete Configuration Template Loading&#34;,
+                     template=&#34;delete_configuration.j2&#34;,
+                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
+    
+        task.host[&#34;conf_delete&#34;] = r.result
+    
+        task.run(task=napalm_configure,
+                 name=&#34;Loading Delete Configuration on the device&#34;,
+                 replace=False,
+                 configuration=task.host[&#34;conf_delete&#34;],
+                 dry_run=dry_run)
+    else:
+        print(f&#34;{Fore.RED}Device {task.host.name}: No {delete_key} key was found in host data.&#34;)</code></pre>
 </details>
 </dd>
 </dl>

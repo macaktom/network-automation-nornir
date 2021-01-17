@@ -18,7 +18,13 @@ from scripts.utility.network_info_exporter import NetworkInfoExporter
 from scripts.utility.network_info_viewer import NetworkUtilityViewer
 
 
-def setup_inventory():
+def setup_inventory() -> Nornir:
+    """
+    Funkce, která umožňuje načíst veškeré informace o hostech a využívaných skupinách (groups). Podporuje dynamické načítání citlivých údajů (pouze pro citlivé údaje skupin).
+
+    Returns:
+        Nornir - nornir objekt, který obsahuje zparsované informace o hostech, skupinách. Dále zajišťuje multithreading funkcionalitu.
+    """
     creds_handler = CredentialHandler()
     nr = InitNornir(config_file="config.yml")  # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný (sub)task - více o chybě v nornir.log
     creds_handler.insert_creds(nr)
@@ -26,16 +32,52 @@ def setup_inventory():
 
 
 def configure_linux_servers(nornir_devices: Nornir, task_func: callable, task_name: str, enable: bool = True) -> None:
+    """
+    Wrapper funkce, která slouží pro konfiguraci serverů založených na Linuxu. Funkce obaluje specifikovaný nornir úkol (task_func), který se týká konfigurace Linux serverů.
+
+    Args:
+        nornir_devices (Nornir): Nornir objekt, umožňující volat paralelně nornir úkoly (tasky) a agregovat výsledky z jednotlivých tasků pro daná zařízení. Obsahuje zparsovaný inventář.
+        task_func (callable): Funkce, která bude paralelně vykonávaná nornirem.
+        task_name (str): Název nornir úkolu
+        enable (bool): Argument, kterým lze specifikovat, jestli je nutný pro daný nornir úkol práv superuživatele (rootu). Defaultně je nastaveno na True (root práva).
+
+    Returns:
+        None
+    """
     result = nornir_devices.run(task=task_func, name=task_name, enable=enable)
     print_result(result)
 
 
 def configure_network_devices(nornir_devices: Nornir, task_func: callable, task_name: str, dry_run: bool) -> None:
+    """
+    Wrapper funkce, která slouží pro konfiguraci síťových zařízení (routerů, switchů). Funkce obaluje specifikovaný nornir úkol (task_func), který se týká konfigurace síťových prvků.
+
+    Args:
+        nornir_devices (Nornir): Nornir objekt, umožňující volat paralelně nornir úkoly (tasky) a agregovat výsledky z jednotlivých tasků pro daná zařízení. Obsahuje zparsovaný inventář.
+        task_func (callable): Funkce, která bude paralelně vykonávaná nornirem.
+        task_name (str): Název nornir úkolu
+        dry_run (bool): argument, který rozhoduje, jestli má být konfigurace provedena v testovacím režimu
+                            (obdržení konečných změn v konfiguraci bez jejich uložení do zařízení) - True. Defaultně False - uložení konečných změn.
+    Returns:
+        None
+    """
     result = nornir_devices.run(task=task_func, name=task_name, dry_run=dry_run)
     print_result(result)
 
 
 def send_command(nornir_devices: Nornir, command_string: str, task_name: str, enable=False) -> None:
+    """
+    Funkce, která slouží pro vykonání příkazu síťovými prvky pomocí knihovny Netmiko.
+
+    Args:
+        nornir_devices (Nornir): Nornir objekt, umožňující volat paralelně nornir úkoly (tasky) a agregovat výsledky z jednotlivých tasků pro daná zařízení. Obsahuje zparsovaný inventář.
+        command_string (str): Příkaz, který bude proveden.
+        task_name (str): Název nornir úkolu
+        enable (bool): Argument, kterým lze specifikovat, jestli je nutné pro vykonání příkazu vstoupit do privilegovaného režimu. Defaultně je nastaveno False (neprivilegovaný režim).
+
+    Returns:
+        None
+    """
     result = nornir_devices.run(task=netmiko_send_command, command_string=command_string, name=task_name, enable=enable)
     print_result(result)
 
@@ -66,8 +108,8 @@ def main() -> None:
     delete_config = DeleteConfiguration()
     linux_config = LinuxConfiguration()
 
-    #all_devices.run(task=viewer.show_device_facts, json_out=True)
-    #all_devices.run(task=viewer.show_packet_filter_info)
+    #all_devices.run(task=viewer.show_interfaces_packet_counters, json_out=False)
+    #all_devices.run(task=viewer.show_device_facts)
     #all_devices.run(task=viewer.show_ipv6_routes)
     #all_devices.run(task=viewer.show_ospf_neighbors, ipv6=False)
     #configure_network_devices(all_devices, interfaces_configuration.configure_ipv4_interfaces, "IPv4 interfaces config", dry_run=False)
@@ -93,7 +135,7 @@ def main() -> None:
 
     #configure_linux_servers(ubuntu_servers, linux_config.send_commands, task_name="Running commands", enable=True)
     #configure_linux_servers(ubuntu_servers, linux_config.configure_vsftpd, "VSFTPD Configuration", enable=True)
-    # TODO show funkce (bez facts atd.), dokumentace (Linux, credentials handler, main), komentare a dokumentace k yamlum
+    # TODO dokumentace (Linux, credentials handler, main), komentare a dokumentace k yamlum
 
 
 if __name__ == "__main__":

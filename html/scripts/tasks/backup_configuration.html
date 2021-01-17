@@ -36,10 +36,12 @@ from nornir.core.filter import F
 from nornir_napalm.plugins.tasks import napalm_get
 from nornir_utils.plugins.tasks.files import write_file
 
+from scripts.utility.credential_handler import CredentialHandler
+
 
 class BackupConfiguration:
     &#34;&#34;&#34;
-    Třida určená pro pravidelný backup konfigurace síťových zařízení (využití pro automatický backup pomocí nástroje cron).
+    Třida určená pro pravidelný backup konfigurace síťových zařízení (využití pro automatický backup např. pomocí nástroje cron).
 
     Attributes:
         date (datetime.date): datum provedení backupu
@@ -48,6 +50,18 @@ class BackupConfiguration:
 
     def __init__(self):
         self._date = datetime.now().date()
+
+    def setup_inventory(self) -&gt; Nornir:
+        &#34;&#34;&#34;
+        Funkce, která umožňuje načíst veškeré informace o hostech a využívaných skupinách (groups). Podporuje dynamické načítání citlivých údajů (pouze pro citlivé údaje skupin).
+
+        Returns:
+            Nornir - nornir objekt, který obsahuje zparsované informace o hostech, skupinách. Dále zajišťuje multithreading funkcionalitu.
+        &#34;&#34;&#34;
+        creds_handler = CredentialHandler()
+        nr = InitNornir(config_file=&#34;config.yml&#34;)  # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný (sub)task - více o chybě v nornir.log
+        creds_handler.insert_creds(nr)
+        return nr
 
     def _create_parent_folders(self, folder_path: Path) -&gt; None:
         &#34;&#34;&#34;
@@ -75,7 +89,7 @@ class BackupConfiguration:
         result = task.run(task=napalm_get, name=&#34;Get configuration&#34;, getters=[&#34;config&#34;])
         if not result.failed:
             running_configuration = result[0].result[&#34;config&#34;][&#39;running&#39;].strip()
-            file_path = Path(Path.cwd() / &#39;backups&#39; / &#34;running_configuration&#34; / f&#34;{task.host.name}&#34; / f&#34;{task.host.name}_{str(self._date)}.conf&#34;)
+            file_path = Path(Path.cwd() / &#39;backups&#39; / f&#34;{task.host.name}&#34; / f&#34;{task.host.name}_{str(self._date)}.conf&#34;)
             self._create_parent_folders(file_path.parent)
             res = task.run(write_file, filename=str(file_path), content=running_configuration, append=False)
             if not res.failed:
@@ -87,9 +101,9 @@ class BackupConfiguration:
 
 
 if __name__ == &#39;__main__&#39;:
-    nr = InitNornir(config_file=&#34;config.yml&#34;)
-    all_devices = nr.filter(F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;) | F(dev_type=&#34;switch&#34;))
     backup_configuration = BackupConfiguration()
+    nr = backup_configuration.setup_inventory()
+    all_devices = nr.filter(F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;) | F(dev_type=&#34;switch&#34;))
     all_devices.run(backup_configuration.backup_device_running_configuration, name=&#34;Backup running configuration&#34;)</code></pre>
 </details>
 </section>
@@ -106,7 +120,7 @@ if __name__ == &#39;__main__&#39;:
 <span>class <span class="ident">BackupConfiguration</span></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Třida určená pro pravidelný backup konfigurace síťových zařízení (využití pro automatický backup pomocí nástroje cron).</p>
+<div class="desc"><p>Třida určená pro pravidelný backup konfigurace síťových zařízení (využití pro automatický backup např. pomocí nástroje cron).</p>
 <h2 id="attributes">Attributes</h2>
 <dl>
 <dt><strong><code>date</code></strong> :&ensp;<code>datetime.date</code></dt>
@@ -118,7 +132,7 @@ if __name__ == &#39;__main__&#39;:
 </summary>
 <pre><code class="python">class BackupConfiguration:
     &#34;&#34;&#34;
-    Třida určená pro pravidelný backup konfigurace síťových zařízení (využití pro automatický backup pomocí nástroje cron).
+    Třida určená pro pravidelný backup konfigurace síťových zařízení (využití pro automatický backup např. pomocí nástroje cron).
 
     Attributes:
         date (datetime.date): datum provedení backupu
@@ -127,6 +141,18 @@ if __name__ == &#39;__main__&#39;:
 
     def __init__(self):
         self._date = datetime.now().date()
+
+    def setup_inventory(self) -&gt; Nornir:
+        &#34;&#34;&#34;
+        Funkce, která umožňuje načíst veškeré informace o hostech a využívaných skupinách (groups). Podporuje dynamické načítání citlivých údajů (pouze pro citlivé údaje skupin).
+
+        Returns:
+            Nornir - nornir objekt, který obsahuje zparsované informace o hostech, skupinách. Dále zajišťuje multithreading funkcionalitu.
+        &#34;&#34;&#34;
+        creds_handler = CredentialHandler()
+        nr = InitNornir(config_file=&#34;config.yml&#34;)  # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný (sub)task - více o chybě v nornir.log
+        creds_handler.insert_creds(nr)
+        return nr
 
     def _create_parent_folders(self, folder_path: Path) -&gt; None:
         &#34;&#34;&#34;
@@ -154,7 +180,7 @@ if __name__ == &#39;__main__&#39;:
         result = task.run(task=napalm_get, name=&#34;Get configuration&#34;, getters=[&#34;config&#34;])
         if not result.failed:
             running_configuration = result[0].result[&#34;config&#34;][&#39;running&#39;].strip()
-            file_path = Path(Path.cwd() / &#39;backups&#39; / &#34;running_configuration&#34; / f&#34;{task.host.name}&#34; / f&#34;{task.host.name}_{str(self._date)}.conf&#34;)
+            file_path = Path(Path.cwd() / &#39;backups&#39; / f&#34;{task.host.name}&#34; / f&#34;{task.host.name}_{str(self._date)}.conf&#34;)
             self._create_parent_folders(file_path.parent)
             res = task.run(write_file, filename=str(file_path), content=running_configuration, append=False)
             if not res.failed:
@@ -195,7 +221,7 @@ if __name__ == &#39;__main__&#39;:
     result = task.run(task=napalm_get, name=&#34;Get configuration&#34;, getters=[&#34;config&#34;])
     if not result.failed:
         running_configuration = result[0].result[&#34;config&#34;][&#39;running&#39;].strip()
-        file_path = Path(Path.cwd() / &#39;backups&#39; / &#34;running_configuration&#34; / f&#34;{task.host.name}&#34; / f&#34;{task.host.name}_{str(self._date)}.conf&#34;)
+        file_path = Path(Path.cwd() / &#39;backups&#39; / f&#34;{task.host.name}&#34; / f&#34;{task.host.name}_{str(self._date)}.conf&#34;)
         self._create_parent_folders(file_path.parent)
         res = task.run(write_file, filename=str(file_path), content=running_configuration, append=False)
         if not res.failed:
@@ -204,6 +230,30 @@ if __name__ == &#39;__main__&#39;:
             print(f&#34;{Fore.RED}Backup of running configuration failed for host {task.host.name} - more info in nornir.log&#34;)
     else:
         print(f&#34;{Fore.RED}Backup of running configuration failed for host {task.host.name} - more info in nornir.log&#34;)</code></pre>
+</details>
+</dd>
+<dt id="scripts.tasks.backup_configuration.BackupConfiguration.setup_inventory"><code class="name flex">
+<span>def <span class="ident">setup_inventory</span></span>(<span>self) ‑> nornir.core.Nornir</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Funkce, která umožňuje načíst veškeré informace o hostech a využívaných skupinách (groups). Podporuje dynamické načítání citlivých údajů (pouze pro citlivé údaje skupin).</p>
+<h2 id="returns">Returns</h2>
+<p>Nornir - nornir objekt, který obsahuje zparsované informace o hostech, skupinách. Dále zajišťuje multithreading funkcionalitu.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setup_inventory(self) -&gt; Nornir:
+    &#34;&#34;&#34;
+    Funkce, která umožňuje načíst veškeré informace o hostech a využívaných skupinách (groups). Podporuje dynamické načítání citlivých údajů (pouze pro citlivé údaje skupin).
+
+    Returns:
+        Nornir - nornir objekt, který obsahuje zparsované informace o hostech, skupinách. Dále zajišťuje multithreading funkcionalitu.
+    &#34;&#34;&#34;
+    creds_handler = CredentialHandler()
+    nr = InitNornir(config_file=&#34;config.yml&#34;)  # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný (sub)task - více o chybě v nornir.log
+    creds_handler.insert_creds(nr)
+    return nr</code></pre>
 </details>
 </dd>
 </dl>
@@ -228,6 +278,7 @@ if __name__ == &#39;__main__&#39;:
 <h4><code><a title="scripts.tasks.backup_configuration.BackupConfiguration" href="#scripts.tasks.backup_configuration.BackupConfiguration">BackupConfiguration</a></code></h4>
 <ul class="">
 <li><code><a title="scripts.tasks.backup_configuration.BackupConfiguration.backup_device_running_configuration" href="#scripts.tasks.backup_configuration.BackupConfiguration.backup_device_running_configuration">backup_device_running_configuration</a></code></li>
+<li><code><a title="scripts.tasks.backup_configuration.BackupConfiguration.setup_inventory" href="#scripts.tasks.backup_configuration.BackupConfiguration.setup_inventory">setup_inventory</a></code></li>
 </ul>
 </li>
 </ul>

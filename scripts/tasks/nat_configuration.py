@@ -34,20 +34,25 @@ class NATConfiguration:
 
             data = task.run(task=load_yaml, file=f'inventory/host_vars/{task.host.name}.yml', name="Load host data",
                             severity_level=logging.DEBUG)
-            task.host["nat_overload_config"] = data[0].result["nat_overload_config"]
+            nat_key = "nat_overload_config"
 
-            r = task.run(task=template_file,
-                         name="NAT Overload Configuration",
-                         template="source_nat_overload.j2",
-                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
+            if nat_key in data[0].result:
+                task.host[nat_key] = data[0].result[nat_key]
 
-            task.host["nat_overload"] = r.result
+                r = task.run(task=template_file,
+                             name="NAT Overload Configuration",
+                             template="source_nat_overload.j2",
+                             path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
 
-            task.run(task=napalm_configure,
-                     name="Loading NAT Overload Configuration on the device",
-                     replace=False,
-                     configuration=task.host["nat_overload"],
-                     dry_run=dry_run)
+                task.host["nat_overload"] = r.result
+
+                task.run(task=napalm_configure,
+                         name="Loading NAT Overload Configuration on the device",
+                         replace=False,
+                         configuration=task.host["nat_overload"],
+                         dry_run=dry_run)
+            else:
+                print(f"{Fore.RED}Device {task.host.name}: No {nat_key} key was found in host data.")
         else:
             print(f"{Fore.RED} Device {task.host.name}: method is not implemented.")
             raise NornirSubTaskError("Invalid device type or vendor. Method is not implemented for particular device/vendor.", task)

@@ -16,7 +16,7 @@ switching_interfaces: # konfigurace switchportů
     trunk_vlans: 10,20
     duplex: full
     speed: auto
-interfaces_ipv4: # konfigurace routing portů + VLAN - IPv4, pokud fyzické rozhraní bude routované (no switchport), tak musí být definovaný klíč routed_physical_port.
+interfaces_ipv4: # konfigurace routing portů + VLAN (SVI) - IPv4, pokud fyzické rozhraní bude routované (no switchport), tak musí být definovaný klíč routed_physical_port.
   Loopback0:
     description: popis rozhrani
     net: 192.168.41.1

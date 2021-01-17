@@ -116,9 +116,9 @@ class ExcelExporter:
                 self.active_sheet.cell(row=row_start, column=column_start).alignment = Alignment(horizontal='center',
                                                                                                  vertical='center')
                 if header in wider_header_columns:
-                    self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 30
+                    self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 30 # šířka širších sloupců, lze změnit dle potřeby
                 else:
-                    self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 15
+                    self.active_sheet.column_dimensions[get_column_letter(column_start)].width = 15 # šířka užších sloupců, lze změnit dle potřeby
                 column_start += 1
         else:
             raise ValueError(f"Error with writing header - check specified row_start and column_start (both "

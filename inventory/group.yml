@@ -1,6 +1,6 @@
 ---
 cisco:
-  platform: "ios"
+  platform: "ios" # pro napalm/netmiko driver (ovladač)
   connection_options:
     napalm:
       extras:
@@ -12,10 +12,10 @@ cisco:
         global_delay_factor: 1
 
 juniper:
-  platform: "junos"
+  platform: "junos" # pro napalm/netmiko driver (ovladač)
 
 linux:
-  platform: "linux"
+  platform: "linux" # pro netmiko driver
   connection_options:
     netmiko:
       extras:

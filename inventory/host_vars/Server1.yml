@@ -9,7 +9,7 @@ vsftpd_config:
     rsa_cert_file: /etc/certs/vsftpd.pem
     rsa_private_key_file: /etc/certs/vsftpd.pem
   commands:
-   #- "apt update" - doporučuji vynechat a provést manuálně. V opačném případě musítě upravit v groups.yml parametr global_delay_factor pro linux group. Parametr nastavte minimálně na hodnotu 5.
+   #- "apt update" - doporučuji vynechat a provést manuálně. V opačném případě musítě upravit v groups.yml parametr global_delay_factor pro debian group. Parametr nastavte minimálně na hodnotu 5.
     - "apt-get install vsftpd -y"
     - "systemctl start vsftpd"
     - "systemctl enable vsftpd"
@@ -18,7 +18,6 @@ vsftpd_config:
     - "chmod a-w /home/ftpuser/ftp"
     - "mkdir /home/ftpuser/ftp/test"
     - "chown ftpuser:ftpuser /home/ftpuser/ftp/test"
-    - "cp /etc/vsftpd.conf /etc/vsftpd.conf.bak"
     - "rm /etc/vsftpd.conf"
     - "scp" # zvolený příkaz, ve skriptu bude tento příkaz kontrolován. Pokud nastane, tak se spustí netmiko_file_transfer task (SCP) pro překopírování vsftpd.conf
     - "echo ftpuser | sudo tee -a /etc/vsftpduserlist.conf"

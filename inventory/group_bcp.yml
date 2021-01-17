@@ -21,7 +21,7 @@ juniper:
   password: "Juniper"
 
 linux:
-  platform: "linux"
+  platform: "ubuntu"
   username: "linux"
   password: "gns3DP"
   connection_options:

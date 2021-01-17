@@ -34,20 +34,25 @@ class EIGRPConfiguration:
 
             data = task.run(task=load_yaml, file=f'inventory/host_vars/{task.host.name}.yml', name="Load host data",
                             severity_level=logging.DEBUG)
-            task.host["eigrp_config"] = data[0].result["eigrp_config"]
+            eigrp_key = "eigrp_config"
 
-            r = task.run(task=template_file,
-                         name="EIGRP IPv4 Template Loading",
-                         template="eigrp_ipv4.j2",
-                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
+            if eigrp_key in data[0].result:
+                task.host[eigrp_key] = data[0].result[eigrp_key]
 
-            task.host["ipv4_eigrp"] = r.result
+                r = task.run(task=template_file,
+                             name="EIGRP IPv4 Template Loading",
+                             template="eigrp_ipv4.j2",
+                             path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
 
-            task.run(task=napalm_configure,
-                     name="Loading EIGRP IPv4 Configuration on the device",
-                     replace=False,
-                     configuration=task.host["ipv4_eigrp"],
-                     dry_run=dry_run)
+                task.host["ipv4_eigrp"] = r.result
+
+                task.run(task=napalm_configure,
+                         name="Loading EIGRP IPv4 Configuration on the device",
+                         replace=False,
+                         configuration=task.host["ipv4_eigrp"],
+                         dry_run=dry_run)
+            else:
+                print(f"{Fore.RED}Device {task.host.name}: No {eigrp_key} key was found in host data.")
         else:
             print(f"{Fore.RED} Device {task.host.name}: invalid device type.")
             raise NornirSubTaskError("Invalid device type. Only cisco routers and L3 switches are supported.", task)
@@ -71,20 +76,25 @@ class EIGRPConfiguration:
         if task.host["vendor"] == "cisco" and not task.host["dev_type"] == "switch":
             data = task.run(task=load_yaml, file=f'inventory/host_vars/{task.host.name}.yml', name="Load host data",
                             severity_level=logging.DEBUG)
-            task.host["eigrp_ipv6_config"] = data[0].result["eigrp_ipv6_config"]
+            eigrp_key = "eigrp_ipv6_config"
 
-            r = task.run(task=template_file,
-                         name="EIGRP IPv6 Template Loading",
-                         template="eigrp_ipv6.j2",
-                         path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
+            if eigrp_key in data[0].result[eigrp_key]:
+                task.host[eigrp_key] = data[0].result[eigrp_key]
 
-            task.host["ipv6_eigrp"] = r.result
+                r = task.run(task=template_file,
+                             name="EIGRP IPv6 Template Loading",
+                             template="eigrp_ipv6.j2",
+                             path=f"templates/{task.host['vendor']}/{task.host['dev_type']}")
 
-            task.run(task=napalm_configure,
-                     name="Loading EIGRP IPv6 Configuration on the device",
-                     replace=False,
-                     configuration=task.host["ipv6_eigrp"],
-                     dry_run=dry_run)
+                task.host["ipv6_eigrp"] = r.result
+
+                task.run(task=napalm_configure,
+                         name="Loading EIGRP IPv6 Configuration on the device",
+                         replace=False,
+                         configuration=task.host["ipv6_eigrp"],
+                         dry_run=dry_run)
+            else:
+                print(f"{Fore.RED}Device {task.host.name}: No {eigrp_key} key was found in host data.")
         else:
             print(f"{Fore.RED} Device {task.host.name}: invalid device type.")
             raise NornirSubTaskError("Invalid device type. Only cisco routers and L3 switches are supported.", task)

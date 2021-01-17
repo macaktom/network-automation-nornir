@@ -1,3 +1,4 @@
+import datetime
 import json
 from colorama import Fore
 from nornir.core.exceptions import NornirSubTaskError
@@ -233,6 +234,11 @@ class NetworkUtilityViewer:
             None
         """
         result = task.run(task=napalm_get, name="Show device basic facts", getters=["facts"])
+
+        if not result.failed:
+            uptime = result[0].result['facts']['uptime']
+            result[0].result['facts']['uptime'] = str(datetime.timedelta(seconds=uptime))
+
         if json_out:
             self._print_info_json(result)
         else:

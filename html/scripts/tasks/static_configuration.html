@@ -61,20 +61,25 @@ class StaticRoutingConfiguration:
         if not task.host[&#34;dev_type&#34;] == &#34;switch&#34;:
             data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
                             severity_level=logging.DEBUG)
-            task.host[&#34;static_routing_config&#34;] = data[0].result[&#34;static_routing_config&#34;]
+            static_routing_key = &#34;static_routing_config&#34;
 
-            r = task.run(task=template_file,
-                         name=&#34;IPv4 Static Routing Template Loading&#34;,
-                         template=&#34;static_ipv4.j2&#34;,
-                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
+            if static_routing_key in data[0].result:
+                task.host[static_routing_key] = data[0].result[static_routing_key]
 
-            task.host[&#34;ipv4_static&#34;] = r.result
+                r = task.run(task=template_file,
+                             name=&#34;IPv4 Static Routing Template Loading&#34;,
+                             template=&#34;static_ipv4.j2&#34;,
+                             path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
-            task.run(task=napalm_configure,
-                     name=&#34;Loading IPv4 Static Routing Configuration on the device&#34;,
-                     replace=False,
-                     configuration=task.host[&#34;ipv4_static&#34;],
-                     dry_run=dry_run)
+                task.host[&#34;ipv4_static&#34;] = r.result
+
+                task.run(task=napalm_configure,
+                         name=&#34;Loading IPv4 Static Routing Configuration on the device&#34;,
+                         replace=False,
+                         configuration=task.host[&#34;ipv4_static&#34;],
+                         dry_run=dry_run)
+            else:
+                print(f&#34;{Fore.RED}Device {task.host.name}: No {static_routing_key} key was found in host data.&#34;)
         else:
             print(f&#34;{Fore.RED} Device {task.host.name}: invalid device type.&#34;)
             raise NornirSubTaskError(&#34;Invalid device type. Switches are not supported.&#34;, task)
@@ -99,20 +104,26 @@ class StaticRoutingConfiguration:
         if not task.host[&#34;dev_type&#34;] == &#34;switch&#34;:
             data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
                             severity_level=logging.DEBUG)
-            task.host[&#34;static_routing_ipv6_config&#34;] = data[0].result[&#34;static_routing_ipv6_config&#34;]
 
-            r = task.run(task=template_file,
-                         name=&#34;IPv6 Static Routing Template Loading&#34;,
-                         template=&#34;static_ipv6.j2&#34;,
-                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
+            static_routing_key = &#34;static_routing_ipv6_config&#34;
 
-            task.host[&#34;ipv6_static&#34;] = r.result
+            if static_routing_key in data[0].result:
+                task.host[static_routing_key] = data[0].result[static_routing_key]
 
-            task.run(task=napalm_configure,
-                     name=&#34;Loading IPv6 Static Routing Configuration on the device&#34;,
-                     replace=False,
-                     configuration=task.host[&#34;ipv6_static&#34;],
-                     dry_run=dry_run)
+                r = task.run(task=template_file,
+                             name=&#34;IPv6 Static Routing Template Loading&#34;,
+                             template=&#34;static_ipv6.j2&#34;,
+                             path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
+
+                task.host[&#34;ipv6_static&#34;] = r.result
+
+                task.run(task=napalm_configure,
+                         name=&#34;Loading IPv6 Static Routing Configuration on the device&#34;,
+                         replace=False,
+                         configuration=task.host[&#34;ipv6_static&#34;],
+                         dry_run=dry_run)
+            else:
+                print(f&#34;{Fore.RED}Device {task.host.name}: No {static_routing_key} key was found in host data.&#34;)
         else:
             print(f&#34;{Fore.RED} Device {task.host.name}: invalid device type.&#34;)
             raise NornirSubTaskError(&#34;Invalid device type. Switches are not supported.&#34;, task)</code></pre>
@@ -161,20 +172,25 @@ class StaticRoutingConfiguration:
         if not task.host[&#34;dev_type&#34;] == &#34;switch&#34;:
             data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
                             severity_level=logging.DEBUG)
-            task.host[&#34;static_routing_config&#34;] = data[0].result[&#34;static_routing_config&#34;]
+            static_routing_key = &#34;static_routing_config&#34;
 
-            r = task.run(task=template_file,
-                         name=&#34;IPv4 Static Routing Template Loading&#34;,
-                         template=&#34;static_ipv4.j2&#34;,
-                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
+            if static_routing_key in data[0].result:
+                task.host[static_routing_key] = data[0].result[static_routing_key]
 
-            task.host[&#34;ipv4_static&#34;] = r.result
+                r = task.run(task=template_file,
+                             name=&#34;IPv4 Static Routing Template Loading&#34;,
+                             template=&#34;static_ipv4.j2&#34;,
+                             path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
-            task.run(task=napalm_configure,
-                     name=&#34;Loading IPv4 Static Routing Configuration on the device&#34;,
-                     replace=False,
-                     configuration=task.host[&#34;ipv4_static&#34;],
-                     dry_run=dry_run)
+                task.host[&#34;ipv4_static&#34;] = r.result
+
+                task.run(task=napalm_configure,
+                         name=&#34;Loading IPv4 Static Routing Configuration on the device&#34;,
+                         replace=False,
+                         configuration=task.host[&#34;ipv4_static&#34;],
+                         dry_run=dry_run)
+            else:
+                print(f&#34;{Fore.RED}Device {task.host.name}: No {static_routing_key} key was found in host data.&#34;)
         else:
             print(f&#34;{Fore.RED} Device {task.host.name}: invalid device type.&#34;)
             raise NornirSubTaskError(&#34;Invalid device type. Switches are not supported.&#34;, task)
@@ -199,20 +215,26 @@ class StaticRoutingConfiguration:
         if not task.host[&#34;dev_type&#34;] == &#34;switch&#34;:
             data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
                             severity_level=logging.DEBUG)
-            task.host[&#34;static_routing_ipv6_config&#34;] = data[0].result[&#34;static_routing_ipv6_config&#34;]
 
-            r = task.run(task=template_file,
-                         name=&#34;IPv6 Static Routing Template Loading&#34;,
-                         template=&#34;static_ipv6.j2&#34;,
-                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
+            static_routing_key = &#34;static_routing_ipv6_config&#34;
 
-            task.host[&#34;ipv6_static&#34;] = r.result
+            if static_routing_key in data[0].result:
+                task.host[static_routing_key] = data[0].result[static_routing_key]
 
-            task.run(task=napalm_configure,
-                     name=&#34;Loading IPv6 Static Routing Configuration on the device&#34;,
-                     replace=False,
-                     configuration=task.host[&#34;ipv6_static&#34;],
-                     dry_run=dry_run)
+                r = task.run(task=template_file,
+                             name=&#34;IPv6 Static Routing Template Loading&#34;,
+                             template=&#34;static_ipv6.j2&#34;,
+                             path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
+
+                task.host[&#34;ipv6_static&#34;] = r.result
+
+                task.run(task=napalm_configure,
+                         name=&#34;Loading IPv6 Static Routing Configuration on the device&#34;,
+                         replace=False,
+                         configuration=task.host[&#34;ipv6_static&#34;],
+                         dry_run=dry_run)
+            else:
+                print(f&#34;{Fore.RED}Device {task.host.name}: No {static_routing_key} key was found in host data.&#34;)
         else:
             print(f&#34;{Fore.RED} Device {task.host.name}: invalid device type.&#34;)
             raise NornirSubTaskError(&#34;Invalid device type. Switches are not supported.&#34;, task)</code></pre>
@@ -264,20 +286,25 @@ konfiguraci na nepodporovaných zařízeních.</dd>
     if not task.host[&#34;dev_type&#34;] == &#34;switch&#34;:
         data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
                         severity_level=logging.DEBUG)
-        task.host[&#34;static_routing_config&#34;] = data[0].result[&#34;static_routing_config&#34;]
+        static_routing_key = &#34;static_routing_config&#34;
 
-        r = task.run(task=template_file,
-                     name=&#34;IPv4 Static Routing Template Loading&#34;,
-                     template=&#34;static_ipv4.j2&#34;,
-                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
+        if static_routing_key in data[0].result:
+            task.host[static_routing_key] = data[0].result[static_routing_key]
 
-        task.host[&#34;ipv4_static&#34;] = r.result
+            r = task.run(task=template_file,
+                         name=&#34;IPv4 Static Routing Template Loading&#34;,
+                         template=&#34;static_ipv4.j2&#34;,
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
-        task.run(task=napalm_configure,
-                 name=&#34;Loading IPv4 Static Routing Configuration on the device&#34;,
-                 replace=False,
-                 configuration=task.host[&#34;ipv4_static&#34;],
-                 dry_run=dry_run)
+            task.host[&#34;ipv4_static&#34;] = r.result
+
+            task.run(task=napalm_configure,
+                     name=&#34;Loading IPv4 Static Routing Configuration on the device&#34;,
+                     replace=False,
+                     configuration=task.host[&#34;ipv4_static&#34;],
+                     dry_run=dry_run)
+        else:
+            print(f&#34;{Fore.RED}Device {task.host.name}: No {static_routing_key} key was found in host data.&#34;)
     else:
         print(f&#34;{Fore.RED} Device {task.host.name}: invalid device type.&#34;)
         raise NornirSubTaskError(&#34;Invalid device type. Switches are not supported.&#34;, task)</code></pre>
@@ -328,20 +355,26 @@ konfiguraci na nepodporovaných zařízeních.</dd>
     if not task.host[&#34;dev_type&#34;] == &#34;switch&#34;:
         data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
                         severity_level=logging.DEBUG)
-        task.host[&#34;static_routing_ipv6_config&#34;] = data[0].result[&#34;static_routing_ipv6_config&#34;]
 
-        r = task.run(task=template_file,
-                     name=&#34;IPv6 Static Routing Template Loading&#34;,
-                     template=&#34;static_ipv6.j2&#34;,
-                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
+        static_routing_key = &#34;static_routing_ipv6_config&#34;
 
-        task.host[&#34;ipv6_static&#34;] = r.result
+        if static_routing_key in data[0].result:
+            task.host[static_routing_key] = data[0].result[static_routing_key]
 
-        task.run(task=napalm_configure,
-                 name=&#34;Loading IPv6 Static Routing Configuration on the device&#34;,
-                 replace=False,
-                 configuration=task.host[&#34;ipv6_static&#34;],
-                 dry_run=dry_run)
+            r = task.run(task=template_file,
+                         name=&#34;IPv6 Static Routing Template Loading&#34;,
+                         template=&#34;static_ipv6.j2&#34;,
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
+
+            task.host[&#34;ipv6_static&#34;] = r.result
+
+            task.run(task=napalm_configure,
+                     name=&#34;Loading IPv6 Static Routing Configuration on the device&#34;,
+                     replace=False,
+                     configuration=task.host[&#34;ipv6_static&#34;],
+                     dry_run=dry_run)
+        else:
+            print(f&#34;{Fore.RED}Device {task.host.name}: No {static_routing_key} key was found in host data.&#34;)
     else:
         print(f&#34;{Fore.RED} Device {task.host.name}: invalid device type.&#34;)
         raise NornirSubTaskError(&#34;Invalid device type. Switches are not supported.&#34;, task)</code></pre>

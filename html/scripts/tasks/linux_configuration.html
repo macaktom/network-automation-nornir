@@ -47,55 +47,119 @@ from scripts.utility.text_file_exporter import FileExporter
 
 
 class LinuxConfiguration:
+    &#34;&#34;&#34;
+    Třída pro konfigurování Linux serverů. Konfigurace VSFTPD implementována pouze pro linuxovou distribuci Ubuntu (18.04).
+    &#34;&#34;&#34;
 
     def send_commands(self, task: Task, commands: List[str] = None, enable: bool = False) -&gt; None:
-        if commands is None:
-            data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
-                            severity_level=logging.DEBUG)
-            if not data.failed and data[0].result[&#34;commands&#34;]:
-                commands = data[0].result[&#34;commands&#34;]
-            else:
-                print(f&#34;{Fore.RED}Device {task.host.name}: Command list is empty or task failed. More in nornir.log.&#34;)
+        &#34;&#34;&#34;
+        Metoda, která slouží pro vykonání příkazů linuxovými servery pomocí knihovny Netmiko.
 
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            commands (List[str]): Příkazy, které budou provedeny. Defaultně None (příkazy jsou obdrženy z inventáře).
+            enable (bool): Argument, kterým lze specifikovat, jestli je nutný pro daný nornir úkol práv superuživatele (rootu). Defaultně je nastaveno na True (root práva).
+
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+                konfiguraci na nepodporovaných zařízeních.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         if task.host.platform == &#34;linux&#34;:
-            print_title(f&#34;Device {task.host.name}:&#34;)
-            for command in commands:
-                task.run(task=netmiko_send_command, command_string=command, enable=enable)
+            if commands is None:
+                data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
+                                severity_level=logging.DEBUG)
+                commands_key = &#34;commands&#34;
+                if commands_key in data[0].result:
+                    commands = data[0].result[commands_key]
+                    print_title(f&#34;Device {task.host.name}:&#34;)
+                    for command in commands:
+                        task.run(task=netmiko_send_command, command_string=command, enable=enable)
+                else:
+                    print(f&#34;{Fore.RED}Device {task.host.name}: Command list is empty.&#34;)
+            else:
+                print_title(f&#34;Device {task.host.name}:&#34;)
+                for command in commands:
+                    task.run(task=netmiko_send_command, command_string=command, enable=enable)
         else:
-            print(f&#34;{Fore.RED}Device {task.host.name}: Not a Linux server.&#34;)
+            print(f&#34;{Fore.RED}Device {task.host.name}: invalid device type.&#34;)
+            raise NornirSubTaskError(&#34;Invalid device type. Only Linux servers are supported.&#34;, task)
 
     def configure_vsftpd(self, task: Task, enable: bool = True) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda, která slouží pro konfiguraci vsftpd serveru (S)FTP.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            enable (bool): Argument, kterým lze specifikovat, jestli je nutný pro daný nornir úkol práv superuživatele (rootu). Defaultně je nastaveno na True (root práva).
+
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+                konfiguraci na nepodporovaných zařízeních. Podporovány jsou pouze ubuntu servery.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         if task.host[&#34;dev_type&#34;] == &#34;ubuntu_server&#34;:
             print_title(f&#34;Device {task.host.name}:&#34;)
             data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
                             severity_level=logging.DEBUG)
-            task.host[&#34;vsftpd_config&#34;] = data[0].result[&#34;vsftpd_config&#34;]
-            ssl_enabled = data[0].result[&#34;vsftpd_config&#34;][&#34;ssl&#34;][&#34;enabled&#34;]
-            ftp_testing = data[0].result[&#34;vsftpd_config&#34;][&#34;testing&#34;]
-            ftp_testing[&#34;ssl&#34;] = ssl_enabled
-            commands = data[0].result[&#34;vsftpd_config&#34;][&#34;commands&#34;]
-            r = task.run(task=template_file,
-                         name=&#34;VSFTPD configuration Template Loading&#34;,
-                         template=&#34;vsftpd.j2&#34;,
-                         path=f&#34;templates/{task.host.platform}/{task.host[&#39;dev_type&#39;]}&#34;,
-                         severity_level=logging.DEBUG)
-            if not r.failed:
-                file_path = Path(Path.cwd() / &#39;export&#39; / &#34;configuration&#34; / &#34;vsftpd.conf&#34;)
-                exporter = FileExporter(file_path, content=r.result)
-                exporter.export_to_file()
-                for command in commands:
-                    if command == &#34;scp&#34;:
-                        task.run(task=netmiko_file_transfer, source_file=file_path, dest_file=f&#34;{file_path.name}&#34;, severity_level=logging.DEBUG)
-                        task.run(task=netmiko_send_command, command_string=f&#34;mv /var/tmp/vsftpd.conf /etc/&#34;, enable=enable, severity_level=logging.DEBUG)
-                        task.run(task=netmiko_send_command, command_string=f&#34;chown root:root /etc/vsftpd.conf&#34;, enable=enable, severity_level=logging.DEBUG)
-                    else:
-                        task.run(task=netmiko_send_command, command_string=command, enable=enable, severity_level=logging.DEBUG)
-                task.run(task=self._testing_vsftpd, name=&#34;VSFTPD Testing&#34;, ftp_data=ftp_testing)
-        else:
-            print(f&#34;{Fore.RED} Device {task.host.name}: invalid device type.&#34;)
-            raise NornirSubTaskError(&#34;Invalid device type. Only Ubuntu servers and L3 switches are supported.&#34;, task)
+            vsftpd_key = &#34;vsftpd_config&#34;
+            ssl_key = &#34;ssl&#34;
+            testing_key = &#34;testing&#34;
+            ssl_enabled = False
+            ftp_testing = False
 
-    def _testing_vsftpd(self, task: Task, ftp_data: Dict[str, Union[str, bool]]):
+            if vsftpd_key in data[0].result:
+                task.host[vsftpd_key] = data[0].result[vsftpd_key]
+                if ssl_key in data[0].result[vsftpd_key]:
+                    ssl_enabled = data[0].result[vsftpd_key][ssl_key][&#34;enabled&#34;]
+                if testing_key in data[0].result[vsftpd_key]:
+                    ftp_testing = data[0].result[vsftpd_key][testing_key]
+                if ftp_testing and ssl_enabled:
+                    ftp_testing[ssl_key] = ssl_enabled
+
+                commands = data[0].result[vsftpd_key][&#34;commands&#34;]
+                r = task.run(task=template_file,
+                             name=&#34;VSFTPD configuration Template Loading&#34;,
+                             template=&#34;vsftpd.j2&#34;,
+                             path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                             severity_level=logging.DEBUG)
+                if not r.failed:
+                    file_path = Path(Path.cwd() / &#39;export&#39; / &#34;configuration&#34; / &#34;vsftpd.conf&#34;)
+                    exporter = FileExporter(file_path, content=r.result)
+                    exporter.export_to_file()
+                    for command in commands:
+                        if command == &#34;scp&#34;:
+                            task.run(task=netmiko_file_transfer, source_file=file_path, dest_file=f&#34;{file_path.name}&#34;,
+                                     severity_level=logging.DEBUG)
+                            task.run(task=netmiko_send_command, command_string=f&#34;mv /var/tmp/vsftpd.conf /etc/&#34;,
+                                     enable=enable, severity_level=logging.DEBUG)
+                            task.run(task=netmiko_send_command, command_string=f&#34;chown root:root /etc/vsftpd.conf&#34;,
+                                     enable=enable, severity_level=logging.DEBUG)
+                        else:
+                            task.run(task=netmiko_send_command, command_string=command, enable=enable,
+                                     severity_level=logging.DEBUG)
+                    task.run(task=self._testing_vsftpd, name=&#34;VSFTPD Testing&#34;, ftp_data=ftp_testing)
+            else:
+                print(f&#34;{Fore.RED}Device {task.host.name}: No {vsftpd_key} key was found in host data.&#34;)
+        else:
+            print(f&#34;{Fore.RED}Device {task.host.name}: invalid device type.&#34;)
+            raise NornirSubTaskError(&#34;Invalid device type. Only Ubuntu servers are supported.&#34;, task)
+
+    def _testing_vsftpd(self, task: Task, ftp_data: Dict[str, Union[str, bool]]) -&gt; Result:
+        &#34;&#34;&#34;
+        Metoda, která slouží pro testování vsftpd serveru (S)FTP.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            ftp_data (Dict[str, Union[str, bool]]): Argument, ve kterém jsou uloženy zparsované data z inventáře, která jsou nutné pro testování (S)FTP serveru.
+
+        Returns:
+            Result - Result objekt (speciální objekt Norniru), který obsahuje informace o hostu a výsledku (S)FTP testu. Hlavím výsledkem je string, který zobrazuje obsah testovacího adresáře.
+        &#34;&#34;&#34;
         ssl_enabled = ftp_data[&#34;ssl&#34;]
         base_directory = ftp_data[&#34;base_directory&#34;]
         ftp = FTP_TLS(f&#34;{ftp_data[&#39;host&#39;]}&#34;) if ssl_enabled else FTP(f&#34;{ftp_data[&#39;host&#39;]}&#34;)
@@ -127,61 +191,125 @@ class LinuxConfiguration:
 <span>class <span class="ident">LinuxConfiguration</span></span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Třída pro konfigurování Linux serverů. Konfigurace VSFTPD implementována pouze pro linuxovou distribuci Ubuntu (18.04).</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class LinuxConfiguration:
+    &#34;&#34;&#34;
+    Třída pro konfigurování Linux serverů. Konfigurace VSFTPD implementována pouze pro linuxovou distribuci Ubuntu (18.04).
+    &#34;&#34;&#34;
 
     def send_commands(self, task: Task, commands: List[str] = None, enable: bool = False) -&gt; None:
-        if commands is None:
-            data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
-                            severity_level=logging.DEBUG)
-            if not data.failed and data[0].result[&#34;commands&#34;]:
-                commands = data[0].result[&#34;commands&#34;]
-            else:
-                print(f&#34;{Fore.RED}Device {task.host.name}: Command list is empty or task failed. More in nornir.log.&#34;)
+        &#34;&#34;&#34;
+        Metoda, která slouží pro vykonání příkazů linuxovými servery pomocí knihovny Netmiko.
 
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            commands (List[str]): Příkazy, které budou provedeny. Defaultně None (příkazy jsou obdrženy z inventáře).
+            enable (bool): Argument, kterým lze specifikovat, jestli je nutný pro daný nornir úkol práv superuživatele (rootu). Defaultně je nastaveno na True (root práva).
+
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+                konfiguraci na nepodporovaných zařízeních.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         if task.host.platform == &#34;linux&#34;:
-            print_title(f&#34;Device {task.host.name}:&#34;)
-            for command in commands:
-                task.run(task=netmiko_send_command, command_string=command, enable=enable)
+            if commands is None:
+                data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
+                                severity_level=logging.DEBUG)
+                commands_key = &#34;commands&#34;
+                if commands_key in data[0].result:
+                    commands = data[0].result[commands_key]
+                    print_title(f&#34;Device {task.host.name}:&#34;)
+                    for command in commands:
+                        task.run(task=netmiko_send_command, command_string=command, enable=enable)
+                else:
+                    print(f&#34;{Fore.RED}Device {task.host.name}: Command list is empty.&#34;)
+            else:
+                print_title(f&#34;Device {task.host.name}:&#34;)
+                for command in commands:
+                    task.run(task=netmiko_send_command, command_string=command, enable=enable)
         else:
-            print(f&#34;{Fore.RED}Device {task.host.name}: Not a Linux server.&#34;)
+            print(f&#34;{Fore.RED}Device {task.host.name}: invalid device type.&#34;)
+            raise NornirSubTaskError(&#34;Invalid device type. Only Linux servers are supported.&#34;, task)
 
     def configure_vsftpd(self, task: Task, enable: bool = True) -&gt; None:
+        &#34;&#34;&#34;
+        Metoda, která slouží pro konfiguraci vsftpd serveru (S)FTP.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            enable (bool): Argument, kterým lze specifikovat, jestli je nutný pro daný nornir úkol práv superuživatele (rootu). Defaultně je nastaveno na True (root práva).
+
+        Raises:
+            NornirSubTaskError: Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+                konfiguraci na nepodporovaných zařízeních. Podporovány jsou pouze ubuntu servery.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
         if task.host[&#34;dev_type&#34;] == &#34;ubuntu_server&#34;:
             print_title(f&#34;Device {task.host.name}:&#34;)
             data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
                             severity_level=logging.DEBUG)
-            task.host[&#34;vsftpd_config&#34;] = data[0].result[&#34;vsftpd_config&#34;]
-            ssl_enabled = data[0].result[&#34;vsftpd_config&#34;][&#34;ssl&#34;][&#34;enabled&#34;]
-            ftp_testing = data[0].result[&#34;vsftpd_config&#34;][&#34;testing&#34;]
-            ftp_testing[&#34;ssl&#34;] = ssl_enabled
-            commands = data[0].result[&#34;vsftpd_config&#34;][&#34;commands&#34;]
-            r = task.run(task=template_file,
-                         name=&#34;VSFTPD configuration Template Loading&#34;,
-                         template=&#34;vsftpd.j2&#34;,
-                         path=f&#34;templates/{task.host.platform}/{task.host[&#39;dev_type&#39;]}&#34;,
-                         severity_level=logging.DEBUG)
-            if not r.failed:
-                file_path = Path(Path.cwd() / &#39;export&#39; / &#34;configuration&#34; / &#34;vsftpd.conf&#34;)
-                exporter = FileExporter(file_path, content=r.result)
-                exporter.export_to_file()
-                for command in commands:
-                    if command == &#34;scp&#34;:
-                        task.run(task=netmiko_file_transfer, source_file=file_path, dest_file=f&#34;{file_path.name}&#34;, severity_level=logging.DEBUG)
-                        task.run(task=netmiko_send_command, command_string=f&#34;mv /var/tmp/vsftpd.conf /etc/&#34;, enable=enable, severity_level=logging.DEBUG)
-                        task.run(task=netmiko_send_command, command_string=f&#34;chown root:root /etc/vsftpd.conf&#34;, enable=enable, severity_level=logging.DEBUG)
-                    else:
-                        task.run(task=netmiko_send_command, command_string=command, enable=enable, severity_level=logging.DEBUG)
-                task.run(task=self._testing_vsftpd, name=&#34;VSFTPD Testing&#34;, ftp_data=ftp_testing)
-        else:
-            print(f&#34;{Fore.RED} Device {task.host.name}: invalid device type.&#34;)
-            raise NornirSubTaskError(&#34;Invalid device type. Only Ubuntu servers and L3 switches are supported.&#34;, task)
+            vsftpd_key = &#34;vsftpd_config&#34;
+            ssl_key = &#34;ssl&#34;
+            testing_key = &#34;testing&#34;
+            ssl_enabled = False
+            ftp_testing = False
 
-    def _testing_vsftpd(self, task: Task, ftp_data: Dict[str, Union[str, bool]]):
+            if vsftpd_key in data[0].result:
+                task.host[vsftpd_key] = data[0].result[vsftpd_key]
+                if ssl_key in data[0].result[vsftpd_key]:
+                    ssl_enabled = data[0].result[vsftpd_key][ssl_key][&#34;enabled&#34;]
+                if testing_key in data[0].result[vsftpd_key]:
+                    ftp_testing = data[0].result[vsftpd_key][testing_key]
+                if ftp_testing and ssl_enabled:
+                    ftp_testing[ssl_key] = ssl_enabled
+
+                commands = data[0].result[vsftpd_key][&#34;commands&#34;]
+                r = task.run(task=template_file,
+                             name=&#34;VSFTPD configuration Template Loading&#34;,
+                             template=&#34;vsftpd.j2&#34;,
+                             path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                             severity_level=logging.DEBUG)
+                if not r.failed:
+                    file_path = Path(Path.cwd() / &#39;export&#39; / &#34;configuration&#34; / &#34;vsftpd.conf&#34;)
+                    exporter = FileExporter(file_path, content=r.result)
+                    exporter.export_to_file()
+                    for command in commands:
+                        if command == &#34;scp&#34;:
+                            task.run(task=netmiko_file_transfer, source_file=file_path, dest_file=f&#34;{file_path.name}&#34;,
+                                     severity_level=logging.DEBUG)
+                            task.run(task=netmiko_send_command, command_string=f&#34;mv /var/tmp/vsftpd.conf /etc/&#34;,
+                                     enable=enable, severity_level=logging.DEBUG)
+                            task.run(task=netmiko_send_command, command_string=f&#34;chown root:root /etc/vsftpd.conf&#34;,
+                                     enable=enable, severity_level=logging.DEBUG)
+                        else:
+                            task.run(task=netmiko_send_command, command_string=command, enable=enable,
+                                     severity_level=logging.DEBUG)
+                    task.run(task=self._testing_vsftpd, name=&#34;VSFTPD Testing&#34;, ftp_data=ftp_testing)
+            else:
+                print(f&#34;{Fore.RED}Device {task.host.name}: No {vsftpd_key} key was found in host data.&#34;)
+        else:
+            print(f&#34;{Fore.RED}Device {task.host.name}: invalid device type.&#34;)
+            raise NornirSubTaskError(&#34;Invalid device type. Only Ubuntu servers are supported.&#34;, task)
+
+    def _testing_vsftpd(self, task: Task, ftp_data: Dict[str, Union[str, bool]]) -&gt; Result:
+        &#34;&#34;&#34;
+        Metoda, která slouží pro testování vsftpd serveru (S)FTP.
+
+        Args:
+            task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+            ftp_data (Dict[str, Union[str, bool]]): Argument, ve kterém jsou uloženy zparsované data z inventáře, která jsou nutné pro testování (S)FTP serveru.
+
+        Returns:
+            Result - Result objekt (speciální objekt Norniru), který obsahuje informace o hostu a výsledku (S)FTP testu. Hlavím výsledkem je string, který zobrazuje obsah testovacího adresáře.
+        &#34;&#34;&#34;
         ssl_enabled = ftp_data[&#34;ssl&#34;]
         base_directory = ftp_data[&#34;base_directory&#34;]
         ftp = FTP_TLS(f&#34;{ftp_data[&#39;host&#39;]}&#34;) if ssl_enabled else FTP(f&#34;{ftp_data[&#39;host&#39;]}&#34;)
@@ -205,67 +333,150 @@ class LinuxConfiguration:
 <span>def <span class="ident">configure_vsftpd</span></span>(<span>self, task: nornir.core.task.Task, enable: bool = True) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Metoda, která slouží pro konfiguraci vsftpd serveru (S)FTP.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+<dt><strong><code>enable</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Argument, kterým lze specifikovat, jestli je nutný pro daný nornir úkol práv superuživatele (rootu). Defaultně je nastaveno na True (root práva).</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NornirSubTaskError</code></dt>
+<dd>Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+konfiguraci na nepodporovaných zařízeních. Podporovány jsou pouze ubuntu servery.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def configure_vsftpd(self, task: Task, enable: bool = True) -&gt; None:
+    &#34;&#34;&#34;
+    Metoda, která slouží pro konfiguraci vsftpd serveru (S)FTP.
+
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+        enable (bool): Argument, kterým lze specifikovat, jestli je nutný pro daný nornir úkol práv superuživatele (rootu). Defaultně je nastaveno na True (root práva).
+
+    Raises:
+        NornirSubTaskError: Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+            konfiguraci na nepodporovaných zařízeních. Podporovány jsou pouze ubuntu servery.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
     if task.host[&#34;dev_type&#34;] == &#34;ubuntu_server&#34;:
         print_title(f&#34;Device {task.host.name}:&#34;)
         data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
                         severity_level=logging.DEBUG)
-        task.host[&#34;vsftpd_config&#34;] = data[0].result[&#34;vsftpd_config&#34;]
-        ssl_enabled = data[0].result[&#34;vsftpd_config&#34;][&#34;ssl&#34;][&#34;enabled&#34;]
-        ftp_testing = data[0].result[&#34;vsftpd_config&#34;][&#34;testing&#34;]
-        ftp_testing[&#34;ssl&#34;] = ssl_enabled
-        commands = data[0].result[&#34;vsftpd_config&#34;][&#34;commands&#34;]
-        r = task.run(task=template_file,
-                     name=&#34;VSFTPD configuration Template Loading&#34;,
-                     template=&#34;vsftpd.j2&#34;,
-                     path=f&#34;templates/{task.host.platform}/{task.host[&#39;dev_type&#39;]}&#34;,
-                     severity_level=logging.DEBUG)
-        if not r.failed:
-            file_path = Path(Path.cwd() / &#39;export&#39; / &#34;configuration&#34; / &#34;vsftpd.conf&#34;)
-            exporter = FileExporter(file_path, content=r.result)
-            exporter.export_to_file()
-            for command in commands:
-                if command == &#34;scp&#34;:
-                    task.run(task=netmiko_file_transfer, source_file=file_path, dest_file=f&#34;{file_path.name}&#34;, severity_level=logging.DEBUG)
-                    task.run(task=netmiko_send_command, command_string=f&#34;mv /var/tmp/vsftpd.conf /etc/&#34;, enable=enable, severity_level=logging.DEBUG)
-                    task.run(task=netmiko_send_command, command_string=f&#34;chown root:root /etc/vsftpd.conf&#34;, enable=enable, severity_level=logging.DEBUG)
-                else:
-                    task.run(task=netmiko_send_command, command_string=command, enable=enable, severity_level=logging.DEBUG)
-            task.run(task=self._testing_vsftpd, name=&#34;VSFTPD Testing&#34;, ftp_data=ftp_testing)
+        vsftpd_key = &#34;vsftpd_config&#34;
+        ssl_key = &#34;ssl&#34;
+        testing_key = &#34;testing&#34;
+        ssl_enabled = False
+        ftp_testing = False
+
+        if vsftpd_key in data[0].result:
+            task.host[vsftpd_key] = data[0].result[vsftpd_key]
+            if ssl_key in data[0].result[vsftpd_key]:
+                ssl_enabled = data[0].result[vsftpd_key][ssl_key][&#34;enabled&#34;]
+            if testing_key in data[0].result[vsftpd_key]:
+                ftp_testing = data[0].result[vsftpd_key][testing_key]
+            if ftp_testing and ssl_enabled:
+                ftp_testing[ssl_key] = ssl_enabled
+
+            commands = data[0].result[vsftpd_key][&#34;commands&#34;]
+            r = task.run(task=template_file,
+                         name=&#34;VSFTPD configuration Template Loading&#34;,
+                         template=&#34;vsftpd.j2&#34;,
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;,
+                         severity_level=logging.DEBUG)
+            if not r.failed:
+                file_path = Path(Path.cwd() / &#39;export&#39; / &#34;configuration&#34; / &#34;vsftpd.conf&#34;)
+                exporter = FileExporter(file_path, content=r.result)
+                exporter.export_to_file()
+                for command in commands:
+                    if command == &#34;scp&#34;:
+                        task.run(task=netmiko_file_transfer, source_file=file_path, dest_file=f&#34;{file_path.name}&#34;,
+                                 severity_level=logging.DEBUG)
+                        task.run(task=netmiko_send_command, command_string=f&#34;mv /var/tmp/vsftpd.conf /etc/&#34;,
+                                 enable=enable, severity_level=logging.DEBUG)
+                        task.run(task=netmiko_send_command, command_string=f&#34;chown root:root /etc/vsftpd.conf&#34;,
+                                 enable=enable, severity_level=logging.DEBUG)
+                    else:
+                        task.run(task=netmiko_send_command, command_string=command, enable=enable,
+                                 severity_level=logging.DEBUG)
+                task.run(task=self._testing_vsftpd, name=&#34;VSFTPD Testing&#34;, ftp_data=ftp_testing)
+        else:
+            print(f&#34;{Fore.RED}Device {task.host.name}: No {vsftpd_key} key was found in host data.&#34;)
     else:
-        print(f&#34;{Fore.RED} Device {task.host.name}: invalid device type.&#34;)
-        raise NornirSubTaskError(&#34;Invalid device type. Only Ubuntu servers and L3 switches are supported.&#34;, task)</code></pre>
+        print(f&#34;{Fore.RED}Device {task.host.name}: invalid device type.&#34;)
+        raise NornirSubTaskError(&#34;Invalid device type. Only Ubuntu servers are supported.&#34;, task)</code></pre>
 </details>
 </dd>
 <dt id="scripts.tasks.linux_configuration.LinuxConfiguration.send_commands"><code class="name flex">
 <span>def <span class="ident">send_commands</span></span>(<span>self, task: nornir.core.task.Task, commands: List[str] = None, enable: bool = False) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Metoda, která slouží pro vykonání příkazů linuxovými servery pomocí knihovny Netmiko.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>task</code></strong> :&ensp;<code>Task</code></dt>
+<dd>Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).</dd>
+<dt><strong><code>commands</code></strong> :&ensp;<code>List[str]</code></dt>
+<dd>Příkazy, které budou provedeny. Defaultně None (příkazy jsou obdrženy z inventáře).</dd>
+<dt><strong><code>enable</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Argument, kterým lze specifikovat, jestli je nutný pro daný nornir úkol práv superuživatele (rootu). Defaultně je nastaveno na True (root práva).</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NornirSubTaskError</code></dt>
+<dd>Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+konfiguraci na nepodporovaných zařízeních.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def send_commands(self, task: Task, commands: List[str] = None, enable: bool = False) -&gt; None:
-    if commands is None:
-        data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
-                        severity_level=logging.DEBUG)
-        if not data.failed and data[0].result[&#34;commands&#34;]:
-            commands = data[0].result[&#34;commands&#34;]
-        else:
-            print(f&#34;{Fore.RED}Device {task.host.name}: Command list is empty or task failed. More in nornir.log.&#34;)
+    &#34;&#34;&#34;
+    Metoda, která slouží pro vykonání příkazů linuxovými servery pomocí knihovny Netmiko.
 
+    Args:
+        task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
+        commands (List[str]): Příkazy, které budou provedeny. Defaultně None (příkazy jsou obdrženy z inventáře).
+        enable (bool): Argument, kterým lze specifikovat, jestli je nutný pro daný nornir úkol práv superuživatele (rootu). Defaultně je nastaveno na True (root práva).
+
+    Raises:
+        NornirSubTaskError: Výjimka, která nastane, pokud nastana chyba v nornir úkolu nebo pokud provádíte
+            konfiguraci na nepodporovaných zařízeních.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
     if task.host.platform == &#34;linux&#34;:
-        print_title(f&#34;Device {task.host.name}:&#34;)
-        for command in commands:
-            task.run(task=netmiko_send_command, command_string=command, enable=enable)
+        if commands is None:
+            data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
+                            severity_level=logging.DEBUG)
+            commands_key = &#34;commands&#34;
+            if commands_key in data[0].result:
+                commands = data[0].result[commands_key]
+                print_title(f&#34;Device {task.host.name}:&#34;)
+                for command in commands:
+                    task.run(task=netmiko_send_command, command_string=command, enable=enable)
+            else:
+                print(f&#34;{Fore.RED}Device {task.host.name}: Command list is empty.&#34;)
+        else:
+            print_title(f&#34;Device {task.host.name}:&#34;)
+            for command in commands:
+                task.run(task=netmiko_send_command, command_string=command, enable=enable)
     else:
-        print(f&#34;{Fore.RED}Device {task.host.name}: Not a Linux server.&#34;)</code></pre>
+        print(f&#34;{Fore.RED}Device {task.host.name}: invalid device type.&#34;)
+        raise NornirSubTaskError(&#34;Invalid device type. Only Linux servers are supported.&#34;, task)</code></pre>
 </details>
 </dd>
 </dl>

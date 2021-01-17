@@ -57,20 +57,25 @@ class InterfacesConfiguration:
 
         data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
                         severity_level=logging.DEBUG)
-        task.host[&#34;interfaces_ipv4&#34;] = data[0].result[&#34;interfaces_ipv4&#34;]
+        interface_key = &#34;interfaces_ipv4&#34;
 
-        result = task.run(task=template_file,
-                          name=&#34;IPv4 Intefaces Configuration&#34;,
-                          template=&#34;interfaces_ipv4.j2&#34;,
-                          path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
+        if interface_key in data[0].result:
+            task.host[interface_key] = data[0].result[interface_key]
 
-        task.host[&#34;ipv4_interfaces&#34;] = result.result
+            result = task.run(task=template_file,
+                              name=&#34;IPv4 Interfaces Configuration&#34;,
+                              template=&#34;interfaces_ipv4.j2&#34;,
+                              path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
-        task.run(task=napalm_configure,
-                 name=&#34;Loading IPv4 interfaces Configuration on the device&#34;,
-                 replace=False,
-                 configuration=task.host[&#34;ipv4_interfaces&#34;],
-                 dry_run=dry_run)
+            task.host[&#34;ipv4_interfaces&#34;] = result.result
+
+            task.run(task=napalm_configure,
+                     name=&#34;Loading IPv4 interfaces Configuration on the device&#34;,
+                     replace=False,
+                     configuration=task.host[&#34;ipv4_interfaces&#34;],
+                     dry_run=dry_run)
+        else:
+            print(f&#34;{Fore.RED}Device {task.host.name}: No {interface_key} key was found in host data.&#34;)
 
     def configure_ipv6_interfaces(self, task: Task, dry_run: bool = False) -&gt; None:
         &#34;&#34;&#34;
@@ -86,20 +91,25 @@ class InterfacesConfiguration:
         &#34;&#34;&#34;
         data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
                         severity_level=logging.DEBUG)
-        task.host[&#34;interfaces_ipv6&#34;] = data[0].result[&#34;interfaces_ipv6&#34;]
+        interface_key = &#34;interfaces_ipv6&#34;
+        if interface_key in data[0].result:
+            task.host[interface_key] = data[0].result[interface_key]
 
-        r = task.run(task=template_file,
-                     name=&#34;IPv6 Intefaces Configuration&#34;,
-                     template=&#34;interfaces_ipv6.j2&#34;,
-                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
+            r = task.run(task=template_file,
+                         name=&#34;IPv6 Interfaces Configuration&#34;,
+                         template=&#34;interfaces_ipv6.j2&#34;,
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
-        task.host[&#34;ipv6_interfaces&#34;] = r.result
+            task.host[&#34;ipv6_interfaces&#34;] = r.result
 
-        task.run(task=napalm_configure,
-                 name=&#34;Loading IPv6 interfaces Configuration on the device&#34;,
-                 replace=False,
-                 configuration=task.host[&#34;ipv6_interfaces&#34;],
-                 dry_run=dry_run)
+            task.run(task=napalm_configure,
+                     name=&#34;Loading IPv6 interfaces Configuration on the device&#34;,
+                     replace=False,
+                     configuration=task.host[&#34;ipv6_interfaces&#34;],
+                     dry_run=dry_run)
+        else:
+            print(f&#34;{Fore.RED}Device {task.host.name}: No {interface_key} key was found in host data.&#34;)
+
 
     def configure_switching_interfaces(self, task: Task, dry_run: bool = False) -&gt; None:
         &#34;&#34;&#34;
@@ -121,21 +131,27 @@ class InterfacesConfiguration:
 
             data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
                             severity_level=logging.DEBUG)
-            task.host[&#34;switching_interfaces&#34;] = data[0].result[&#34;switching_interfaces&#34;]
-            task.host[&#34;vlans_config&#34;] = data[0].result[&#34;vlans_config&#34;]
+            switching_interface_key = &#34;switching_interfaces&#34;
+            vlans_key = &#34;vlans_config&#34;
 
-            interfaces_result = task.run(task=template_file,
-                                         name=&#34;Switching Intefaces Configuration&#34;,
-                                         template=&#34;switching_interfaces.j2&#34;,
-                                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
+            if switching_interface_key in data[0].result and vlans_key in data[0].result:
+                task.host[switching_interface_key] = data[0].result[switching_interface_key]
+                task.host[vlans_key] = data[0].result[vlans_key]
 
-            task.host[&#34;switching_interfaces_config&#34;] = interfaces_result.result
+                interfaces_result = task.run(task=template_file,
+                                             name=&#34;Switching Interfaces Configuration&#34;,
+                                             template=&#34;switching_interfaces.j2&#34;,
+                                             path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
-            task.run(task=napalm_configure,
-                     name=&#34;Loading Switching Interfaces Configuration on the device&#34;,
-                     replace=False,
-                     configuration=task.host[&#34;switching_interfaces_config&#34;],
-                     dry_run=dry_run)
+                task.host[&#34;switching_interfaces_config&#34;] = interfaces_result.result
+
+                task.run(task=napalm_configure,
+                         name=&#34;Loading Switching Interfaces Configuration on the device&#34;,
+                         replace=False,
+                         configuration=task.host[&#34;switching_interfaces_config&#34;],
+                         dry_run=dry_run)
+            else:
+                print(f&#34;{Fore.RED}Device {task.host.name}: No {switching_interface_key} or {vlans_key} key was found in host data.&#34;)
         else:
             print(f&#34;{Fore.RED} Device {task.host.name}: invalid device type.&#34;)
             raise NornirSubTaskError(&#34;Invalid device type. Only switches are supported.&#34;, task)</code></pre>
@@ -181,20 +197,25 @@ konfigurace switchovaných a routovaných portů).</p></div>
 
         data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
                         severity_level=logging.DEBUG)
-        task.host[&#34;interfaces_ipv4&#34;] = data[0].result[&#34;interfaces_ipv4&#34;]
+        interface_key = &#34;interfaces_ipv4&#34;
 
-        result = task.run(task=template_file,
-                          name=&#34;IPv4 Intefaces Configuration&#34;,
-                          template=&#34;interfaces_ipv4.j2&#34;,
-                          path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
+        if interface_key in data[0].result:
+            task.host[interface_key] = data[0].result[interface_key]
 
-        task.host[&#34;ipv4_interfaces&#34;] = result.result
+            result = task.run(task=template_file,
+                              name=&#34;IPv4 Interfaces Configuration&#34;,
+                              template=&#34;interfaces_ipv4.j2&#34;,
+                              path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
-        task.run(task=napalm_configure,
-                 name=&#34;Loading IPv4 interfaces Configuration on the device&#34;,
-                 replace=False,
-                 configuration=task.host[&#34;ipv4_interfaces&#34;],
-                 dry_run=dry_run)
+            task.host[&#34;ipv4_interfaces&#34;] = result.result
+
+            task.run(task=napalm_configure,
+                     name=&#34;Loading IPv4 interfaces Configuration on the device&#34;,
+                     replace=False,
+                     configuration=task.host[&#34;ipv4_interfaces&#34;],
+                     dry_run=dry_run)
+        else:
+            print(f&#34;{Fore.RED}Device {task.host.name}: No {interface_key} key was found in host data.&#34;)
 
     def configure_ipv6_interfaces(self, task: Task, dry_run: bool = False) -&gt; None:
         &#34;&#34;&#34;
@@ -210,20 +231,25 @@ konfigurace switchovaných a routovaných portů).</p></div>
         &#34;&#34;&#34;
         data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
                         severity_level=logging.DEBUG)
-        task.host[&#34;interfaces_ipv6&#34;] = data[0].result[&#34;interfaces_ipv6&#34;]
+        interface_key = &#34;interfaces_ipv6&#34;
+        if interface_key in data[0].result:
+            task.host[interface_key] = data[0].result[interface_key]
 
-        r = task.run(task=template_file,
-                     name=&#34;IPv6 Intefaces Configuration&#34;,
-                     template=&#34;interfaces_ipv6.j2&#34;,
-                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
+            r = task.run(task=template_file,
+                         name=&#34;IPv6 Interfaces Configuration&#34;,
+                         template=&#34;interfaces_ipv6.j2&#34;,
+                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
-        task.host[&#34;ipv6_interfaces&#34;] = r.result
+            task.host[&#34;ipv6_interfaces&#34;] = r.result
 
-        task.run(task=napalm_configure,
-                 name=&#34;Loading IPv6 interfaces Configuration on the device&#34;,
-                 replace=False,
-                 configuration=task.host[&#34;ipv6_interfaces&#34;],
-                 dry_run=dry_run)
+            task.run(task=napalm_configure,
+                     name=&#34;Loading IPv6 interfaces Configuration on the device&#34;,
+                     replace=False,
+                     configuration=task.host[&#34;ipv6_interfaces&#34;],
+                     dry_run=dry_run)
+        else:
+            print(f&#34;{Fore.RED}Device {task.host.name}: No {interface_key} key was found in host data.&#34;)
+
 
     def configure_switching_interfaces(self, task: Task, dry_run: bool = False) -&gt; None:
         &#34;&#34;&#34;
@@ -245,21 +271,27 @@ konfigurace switchovaných a routovaných portů).</p></div>
 
             data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
                             severity_level=logging.DEBUG)
-            task.host[&#34;switching_interfaces&#34;] = data[0].result[&#34;switching_interfaces&#34;]
-            task.host[&#34;vlans_config&#34;] = data[0].result[&#34;vlans_config&#34;]
+            switching_interface_key = &#34;switching_interfaces&#34;
+            vlans_key = &#34;vlans_config&#34;
 
-            interfaces_result = task.run(task=template_file,
-                                         name=&#34;Switching Intefaces Configuration&#34;,
-                                         template=&#34;switching_interfaces.j2&#34;,
-                                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
+            if switching_interface_key in data[0].result and vlans_key in data[0].result:
+                task.host[switching_interface_key] = data[0].result[switching_interface_key]
+                task.host[vlans_key] = data[0].result[vlans_key]
 
-            task.host[&#34;switching_interfaces_config&#34;] = interfaces_result.result
+                interfaces_result = task.run(task=template_file,
+                                             name=&#34;Switching Interfaces Configuration&#34;,
+                                             template=&#34;switching_interfaces.j2&#34;,
+                                             path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
-            task.run(task=napalm_configure,
-                     name=&#34;Loading Switching Interfaces Configuration on the device&#34;,
-                     replace=False,
-                     configuration=task.host[&#34;switching_interfaces_config&#34;],
-                     dry_run=dry_run)
+                task.host[&#34;switching_interfaces_config&#34;] = interfaces_result.result
+
+                task.run(task=napalm_configure,
+                         name=&#34;Loading Switching Interfaces Configuration on the device&#34;,
+                         replace=False,
+                         configuration=task.host[&#34;switching_interfaces_config&#34;],
+                         dry_run=dry_run)
+            else:
+                print(f&#34;{Fore.RED}Device {task.host.name}: No {switching_interface_key} or {vlans_key} key was found in host data.&#34;)
         else:
             print(f&#34;{Fore.RED} Device {task.host.name}: invalid device type.&#34;)
             raise NornirSubTaskError(&#34;Invalid device type. Only switches are supported.&#34;, task)</code></pre>
@@ -300,20 +332,25 @@ konfigurace switchovaných a routovaných portů).</p></div>
 
     data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
                     severity_level=logging.DEBUG)
-    task.host[&#34;interfaces_ipv4&#34;] = data[0].result[&#34;interfaces_ipv4&#34;]
+    interface_key = &#34;interfaces_ipv4&#34;
 
-    result = task.run(task=template_file,
-                      name=&#34;IPv4 Intefaces Configuration&#34;,
-                      template=&#34;interfaces_ipv4.j2&#34;,
-                      path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
+    if interface_key in data[0].result:
+        task.host[interface_key] = data[0].result[interface_key]
 
-    task.host[&#34;ipv4_interfaces&#34;] = result.result
+        result = task.run(task=template_file,
+                          name=&#34;IPv4 Interfaces Configuration&#34;,
+                          template=&#34;interfaces_ipv4.j2&#34;,
+                          path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
-    task.run(task=napalm_configure,
-             name=&#34;Loading IPv4 interfaces Configuration on the device&#34;,
-             replace=False,
-             configuration=task.host[&#34;ipv4_interfaces&#34;],
-             dry_run=dry_run)</code></pre>
+        task.host[&#34;ipv4_interfaces&#34;] = result.result
+
+        task.run(task=napalm_configure,
+                 name=&#34;Loading IPv4 interfaces Configuration on the device&#34;,
+                 replace=False,
+                 configuration=task.host[&#34;ipv4_interfaces&#34;],
+                 dry_run=dry_run)
+    else:
+        print(f&#34;{Fore.RED}Device {task.host.name}: No {interface_key} key was found in host data.&#34;)</code></pre>
 </details>
 </dd>
 <dt id="scripts.tasks.interfaces_configuration.InterfacesConfiguration.configure_ipv6_interfaces"><code class="name flex">
@@ -349,20 +386,24 @@ konfigurace switchovaných a routovaných portů).</p></div>
     &#34;&#34;&#34;
     data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
                     severity_level=logging.DEBUG)
-    task.host[&#34;interfaces_ipv6&#34;] = data[0].result[&#34;interfaces_ipv6&#34;]
+    interface_key = &#34;interfaces_ipv6&#34;
+    if interface_key in data[0].result:
+        task.host[interface_key] = data[0].result[interface_key]
 
-    r = task.run(task=template_file,
-                 name=&#34;IPv6 Intefaces Configuration&#34;,
-                 template=&#34;interfaces_ipv6.j2&#34;,
-                 path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
+        r = task.run(task=template_file,
+                     name=&#34;IPv6 Interfaces Configuration&#34;,
+                     template=&#34;interfaces_ipv6.j2&#34;,
+                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
-    task.host[&#34;ipv6_interfaces&#34;] = r.result
+        task.host[&#34;ipv6_interfaces&#34;] = r.result
 
-    task.run(task=napalm_configure,
-             name=&#34;Loading IPv6 interfaces Configuration on the device&#34;,
-             replace=False,
-             configuration=task.host[&#34;ipv6_interfaces&#34;],
-             dry_run=dry_run)</code></pre>
+        task.run(task=napalm_configure,
+                 name=&#34;Loading IPv6 interfaces Configuration on the device&#34;,
+                 replace=False,
+                 configuration=task.host[&#34;ipv6_interfaces&#34;],
+                 dry_run=dry_run)
+    else:
+        print(f&#34;{Fore.RED}Device {task.host.name}: No {interface_key} key was found in host data.&#34;)</code></pre>
 </details>
 </dd>
 <dt id="scripts.tasks.interfaces_configuration.InterfacesConfiguration.configure_switching_interfaces"><code class="name flex">
@@ -410,21 +451,27 @@ konfiguraci na nepodporovaných zařízeních.</dd>
 
         data = task.run(task=load_yaml, file=f&#39;inventory/host_vars/{task.host.name}.yml&#39;, name=&#34;Load host data&#34;,
                         severity_level=logging.DEBUG)
-        task.host[&#34;switching_interfaces&#34;] = data[0].result[&#34;switching_interfaces&#34;]
-        task.host[&#34;vlans_config&#34;] = data[0].result[&#34;vlans_config&#34;]
+        switching_interface_key = &#34;switching_interfaces&#34;
+        vlans_key = &#34;vlans_config&#34;
 
-        interfaces_result = task.run(task=template_file,
-                                     name=&#34;Switching Intefaces Configuration&#34;,
-                                     template=&#34;switching_interfaces.j2&#34;,
-                                     path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
+        if switching_interface_key in data[0].result and vlans_key in data[0].result:
+            task.host[switching_interface_key] = data[0].result[switching_interface_key]
+            task.host[vlans_key] = data[0].result[vlans_key]
 
-        task.host[&#34;switching_interfaces_config&#34;] = interfaces_result.result
+            interfaces_result = task.run(task=template_file,
+                                         name=&#34;Switching Interfaces Configuration&#34;,
+                                         template=&#34;switching_interfaces.j2&#34;,
+                                         path=f&#34;templates/{task.host[&#39;vendor&#39;]}/{task.host[&#39;dev_type&#39;]}&#34;)
 
-        task.run(task=napalm_configure,
-                 name=&#34;Loading Switching Interfaces Configuration on the device&#34;,
-                 replace=False,
-                 configuration=task.host[&#34;switching_interfaces_config&#34;],
-                 dry_run=dry_run)
+            task.host[&#34;switching_interfaces_config&#34;] = interfaces_result.result
+
+            task.run(task=napalm_configure,
+                     name=&#34;Loading Switching Interfaces Configuration on the device&#34;,
+                     replace=False,
+                     configuration=task.host[&#34;switching_interfaces_config&#34;],
+                     dry_run=dry_run)
+        else:
+            print(f&#34;{Fore.RED}Device {task.host.name}: No {switching_interface_key} or {vlans_key} key was found in host data.&#34;)
     else:
         print(f&#34;{Fore.RED} Device {task.host.name}: invalid device type.&#34;)
         raise NornirSubTaskError(&#34;Invalid device type. Only switches are supported.&#34;, task)</code></pre>
