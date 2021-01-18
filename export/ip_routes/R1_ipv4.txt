@@ -12,3 +12,11 @@ Gateway of last resort is not set
       10.0.0.0/8 is variably subnetted, 2 subnets, 2 masks
 C        10.10.10.0/24 is directly connected, Ethernet1/0
 L        10.10.10.2/32 is directly connected, Ethernet1/0
+      192.168.10.0/32 is subnetted, 1 subnets
+C        192.168.10.1 is directly connected, Loopback0
+      192.168.20.0/24 is variably subnetted, 2 subnets, 2 masks
+C        192.168.20.0/24 is directly connected, FastEthernet0/0
+L        192.168.20.1/32 is directly connected, FastEthernet0/0
+      192.168.50.0/24 is variably subnetted, 2 subnets, 2 masks
+C        192.168.50.0/30 is directly connected, FastEthernet0/1
+L        192.168.50.1/32 is directly connected, FastEthernet0/1

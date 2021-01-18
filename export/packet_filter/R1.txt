@@ -1,5 +1,3 @@
-Standard IP access list 1
-    10 permit 192.168.0.0, wildcard bits 0.0.0.255
 Standard IP access list Student-ACL
     10 deny   192.168.1.53
     20 permit 172.30.0.0, wildcard bits 0.0.255.255
@@ -7,10 +5,4 @@ Extended IP access list ADMIN-ACL
     10 deny ip 192.168.10.0 0.0.0.255 192.168.20.0 0.0.0.255
     20 deny ip 192.168.30.0 0.0.0.255 192.168.20.0 0.0.0.255
     30 deny ip 192.168.50.0 0.0.0.255 192.168.20.0 0.0.0.255
-    40 permit ip any any (1562 matches)
-IPv6 access list ACLName
-    deny tcp host 2001:DB8:E0BB::2 any  eq telnet sequence 10
-    permit ipv6 any any (7 matches) sequence 20
-IPv6 access list ExampleACL
-    permit icmp 2001:DB8:E0BB::/64 2001:DB8::/64 sequence 10
-    deny udp any any sequence 20
+    40 permit ip any any

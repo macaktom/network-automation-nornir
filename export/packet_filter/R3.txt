@@ -46,17 +46,4 @@ family inet6 {
             then discard;
         }
     }
-    filter Student-Test {
-        term T2 {
-            from {
-                source-address {
-                    2001:db4::0/64;
-                }
-                destination-address {
-                    2001:db5::0/64;
-                }
-            }
-            then discard;
-        }
-    }
 }

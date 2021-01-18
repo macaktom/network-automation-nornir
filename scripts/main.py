@@ -109,7 +109,7 @@ def main() -> None:
     linux_config = LinuxConfiguration()
 
     #all_devices.run(task=viewer.show_interfaces_packet_counters, json_out=False)
-    #all_devices.run(task=viewer.show_device_facts)
+    #all_devices.run(task=viewer.show_device_facts, json_out=True)
     #all_devices.run(task=viewer.show_ipv6_routes)
     #all_devices.run(task=viewer.show_ospf_neighbors, ipv6=False)
     #configure_network_devices(all_devices, interfaces_configuration.configure_ipv4_interfaces, "IPv4 interfaces config", dry_run=False)
@@ -135,7 +135,7 @@ def main() -> None:
 
     #configure_linux_servers(ubuntu_servers, linux_config.send_commands, task_name="Running commands", enable=True)
     #configure_linux_servers(ubuntu_servers, linux_config.configure_vsftpd, "VSFTPD Configuration", enable=True)
-    # TODO dokumentace (Linux, credentials handler, main), komentare a dokumentace k yamlum
+    # TODO komentare a dokumentace k yamlum
 
 
 if __name__ == "__main__":

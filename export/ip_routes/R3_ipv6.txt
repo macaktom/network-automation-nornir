@@ -1,0 +1,31 @@
+inet6.0: 9 destinations, 11 routes (9 active, 0 holddown, 0 hidden)
++ = Active Route, - = Last Active, * = Both
+
+2001:bb9:aabb:1234::/64
+                   *[Direct/0] 06:16:36
+                    > via em1.0
+                    [Direct/0] 06:16:35
+                    > via em2.0
+2001:bb9:aabb:1234:1111:4444:3333:2222/128
+                   *[Local/0] 06:16:36
+                      Local via em1.0
+2001:bb9:aabb:1234:3333:2222:4444:5555/128
+                   *[Local/0] 06:16:35
+                      Local via em2.0
+2020::1/128        *[Direct/0] 06:16:35
+                    > via lo0.0
+fe80::/64          *[Direct/0] 06:16:36
+                    > via em1.0
+                    [Direct/0] 06:16:35
+                    > via em2.0
+fe80::e2b:950f:fce0:9600/128
+                   *[Direct/0] 06:16:35
+                    > via lo0.0
+fe80::e2b:95ff:fee0:9601/128
+                   *[Local/0] 06:16:36
+                      Local via em1.0
+fe80::e2b:95ff:fee0:9602/128
+                   *[Local/0] 06:16:35
+                      Local via em2.0
+ff02::5/128        *[OSPF3/10] 06:16:40, metric 1
+                      MultiRecv

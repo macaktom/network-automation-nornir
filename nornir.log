@@ -2329,3 +2329,22 @@ AttributeError: 'Host' object has no attribute 'vendor'
 2021-01-16 20:58:45,039 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 2 hosts
 2021-01-16 20:59:33,915 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 2 hosts
 2021-01-16 20:59:48,609 -  nornir.core -     INFO -        run() - Running task 'OSPFv3 config' with args {'dry_run': False} on 2 hosts
+2021-01-18 18:23:40,258 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {} on 3 hosts
+2021-01-18 18:27:17,959 -  nornir.core -     INFO -        run() - Running task 'show_interfaces_packet_counters' with args {'json_out': False} on 3 hosts
+2021-01-18 18:27:20,609 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {'json_out': True} on 3 hosts
+2021-01-18 18:27:23,111 -  nornir.core -     INFO -        run() - Running task 'show_ipv6_routes' with args {} on 3 hosts
+2021-01-18 18:27:28,918 -  nornir.core -     INFO -        run() - Running task 'show_ospf_neighbors' with args {'ipv6': False} on 3 hosts
+2021-01-18 18:27:29,726 -  nornir.core -     INFO -        run() - Running task 'export_device_configuration' with args {} on 3 hosts
+2021-01-18 18:27:30,695 -  nornir.core -     INFO -        run() - Running task 'export_packet_filter_info' with args {} on 3 hosts
+2021-01-18 18:27:31,504 -  nornir.core -     INFO -        run() - Running task 'export_ipv4_routes' with args {} on 3 hosts
+2021-01-18 18:27:32,311 -  nornir.core -     INFO -        run() - Running task 'export_ipv6_routes' with args {} on 3 hosts
+2021-01-18 18:27:33,123 -  nornir.core -     INFO -        run() - Running task 'get_conn_state_and_device_facts' with args {} on 3 hosts
+2021-01-18 18:27:33,610 -  nornir.core -     INFO -        run() - Running task 'Get interfaces packet counters' with args {'getters': ['interfaces_counters']} on 3 hosts
+2021-01-18 18:27:33,996 -  nornir.core -     INFO -        run() - Running task 'Running commands' with args {'enable': True} on 1 hosts
+2021-01-18 18:29:19,147 -  nornir.core -     INFO -        run() - Running task 'show_interfaces_packet_counters' with args {'json_out': False} on 3 hosts
+2021-01-18 18:29:22,657 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {'json_out': True} on 3 hosts
+2021-01-18 18:30:14,378 -  nornir.core -     INFO -        run() - Running task 'show_interfaces_packet_counters' with args {'json_out': False} on 3 hosts
+2021-01-18 18:30:17,030 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {'json_out': True} on 3 hosts
+2021-01-18 18:30:45,002 -  nornir.core -     INFO -        run() - Running task 'show_interfaces_packet_counters' with args {'json_out': False} on 3 hosts
+2021-01-18 18:30:48,529 -  nornir.core -     INFO -        run() - Running task 'show_device_facts' with args {'json_out': True} on 3 hosts
+2021-01-18 18:31:22,512 -  nornir.core -     INFO -        run() - Running task 'Backup running configuration' with args {} on 3 hosts
