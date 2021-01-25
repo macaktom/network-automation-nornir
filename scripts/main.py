@@ -1,9 +1,13 @@
 import datetime
+import time
+
+from colorama import Fore
 from nornir import InitNornir
 from nornir.core import Nornir
+from nornir.core.exceptions import NornirSubTaskError, NornirExecutionError
 from nornir.core.filter import F
 from nornir_netmiko import netmiko_send_command
-from nornir_utils.plugins.functions import print_result
+from nornir_utils.plugins.functions import print_result, print_title
 from scripts.tasks.delete_configuration import DeleteConfiguration
 from scripts.tasks.eigrp_configuration import EIGRPConfiguration
 from scripts.tasks.interfaces_configuration import InterfacesConfiguration
@@ -26,7 +30,10 @@ def setup_inventory() -> Nornir:
         Nornir - nornir objekt, který obsahuje zparsované informace o hostech, skupinách. Dále zajišťuje multithreading funkcionalitu.
     """
     creds_handler = CredentialHandler()
-    nr = InitNornir(config_file="config.yml")  # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný (sub)task - více o chybě v nornir.log
+    nr = InitNornir(config_file="config.yml")  # Nornir objekt, který přeskočí zařízení, které nezvládly požadovaný (sub)task. více o chybě v nornir.log
+
+    # Nornir objekt, který zastavení všechny následující tasky, v případě, že došlo k chybě u tasku předchozího.
+    # nr = InitNornir(config_file="config.yml", core={"raise_on_error": True})  # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný (sub)task - více o chybě v nornir.log
     creds_handler.insert_creds(nr)
     return nr
 
@@ -108,8 +115,10 @@ def main() -> None:
     delete_config = DeleteConfiguration()
     linux_config = LinuxConfiguration()
 
+    #all_devices.run(task=db_writer.write_to_db)
+
     #all_devices.run(task=viewer.show_interfaces_packet_counters, json_out=False)
-    #all_devices.run(task=viewer.show_device_facts, json_out=True)
+    all_devices.run(task=viewer.show_device_facts)
     #all_devices.run(task=viewer.show_ipv6_routes)
     #all_devices.run(task=viewer.show_ospf_neighbors, ipv6=False)
     #configure_network_devices(all_devices, interfaces_configuration.configure_ipv4_interfaces, "IPv4 interfaces config", dry_run=False)
@@ -139,6 +148,14 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    start = datetime.datetime.now()
-    main()
-    print("Time elapsed: " + str((datetime.datetime.now() - start)))
+    try:
+        main()
+    except (NornirSubTaskError, NornirExecutionError) as err:
+        print_title("Failed hosts - more in nornir.log:")
+        for host in err.failed_hosts:
+            host_tasks_name = []
+            print(f"{Fore.RED}{host}: Nornir (sub)tasks failed: ", sep="")
+            for task in err.failed_hosts[host]:
+                if task.name not in host_tasks_name:
+                    host_tasks_name.append(task.name)
+                    print(f"{task.name}", sep=", ")

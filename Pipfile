@@ -31,6 +31,7 @@ openpyxl = "*"
 pdoc3 = "*"
 jinja2 = "*"
 ansible = "*"
+influxdb = "*"
 
 [requires]
 python_version = "3.8"
