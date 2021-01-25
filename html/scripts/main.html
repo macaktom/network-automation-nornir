@@ -27,11 +27,15 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">import datetime
+import time
+
+from colorama import Fore
 from nornir import InitNornir
 from nornir.core import Nornir
+from nornir.core.exceptions import NornirSubTaskError, NornirExecutionError
 from nornir.core.filter import F
 from nornir_netmiko import netmiko_send_command
-from nornir_utils.plugins.functions import print_result
+from nornir_utils.plugins.functions import print_result, print_title
 from scripts.tasks.delete_configuration import DeleteConfiguration
 from scripts.tasks.eigrp_configuration import EIGRPConfiguration
 from scripts.tasks.interfaces_configuration import InterfacesConfiguration
@@ -54,7 +58,10 @@ def setup_inventory() -&gt; Nornir:
         Nornir - nornir objekt, který obsahuje zparsované informace o hostech, skupinách. Dále zajišťuje multithreading funkcionalitu.
     &#34;&#34;&#34;
     creds_handler = CredentialHandler()
-    nr = InitNornir(config_file=&#34;config.yml&#34;)  # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný (sub)task - více o chybě v nornir.log
+    nr = InitNornir(config_file=&#34;config.yml&#34;)  # Nornir objekt, který přeskočí zařízení, které nezvládly požadovaný (sub)task. více o chybě v nornir.log
+
+    # Nornir objekt, který zastavení všechny následující tasky, v případě, že došlo k chybě u tasku předchozího.
+    # nr = InitNornir(config_file=&#34;config.yml&#34;, core={&#34;raise_on_error&#34;: True})  # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný (sub)task - více o chybě v nornir.log
     creds_handler.insert_creds(nr)
     return nr
 
@@ -136,8 +143,10 @@ def main() -&gt; None:
     delete_config = DeleteConfiguration()
     linux_config = LinuxConfiguration()
 
+    #all_devices.run(task=db_writer.write_to_db)
+
     #all_devices.run(task=viewer.show_interfaces_packet_counters, json_out=False)
-    #all_devices.run(task=viewer.show_device_facts)
+    all_devices.run(task=viewer.show_device_facts)
     #all_devices.run(task=viewer.show_ipv6_routes)
     #all_devices.run(task=viewer.show_ospf_neighbors, ipv6=False)
     #configure_network_devices(all_devices, interfaces_configuration.configure_ipv4_interfaces, &#34;IPv4 interfaces config&#34;, dry_run=False)
@@ -163,13 +172,21 @@ def main() -&gt; None:
 
     #configure_linux_servers(ubuntu_servers, linux_config.send_commands, task_name=&#34;Running commands&#34;, enable=True)
     #configure_linux_servers(ubuntu_servers, linux_config.configure_vsftpd, &#34;VSFTPD Configuration&#34;, enable=True)
-    # TODO dokumentace (Linux, credentials handler, main), komentare a dokumentace k yamlum
+    # TODO komentare a dokumentace k yamlum
 
 
 if __name__ == &#34;__main__&#34;:
-    start = datetime.datetime.now()
-    main()
-    print(&#34;Time elapsed: &#34; + str((datetime.datetime.now() - start)))</code></pre>
+    try:
+        main()
+    except (NornirSubTaskError, NornirExecutionError) as err:
+        print_title(&#34;Failed hosts - more in nornir.log:&#34;)
+        for host in err.failed_hosts:
+            host_tasks_name = []
+            print(f&#34;{Fore.RED}{host}: Nornir (sub)tasks failed: &#34;, sep=&#34;&#34;)
+            for task in err.failed_hosts[host]:
+                if task.name not in host_tasks_name:
+                    host_tasks_name.append(task.name)
+                    print(f&#34;{task.name}&#34;, sep=&#34;, &#34;)</code></pre>
 </details>
 </section>
 <section>
@@ -293,7 +310,12 @@ if __name__ == &#34;__main__&#34;:
     packet_filter = PacketFilterConfiguration()
     nat_config = NATConfiguration()
     delete_config = DeleteConfiguration()
-    linux_config = LinuxConfiguration()</code></pre>
+    linux_config = LinuxConfiguration()
+
+    #all_devices.run(task=db_writer.write_to_db)
+
+    #all_devices.run(task=viewer.show_interfaces_packet_counters, json_out=False)
+    all_devices.run(task=viewer.show_device_facts)</code></pre>
 </details>
 </dd>
 <dt id="scripts.main.send_command"><code class="name flex">
@@ -354,7 +376,10 @@ if __name__ == &#34;__main__&#34;:
         Nornir - nornir objekt, který obsahuje zparsované informace o hostech, skupinách. Dále zajišťuje multithreading funkcionalitu.
     &#34;&#34;&#34;
     creds_handler = CredentialHandler()
-    nr = InitNornir(config_file=&#34;config.yml&#34;)  # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný (sub)task - více o chybě v nornir.log
+    nr = InitNornir(config_file=&#34;config.yml&#34;)  # Nornir objekt, který přeskočí zařízení, které nezvládly požadovaný (sub)task. více o chybě v nornir.log
+
+    # Nornir objekt, který zastavení všechny následující tasky, v případě, že došlo k chybě u tasku předchozího.
+    # nr = InitNornir(config_file=&#34;config.yml&#34;, core={&#34;raise_on_error&#34;: True})  # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný (sub)task - více o chybě v nornir.log
     creds_handler.insert_creds(nr)
     return nr</code></pre>
 </details>
