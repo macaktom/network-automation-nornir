@@ -1,20 +1,9 @@
 ---
 interfaces_ipv4:
-  Loopback0:
-      description: description of virtual interface
-      net: 192.168.10.1
-      mask: 255.255.255.255
   FastEthernet0/0:
-      description: connected to switch_mgmt Ethernet10
-      net: 192.168.20.1
+      description: popis
+      net: 192.168.70.1
       mask: 255.255.255.0
-      routed_physical_port: true
-      duplex: full
-      speed: auto
-  FastEthernet0/1:
-      description: connected to router1 FastEthernet0/1
-      net: 192.168.50.1
-      mask: 255.255.255.252
       routed_physical_port: true
       duplex: full
       speed: auto

@@ -115,13 +115,13 @@ def main() -> None:
     delete_config = DeleteConfiguration()
     linux_config = LinuxConfiguration()
 
-    #all_devices.run(task=db_writer.write_to_db)
+
 
     #all_devices.run(task=viewer.show_interfaces_packet_counters, json_out=False)
-    all_devices.run(task=viewer.show_device_facts)
+    #all_devices.run(task=viewer.show_hardware_details)
     #all_devices.run(task=viewer.show_ipv6_routes)
     #all_devices.run(task=viewer.show_ospf_neighbors, ipv6=False)
-    #configure_network_devices(all_devices, interfaces_configuration.configure_ipv4_interfaces, "IPv4 interfaces config", dry_run=False)
+    #configure_network_devices(all_devices, interfaces_configuration.configure_ipv4_interfaces, "IPv4 interfaces config", dry_run=True)
     #configure_network_devices(all_devices, interfaces_configuration.configure_ipv6_interfaces, "IPv6 interfaces config", dry_run=False)
     #configure_network_devices(l3_switches, interfaces_configuration.configure_switching_interfaces, "Switching interfaces config", dry_run=False)
     #configure_network_devices(all_devices, static_routing_config.configure_static_routing_ipv4, "Static routing config",dry_run=False)

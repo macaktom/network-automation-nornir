@@ -154,7 +154,7 @@ class DBHandler:
                         self._write_to_db(host, measurement, data_fetch_time_utc, fields, db_conn)
                 else:
                     print(f"{Fore.RED}[{data_fetch_time_utc}] {host}: Failure during data collection (using NAPALM getters). Device is not probably supported by used NAPALM getter.")
-            sleep(20)
+            sleep(10)
 
     def drop_db_measurements(self, db_conn: InfluxDBClient, measurements: List[str]) -> None:
         """
@@ -176,15 +176,20 @@ if __name__ == '__main__':
                                      database='monitoring_nornir')
     db_ansible_conn = InfluxDBClient(host='10.10.10.10', port=8086, username='monitoring', password='monitoring',
                                       database='monitoring_ansible')
+    db_telegraf_conn = InfluxDBClient(host='10.10.10.10', port=8086, username='monitoring', password='monitoring',
+                                     database='monitoring_telegraf')
     db_writer = DBHandler()
     # Zakomentujte následující řádek, pokud chcete pouze zobrazit stav databází pro Nornir a Ansible projekty.
     db_writer.write_monitored_data(db_nornir_conn)
 
     #db_writer.drop_db_measurements(db_nornir_conn, ['hw_details', 'device_facts'])
     #db_writer.drop_db_measurements(db_ansible_conn, ['hw_details', 'device_facts'])
+    #db_writer.drop_db_measurements(db_telegraf_conn, ['cpu', 'mem', 'system'])
 
     print_title("Ansible DB info")
     db_writer.show_db_state(db_ansible_conn)
     print_title("Nornir DB info ")
     db_writer.show_db_state(db_nornir_conn)
+    print_title("Telegraf DB info ")
+    db_writer.show_db_state(db_telegraf_conn)
 
