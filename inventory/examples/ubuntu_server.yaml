@@ -1,6 +1,8 @@
 ---
+# YAML soubor, který slouží POUZE jako přehled VŠECH definovatelných možností nastavení inventáře pro ubuntu servery (Ubuntu verze 18.04). Nejedná se o reálný příklad.
+# Je zde definována struktura a formát dat pro jednotlivé konfigurace zařízení.
 commands: ["pwd", "ls"]
-vsftpd_config:
+vsftpd_config: # nepovinné fieldy: ssl, testing
   # (S)FTP konfigurace - vsftpd, nutné mít vytvořeného FTP usera (v mém případě ftpuser) a v případě SSL vygenerovaný certifikát
   # V případě SSL je nutné mít předem vygenerovaný certifikát (např. self-signed). Předem jsem vytvořil složku /etc/certs.
   # Self-signed certifikat: sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/certs/vsftpd.pem -out /etc/certs/vsftpd.pem
@@ -26,5 +28,5 @@ vsftpd_config:
     host: 10.10.10.10
     user: ftpuser
     password: ftpuser # plain-text heslo pro zjednodušení testování (parsování citlivých dat šifrovaných v Ansible Vault bylo provedeno pouze pro groups.yml).
-    base_directory: test
-    test_folder: python_testing
+    base_directory: test # hlavní FTP složka
+    test_folder: python_testing # podsložka base_directory (pro testing)

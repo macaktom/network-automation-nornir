@@ -6,6 +6,6 @@ inventory:
         group_file: "./inventory/group.yml"
 
 runners:
-    plugin: threaded
+    plugin: threaded # povolení paralelismu (registrace threaded pluginu)
     options:
-        num_workers: 20
+        num_workers: 20 #20 použitých vláken pro daný Task

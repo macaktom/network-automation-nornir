@@ -125,12 +125,12 @@ def main() -&gt; None:
         None
     &#34;&#34;&#34;
     nornir_obj = setup_inventory()
-    routers = nornir_obj.filter(F(dev_type=&#34;router&#34;))
+    routers = nornir_obj.filter(F(dev_type=&#34;router&#34;)) # vyfiltrování routerů (dev_type=&#34;router&#34;)
     juniper_devices = nornir_obj.filter(F(groups__contains=&#34;juniper&#34;))
     l3_switches = nornir_obj.filter(F(dev_type=&#34;L3_switch&#34;))
     cisco_routers = nornir_obj.filter(F(groups__contains=&#34;cisco&#34;) &amp; F(dev_type=&#34;router&#34;))
     l3_cisco = nornir_obj.filter(F(groups__contains=&#34;cisco&#34;) &amp; F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;))
-    all_devices = nornir_obj.filter(F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;))
+    l3_devices = nornir_obj.filter(F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;))
     ubuntu_servers = nornir_obj.filter(F(dev_type=&#34;ubuntu_server&#34;) | F(groups__contains=&#34;linux&#34;))
     viewer = NetworkUtilityViewer()
     exporter = NetworkInfoExporter(NetworkInfoCollector())
@@ -142,33 +142,31 @@ def main() -&gt; None:
     nat_config = NATConfiguration()
     delete_config = DeleteConfiguration()
     linux_config = LinuxConfiguration()
-
-    #all_devices.run(task=db_writer.write_to_db)
-
-    #all_devices.run(task=viewer.show_interfaces_packet_counters, json_out=False)
-    all_devices.run(task=viewer.show_device_facts)
-    #all_devices.run(task=viewer.show_ipv6_routes)
-    #all_devices.run(task=viewer.show_ospf_neighbors, ipv6=False)
-    #configure_network_devices(all_devices, interfaces_configuration.configure_ipv4_interfaces, &#34;IPv4 interfaces config&#34;, dry_run=False)
-    #configure_network_devices(all_devices, interfaces_configuration.configure_ipv6_interfaces, &#34;IPv6 interfaces config&#34;, dry_run=False)
+    
+    #l3_devices.run(task=viewer.show_interfaces_packet_counters, json_out=False)
+    #l3_devices.run(task=viewer.show_hardware_details)
+    #l3_devices.run(task=viewer.show_ipv6_routes)
+    #l3_devices.run(task=viewer.show_ospf_neighbors, ipv6=False)
+    #configure_network_devices(l3_devices, interfaces_configuration.configure_ipv4_interfaces, &#34;IPv4 interfaces config&#34;, dry_run=True)
+    #configure_network_devices(l3_devices, interfaces_configuration.configure_ipv6_interfaces, &#34;IPv6 interfaces config&#34;, dry_run=False)
     #configure_network_devices(l3_switches, interfaces_configuration.configure_switching_interfaces, &#34;Switching interfaces config&#34;, dry_run=False)
-    #configure_network_devices(all_devices, static_routing_config.configure_static_routing_ipv4, &#34;Static routing config&#34;,dry_run=False)
-    #configure_network_devices(all_devices, ospf_config.configure_ospf, &#34;OSPFv2 config&#34;, dry_run=False)
+    #configure_network_devices(l3_devices, static_routing_config.configure_static_routing_ipv4, &#34;Static routing config&#34;,dry_run=False)
+    #configure_network_devices(l3_devices, ospf_config.configure_ospf, &#34;OSPFv2 config&#34;, dry_run=False)
     #configure_network_devices(l3_cisco, eigrp_config.configure_eigrp_ipv4, &#34;EIGRP config&#34;, dry_run=False)
-    #configure_network_devices(all_devices, packet_filter.configure_ipv4_packet_filters, &#34;IPv4 packet filter config&#34;,dry_run=False)
+    #configure_network_devices(l3_devices, packet_filter.configure_ipv4_packet_filters, &#34;IPv4 packet filter config&#34;,dry_run=False)
     #configure_network_devices(l3_cisco, nat_config.configure_source_nat_overload, &#34;NAT Overload config&#34;, dry_run=False)
     #configure_network_devices(routers, ospf_config.configure_ospfv3, &#34;OSPFv3 config&#34;, dry_run=False)
     #configure_network_devices(l3_cisco, eigrp_config.configure_eigrp_ipv6, &#34;EIGRP IPV6 config&#34;, dry_run=False)
-    #configure_network_devices(all_devices, static_routing_config.configure_static_routing_ipv6,&#34;IPv6 Static Routing config&#34;, dry_run=False)
-    #configure_network_devices(all_devices, packet_filter.configure_ipv6_packet_filters, &#34;IPv6 packet filter config&#34;,dry_run=False)
-    #configure_network_devices(all_devices, delete_config.delete_configuration, &#34;Delete Configuration&#34;, dry_run=False)
+    #configure_network_devices(l3_devices, static_routing_config.configure_static_routing_ipv6,&#34;IPv6 Static Routing config&#34;, dry_run=False)
+    #configure_network_devices(l3_devices, packet_filter.configure_ipv6_packet_filters, &#34;IPv6 packet filter config&#34;,dry_run=False)
+    #configure_network_devices(l3_devices, delete_config.delete_configuration, &#34;Delete Configuration&#34;, dry_run=False)
 
-    #all_devices.run(task=exporter.export_device_configuration)
-    #all_devices.run(task=exporter.export_packet_filter_info)
-    #all_devices.run(task=exporter.export_ipv4_routes)
-    #all_devices.run(task=exporter.export_ipv6_routes)
-    #exporter.export_device_facts(all_devices)
-    #exporter.export_interfaces_packet_counters(all_devices)
+    #l3_devices.run(task=exporter.export_device_configuration)
+    #l3_devices.run(task=exporter.export_packet_filter_info)
+    #l3_devices.run(task=exporter.export_ipv4_routes)
+    #l3_devices.run(task=exporter.export_ipv6_routes)
+    #exporter.export_device_facts(l3_devices)
+    #exporter.export_interfaces_packet_counters(l3_devices)
 
     #configure_linux_servers(ubuntu_servers, linux_config.send_commands, task_name=&#34;Running commands&#34;, enable=True)
     #configure_linux_servers(ubuntu_servers, linux_config.configure_vsftpd, &#34;VSFTPD Configuration&#34;, enable=True)
@@ -294,12 +292,12 @@ if __name__ == &#34;__main__&#34;:
         None
     &#34;&#34;&#34;
     nornir_obj = setup_inventory()
-    routers = nornir_obj.filter(F(dev_type=&#34;router&#34;))
+    routers = nornir_obj.filter(F(dev_type=&#34;router&#34;)) # vyfiltrování routerů (dev_type=&#34;router&#34;)
     juniper_devices = nornir_obj.filter(F(groups__contains=&#34;juniper&#34;))
     l3_switches = nornir_obj.filter(F(dev_type=&#34;L3_switch&#34;))
     cisco_routers = nornir_obj.filter(F(groups__contains=&#34;cisco&#34;) &amp; F(dev_type=&#34;router&#34;))
     l3_cisco = nornir_obj.filter(F(groups__contains=&#34;cisco&#34;) &amp; F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;))
-    all_devices = nornir_obj.filter(F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;))
+    l3_devices = nornir_obj.filter(F(dev_type=&#34;router&#34;) | F(dev_type=&#34;L3_switch&#34;))
     ubuntu_servers = nornir_obj.filter(F(dev_type=&#34;ubuntu_server&#34;) | F(groups__contains=&#34;linux&#34;))
     viewer = NetworkUtilityViewer()
     exporter = NetworkInfoExporter(NetworkInfoCollector())
@@ -310,12 +308,7 @@ if __name__ == &#34;__main__&#34;:
     packet_filter = PacketFilterConfiguration()
     nat_config = NATConfiguration()
     delete_config = DeleteConfiguration()
-    linux_config = LinuxConfiguration()
-
-    #all_devices.run(task=db_writer.write_to_db)
-
-    #all_devices.run(task=viewer.show_interfaces_packet_counters, json_out=False)
-    all_devices.run(task=viewer.show_device_facts)</code></pre>
+    linux_config = LinuxConfiguration()</code></pre>
 </details>
 </dd>
 <dt id="scripts.main.send_command"><code class="name flex">

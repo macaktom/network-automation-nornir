@@ -1,172 +1,170 @@
 ---
-# YAML soubor, který slouží POUZE jako přehled VŠECH definovatelných možností nastavení inventáře u zařízení Juniper Olive (router). Nejedná se o reálnou situaci.
+# YAML soubor, který slouží POUZE jako přehled VŠECH definovatelných možností nastavení inventáře u zařízení Juniper Olive (router). Nejedná se o reálný příklad.
 # Je zde definována struktura a formát dat pro jednotlivé konfigurace zařízení.
-# Pokud vývojář využívá jako typ Nornir inventáře plugin SimpleInventory, tak modifikované data je nutné překopírovat do slovníku data v souboru hosts.yaml.
-data:
-  interfaces_ipv4:
-    lo0:
+interfaces_ipv4: # pro konfiguraci IPv4 rozhraní, všechny fieldy jsou povinné
+  lo0:
+    description: '"popis z neco z neco"'
+    units:
+        - number: 0
+          net: 2.2.2.2
+          prefix_length: /32
+  em1:
+    description: '"popis z neco z neco"'
+    units:
+        - number: 0
+          description: '"popis em1.0"'
+          net: 192.168.20.1
+          prefix_length: /24
+        - number: 1
+          net: 192.168.30.1
+          prefix_length: /24
+  em2:
+    description: '"popis z neco z neco"'
+    units:
+        - number: 0
+          net: 192.168.40.1
+          prefix_length: /24
+static_routing_config: # pro konfiguraci IPv4 statického směrování, nepovinné fieldy: default (defaultní cesta), default.next_hop.
+  networks:
+      - dest_ip: 192.168.50.0
+        prefix_length: /24
+        next_hop: 192.168.20.2
+      - dest_ip: 192.168.60.0
+        prefix_length: /30
+        next_hop: 192.168.30.2
+  default:
+      next_hop: 192.168.20.2
+ospf_config: # OSPFv2 konfigurace + redistribuce (static), nepovinné fieldy: redistribute_static
+  router_id: 2.2.2.2
+  interfaces:
+      em0.0:
+          passive: true
+          area_number: 0
+      em1.0:
+          passive: false
+          area_number: 0
+  redistribute_static:
+      policy_name: static-into-ospf
+      term_name: static
+packet_filter_config: # Packet filter konfigurace IPv4, všechny fieldy jsou povinné.
+  ADMIN-FILTER:
+      term_name: T1
+      rules:
+          - from source-address 172.27.31.0/24
+          - from destination-address 172.27.0.0/24
+          - from destination-port 3389
+          - then discard
+      interfaces:
+          - name: em2
+            unit_number: 0
+            filter_direction: output
+  Student-FILTER:
+      term_name: T2
+      rules:
+          - from source-address 182.27.31.0/24
+          - from destination-address 173.27.0.0/24
+          - from protocol tcp
+          - then discard
+      interfaces:
+          - name: em1
+            unit_number: 1
+            filter_direction: input
+interfaces_ipv6: # Základní nastavení rozhraní - IPv6, nepovinné fieldy: eui_format_auto, routed_physical_port, duplex, speed
+  lo0:
       description: '"popis z neco z neco"'
       units:
           - number: 0
-            net: 2.2.2.2
-            prefix_length: /32
-    em1:
+            net: "2020::1"
+            prefix_length: /128
+  em1:
       description: '"popis z neco z neco"'
       units:
           - number: 0
             description: '"popis em1.0"'
-            net: 192.168.20.1
-            prefix_length: /24
+            net: "2001:bb9:aabb:1234:1111:4444:3333:2222"
+            prefix_length: /64
           - number: 1
-            net: 192.168.30.1
-            prefix_length: /24
-    em2:
+            description: '"popis em1.1"'
+            net: "2001:bb9:aabb:1234:4444:2222:3333:4444"
+            prefix_length: /64
+  em2:
       description: '"popis z neco z neco"'
       units:
           - number: 0
-            net: 192.168.40.1
-            prefix_length: /24
-  static_routing_config:
-    networks:
-        - dest_ip: 192.168.50.0
-          prefix_length: /24
-          next_hop: 192.168.20.2
-        - dest_ip: 192.168.60.0
-          prefix_length: /30
-          next_hop: 192.168.30.2
-    default:
-        next_hop: 192.168.20.2
-  ospf_config:
-    router_id: 2.2.2.2
-    interfaces:
-        em0.0:
-            passive: true
-            area_number: 0
-        em1.0:
-            passive: false
-            area_number: 0
-    redistribute_static:
-        policy_name: static-into-ospf
-        term_name: static
-  packet_filter_config:
-    ADMIN-FILTER:
-        term_name: T1
-        rules:
-            - from source-address 172.27.31.0/24
-            - from destination-address 172.27.0.0/24
-            - from destination-port 3389
-            - then discard
-        interfaces:
-            - name: em2
-              unit_number: 0
-              filter_direction: output
-    Student-FILTER:
-        term_name: T2
-        rules:
-            - from source-address 182.27.31.0/24
-            - from destination-address 173.27.0.0/24
-            - from protocol tcp
-            - then discard
-        interfaces:
-            - name: em1
-              unit_number: 1
-              filter_direction: input
-  interfaces_ipv6:
-    lo0:
-        description: '"popis z neco z neco"'
-        units:
-            - number: 0
-              net: "2020::1"
-              prefix_length: /128
-    em1:
-        description: '"popis z neco z neco"'
-        units:
-            - number: 0
-              description: '"popis em1.0"'
-              net: "2001:bb9:aabb:1234:1111:4444:3333:2222"
-              prefix_length: /64
-            - number: 1
-              description: '"popis em1.1"'
-              net: "2001:bb9:aabb:1234:4444:2222:3333:4444"
-              prefix_length: /64
-    em2:
-        description: '"popis z neco z neco"'
-        units:
-            - number: 0
-              net: "2001:bb9:aabb:1234:3333:2222:4444:5555"
-              prefix_length: /64
-  static_routing_ipv6_config:
-    networks:
-        - dest_ip: "2001:db8::"
-          prefix_length: /64
-          next_hop: "2001:bb9:aabb:1234:3333:2222:4444:5555"
-        - dest_ip: "2001:db9::"
-          prefix_length: /64
-          next_hop: "2001:bb9:aabb:1234:4444:2222:3333:4444"
-    default:
+            net: "2001:bb9:aabb:1234:3333:2222:4444:5555"
+            prefix_length: /64
+static_routing_ipv6_config: # Statický routing - IPv6, nepovinné fieldy: default (defaultní cesta), default.next_hop
+  networks:
+      - dest_ip: "2001:db8::"
+        prefix_length: /64
         next_hop: "2001:bb9:aabb:1234:3333:2222:4444:5555"
+      - dest_ip: "2001:db9::"
+        prefix_length: /64
+        next_hop: "2001:bb9:aabb:1234:4444:2222:3333:4444"
+  default:
+      next_hop: "2001:bb9:aabb:1234:3333:2222:4444:5555"
+ospfv3_config: # OSPFv3 konfigurace + redistribuce (static), nepovinné fieldy: redistribute_static
+  router_id: 9.9.9.9
+  interfaces:
+      em0.0:
+          passive: true
+          area_number: 0
+      em1.0:
+          passive: false
+          area_number: 0
+  redistribute_static:
+      policy_name: static-into-ospfv3
+      term_name: static6
+packet_filter_ipv6_config: # Packet filter konfigurace IPv6, všechny fieldy jsou povinné.
+  ADMIN-Test:
+      term_name: T1
+      rules:
+          - from source-address 2001:db8::0/64
+          - from destination-address 2001:db9::0/64
+          - then discard
+      interfaces:
+          - name: em2
+            unit_number: 0
+            filter_direction: input
+  Student-Test:
+      term_name: T2
+      rules:
+          - from source-address 2001:db4::0/64
+          - from destination-address 2001:db5::0/64
+          - then discard
+      interfaces:
+          - name: em1
+            unit_number: 1
+            filter_direction: output
+restore_config: # obnovení konfigurace z backups složky dle running_config_date (datum backupu).
+  running_config_date: 2020-12-27
+delete_config: # vymázání konfigurace, všechny fieldy jsou nepovinné (lze tedy smazat i určitou část konfiguracen např. pouze OSPF).
+  interfaces:
+      lo0:
+          delete_whole_interface: true
+          delete_units: [0]
+      em1:
+          delete_whole_interface: true
+          delete_units: []
+      em2:
+          delete_whole_interface: false
+          delete_units: [0]
+  static_routing_config: true
+  ospf_config:
+      policy_statement: static-into-ospf
+      router_id: 9.9.9.9
+  packet_filter_config:
+      ADMIN-FILTER:
+          interfaces:
+              - name: em2
+                unit_number: 0
+                filter_direction: output
+  static_routing_ipv6_config: true
   ospfv3_config:
-    router_id: 9.9.9.9
-    interfaces:
-        em0.0:
-            passive: true
-            area_number: 0
-        em1.0:
-            passive: false
-            area_number: 0
-    redistribute_static:
-        policy_name: static-into-ospfv3
-        term_name: static6
+      policy_statement: static-into-ospfv3
   packet_filter_ipv6_config:
-    ADMIN-Test:
-        term_name: T1
-        rules:
-            - from source-address 2001:db8::0/64
-            - from destination-address 2001:db9::0/64
-            - then discard
-        interfaces:
-            - name: em2
-              unit_number: 0
-              filter_direction: input
-    Student-Test:
-        term_name: T2
-        rules:
-            - from source-address 2001:db4::0/64
-            - from destination-address 2001:db5::0/64
-            - then discard
-        interfaces:
-            - name: em1
-              unit_number: 1
-              filter_direction: output
-  restore_config:
-    running_config_date: 2020-12-27
-  delete_config:
-    interfaces:
-        lo0:
-            delete_whole_interface: true
-            delete_units: [0]
-        em1:
-            delete_whole_interface: true
-            delete_units: []
-        em2:
-            delete_whole_interface: false
-            delete_units: [0]
-    static_routing_config: true
-    ospf_config:
-        policy_statement: static-into-ospf
-        router_id: 9.9.9.9
-    packet_filter_config:
-        ADMIN-FILTER:
-            interfaces:
-                - name: em2
-                  unit_number: 0
-                  filter_direction: output
-    static_routing_ipv6_config: true
-    ospfv3_config:
-        policy_statement: static-into-ospfv3
-    packet_filter_ipv6_config:
-        Student-Test:
-            interfaces:
-                - name: em1
-                  unit_number: 1
-                  filter_direction: output
+      Student-Test:
+          interfaces:
+              - name: em1
+                unit_number: 1
+                filter_direction: output

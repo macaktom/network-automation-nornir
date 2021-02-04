@@ -1,13 +1,15 @@
 {% if host.ospf_config is defined %}
 router ospf {{ host.ospf_config.process }}
  router-id {{ host.ospf_config.router_id }}
+{% if host.ospf_config.passive_interfaces is defined %}
 {% for interface in host.ospf_config.passive_interfaces %}
  passive-interface {{ interface }}
 {% endfor %}
+{% endif %}
 {% for net in host.ospf_config.networks %}
  network {{ net.ip }} {{ net.wildcard }} area {{ net.area_number }}
 {% endfor %}
-{% if host.ospf_config.redistribute is defined%}
+{% if host.ospf_config.redistribute is defined %}
 {% if host.ospf_config.redistribute.static %}
  redistribute static subnets
 {% endif %}

@@ -182,7 +182,7 @@ class DBHandler:
                         self._write_to_db(host, measurement, data_fetch_time_utc, fields, db_conn)
                 else:
                     print(f&#34;{Fore.RED}[{data_fetch_time_utc}] {host}: Failure during data collection (using NAPALM getters). Device is not probably supported by used NAPALM getter.&#34;)
-            sleep(20)
+            sleep(10)
 
     def drop_db_measurements(self, db_conn: InfluxDBClient, measurements: List[str]) -&gt; None:
         &#34;&#34;&#34;
@@ -204,17 +204,22 @@ if __name__ == &#39;__main__&#39;:
                                      database=&#39;monitoring_nornir&#39;)
     db_ansible_conn = InfluxDBClient(host=&#39;10.10.10.10&#39;, port=8086, username=&#39;monitoring&#39;, password=&#39;monitoring&#39;,
                                       database=&#39;monitoring_ansible&#39;)
+    db_telegraf_conn = InfluxDBClient(host=&#39;10.10.10.10&#39;, port=8086, username=&#39;monitoring&#39;, password=&#39;monitoring&#39;,
+                                     database=&#39;monitoring_telegraf&#39;)
     db_writer = DBHandler()
     # Zakomentujte následující řádek, pokud chcete pouze zobrazit stav databází pro Nornir a Ansible projekty.
     db_writer.write_monitored_data(db_nornir_conn)
 
     #db_writer.drop_db_measurements(db_nornir_conn, [&#39;hw_details&#39;, &#39;device_facts&#39;])
     #db_writer.drop_db_measurements(db_ansible_conn, [&#39;hw_details&#39;, &#39;device_facts&#39;])
+    #db_writer.drop_db_measurements(db_telegraf_conn, [&#39;cpu&#39;, &#39;mem&#39;, &#39;system&#39;])
 
     print_title(&#34;Ansible DB info&#34;)
     db_writer.show_db_state(db_ansible_conn)
     print_title(&#34;Nornir DB info &#34;)
-    db_writer.show_db_state(db_nornir_conn)</code></pre>
+    db_writer.show_db_state(db_nornir_conn)
+    print_title(&#34;Telegraf DB info &#34;)
+    db_writer.show_db_state(db_telegraf_conn)</code></pre>
 </details>
 </section>
 <section>
@@ -398,7 +403,7 @@ if __name__ == &#39;__main__&#39;:
                         self._write_to_db(host, measurement, data_fetch_time_utc, fields, db_conn)
                 else:
                     print(f&#34;{Fore.RED}[{data_fetch_time_utc}] {host}: Failure during data collection (using NAPALM getters). Device is not probably supported by used NAPALM getter.&#34;)
-            sleep(20)
+            sleep(10)
 
     def drop_db_measurements(self, db_conn: InfluxDBClient, measurements: List[str]) -&gt; None:
         &#34;&#34;&#34;
@@ -532,7 +537,7 @@ Ziskávání dat pomocí NAPALM getterů je prováděno +- každých 20s.</p>
                     self._write_to_db(host, measurement, data_fetch_time_utc, fields, db_conn)
             else:
                 print(f&#34;{Fore.RED}[{data_fetch_time_utc}] {host}: Failure during data collection (using NAPALM getters). Device is not probably supported by used NAPALM getter.&#34;)
-        sleep(20)</code></pre>
+        sleep(10)</code></pre>
 </details>
 </dd>
 </dl>

@@ -5,11 +5,10 @@ cisco:
     napalm:
       extras:
         optional_args:
-          auto_file_prompt: True
-          global_delay_factor: 1
+          global_delay_factor: 1 # prodlužuje čas na provedení daného příkazu. Pro global_delay_factor: X (kladné číslo) platí následující doba čekání: X * 100s
     netmiko:
       extras:
-        global_delay_factor: 1
+        global_delay_factor: 1 # prodlužuje čas na provedení daného příkazu. Pro global_delay_factor: X (kladné číslo) platí následující doba čekání: X * 100s
 
 juniper:
   platform: "junos" # pro napalm/netmiko driver (ovladač)
@@ -19,5 +18,5 @@ linux:
   connection_options:
     netmiko:
       extras:
-        global_delay_factor: 3
+        global_delay_factor: 3 # prodlužuje čas na provedení daného příkazu. Pro global_delay_factor: X (kladné číslo) platí následující doba čekání: X * 100s
 

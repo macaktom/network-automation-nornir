@@ -3,9 +3,11 @@ ipv6 unicast-routing
 !
 ipv6 router ospf {{ host.ospfv3_config.process }}
  router-id {{ host.ospfv3_config.router_id }}
+{% if host.ospfv3_config.passive_interfaces is defined %}
 {% for interface in host.ospfv3_config.passive_interfaces %}
  passive-interface {{ interface }}
 {% endfor %}
+{% endif %}
 {% if host.ospfv3_config.redistribute is defined %}
 {% if host.ospfv3_config.redistribute.static %}
  redistribute static

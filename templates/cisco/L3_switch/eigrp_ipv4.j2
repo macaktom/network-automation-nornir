@@ -1,8 +1,10 @@
 {% if host.eigrp_config is defined %}
 router eigrp {{ host.eigrp_config.AS_number }}
+{% if host.eigrp_config.passive_interfaces is defined %}
 {% for interface in host.eigrp_config.passive_interfaces %}
  passive-interface {{ interface }}
 {% endfor %}
+{% endif %}
 {% for net in host.eigrp_config.networks %}
  network {{ net.ip }} {{ net.wildcard }}
 {% endfor %}
