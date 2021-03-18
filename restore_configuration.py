@@ -9,7 +9,7 @@ from nornir_napalm.plugins.tasks import napalm_configure
 from nornir_utils.plugins.functions import print_result
 from nornir_utils.plugins.tasks.data import load_yaml
 
-from scripts.utility.credential_handler import CredentialHandler
+from modules.utility.credential_handler import CredentialHandler
 
 
 class RestoreConfiguration:

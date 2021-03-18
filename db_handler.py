@@ -7,7 +7,7 @@ from nornir import InitNornir
 from nornir.core import Task, Nornir
 from nornir_napalm.plugins.tasks import napalm_get
 from nornir_utils.plugins.functions import print_title
-from scripts.utility.credential_handler import CredentialHandler
+from modules.utility.credential_handler import CredentialHandler
 
 
 def setup_inventory() -> Nornir:

@@ -8,7 +8,7 @@ from nornir.core.filter import F
 from nornir_napalm.plugins.tasks import napalm_get
 from nornir_utils.plugins.tasks.files import write_file
 
-from scripts.utility.credential_handler import CredentialHandler
+from modules.utility.credential_handler import CredentialHandler
 
 
 class BackupConfiguration:
