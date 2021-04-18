@@ -4,9 +4,8 @@ from typing import Dict, List
 from colorama import Fore
 from influxdb import InfluxDBClient
 from nornir import InitNornir
-from nornir.core import Task, Nornir
+from nornir.core import Nornir
 from nornir_napalm.plugins.tasks import napalm_get
-from nornir_utils.plugins.functions import print_title
 from modules.utility.credential_handler import CredentialHandler
 
 
@@ -172,24 +171,27 @@ class DBHandler:
 
 
 if __name__ == '__main__':
-    db_nornir_conn = InfluxDBClient(host='10.10.10.10', port=8086, username='monitoring', password='monitoring',
+    db_nornir_conn = InfluxDBClient(host='10.10.10.6', port=8086, username='monitoring', password='monitoring',
                                      database='monitoring_nornir')
-    db_ansible_conn = InfluxDBClient(host='10.10.10.10', port=8086, username='monitoring', password='monitoring',
+    db_ansible_conn = InfluxDBClient(host='10.10.10.6', port=8086, username='monitoring', password='monitoring',
                                       database='monitoring_ansible')
-    db_telegraf_conn = InfluxDBClient(host='10.10.10.10', port=8086, username='monitoring', password='monitoring',
+    db_telegraf_conn = InfluxDBClient(host='10.10.10.6', port=8086, username='monitoring', password='monitoring',
                                      database='monitoring_telegraf')
     db_writer = DBHandler()
-    # Zakomentujte následující řádek, pokud chcete pouze zobrazit stav databází pro Nornir a Ansible projekty.
-    db_writer.write_monitored_data(db_nornir_conn)
 
+    # Zápis dat do databáze - nekonečná smyčka, nutno zakomentovat pokud chcete zobrazit stav DB
+    #db_writer.write_monitored_data(db_nornir_conn)
+
+    #Smazat všechna měření jednotlivých databází
     #db_writer.drop_db_measurements(db_nornir_conn, ['hw_details', 'device_facts'])
     #db_writer.drop_db_measurements(db_ansible_conn, ['hw_details', 'device_facts'])
     #db_writer.drop_db_measurements(db_telegraf_conn, ['cpu', 'mem', 'system'])
 
-    print_title("Ansible DB info")
-    db_writer.show_db_state(db_ansible_conn)
-    print_title("Nornir DB info ")
-    db_writer.show_db_state(db_nornir_conn)
-    print_title("Telegraf DB info ")
-    db_writer.show_db_state(db_telegraf_conn)
+    #Stav jednotlivých databází
+    #print_title("Ansible DB info")
+    #db_writer.show_db_state(db_ansible_conn)
+    #print_title("Nornir DB info ")
+    #db_writer.show_db_state(db_nornir_conn)
+    #print_title("Telegraf DB info ")
+    #db_writer.show_db_state(db_telegraf_conn)
 

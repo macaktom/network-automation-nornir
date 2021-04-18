@@ -1,8 +1,0 @@
-Standard IP access list Student-ACL
-    10 deny   192.168.1.53
-    20 permit 172.30.0.0, wildcard bits 0.0.255.255
-Extended IP access list ADMIN-ACL
-    10 deny ip 192.168.10.0 0.0.0.255 192.168.20.0 0.0.0.255
-    20 deny ip 192.168.30.0 0.0.0.255 192.168.20.0 0.0.0.255
-    30 deny ip 192.168.50.0 0.0.0.255 192.168.20.0 0.0.0.255
-    40 permit ip any any

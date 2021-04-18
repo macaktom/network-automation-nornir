@@ -16,7 +16,7 @@ class InterfacesConfiguration:
 
     def configure_ipv4_interfaces(self, task: Task, dry_run: bool = False) -> None:
         """
-        Metoda pro konfiguraci IPv4 rozhraní.
+        Metoda pro konfiguraci rozhraní (IPv4).
 
         Args:
             task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).
@@ -51,7 +51,7 @@ class InterfacesConfiguration:
 
     def configure_ipv6_interfaces(self, task: Task, dry_run: bool = False) -> None:
         """
-        Metoda pro konfiguraci IPv6 rozhraní.
+        Metoda pro konfiguraci rozhraní (IPv6).
 
         Args:
             task (Task): Task objekt, umožňující paralelně volat a seskupovat další nornir úkoly (funkce).

@@ -1,0 +1,28 @@
+inet.0: 12 destinations, 12 routes (12 active, 0 holddown, 0 hidden)
++ = Active Route, - = Last Active, * = Both
+
+10.10.10.0/24      *[Direct/0] 05:34:56
+                    > via em0.0
+10.10.10.3/32      *[Local/0] 05:34:56
+                      Local via em0.0
+192.168.1.0/24     *[OSPF/10] 05:34:43, metric 2
+                    > to 192.168.2.1 via em1.0
+192.168.2.0/24     *[Direct/0] 05:34:55
+                    > via em1.0
+192.168.2.2/32     *[Local/0] 05:34:55
+                      Local via em1.0
+192.168.3.0/24     *[Direct/0] 05:34:55
+                    > via em2.0
+192.168.3.1/32     *[Local/0] 05:34:55
+                      Local via em2.0
+192.168.4.0/24     *[OSPF/150] 00:08:18, metric 20, tag 0
+                    > to 192.168.3.2 via em2.0
+192.168.30.0/24    *[OSPF/150] 00:07:26, metric 20, tag 0
+                    > to 192.168.3.2 via em2.0
+192.168.40.0/24    *[OSPF/150] 00:07:26, metric 20, tag 0
+                    > to 192.168.3.2 via em2.0
+192.168.50.0/24    *[OSPF/150] 00:07:26, metric 20, tag 0
+                    > to 192.168.3.2 via em2.0
+224.0.0.5/32       *[OSPF/10] 05:35:01, metric 1
+                      MultiRecv
+

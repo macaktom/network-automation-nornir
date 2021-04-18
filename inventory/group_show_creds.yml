@@ -8,7 +8,6 @@ cisco:
       extras:
         optional_args:
           secret: "cisco"
-          auto_file_prompt: True
           global_delay_factor: 1
     netmiko:
       extras:
@@ -22,11 +21,11 @@ juniper:
 
 linux:
   platform: "ubuntu"
-  username: "linux"
-  password: "gns3DP"
+  username: "gns3"
+  password: "gns3"
   connection_options:
     netmiko:
       extras:
-        secret: "gns3DP"
+        secret: "gns3"
         global_delay_factor: 3
 

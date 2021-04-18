@@ -1,8 +1,25 @@
-IPv6 Routing Table - default - 1 entries
+IPv6 Routing Table - default - 9 entries
 Codes: C - Connected, L - Local, S - Static, U - Per-user Static route
        B - BGP, R - RIP, H - NHRP, I1 - ISIS L1
        I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP
-       EX - EIGRP external, O - OSPF Intra, OI - OSPF Inter, OE1 - OSPF ext 1
+       EX - EIGRP external, ND - ND Default, NDp - ND Prefix, DCE - Destination
+       NDr - Redirect, O - OSPF Intra, OI - OSPF Inter, OE1 - OSPF ext 1
        OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1, ON2 - OSPF NSSA ext 2, l - LISP
+C   2001:DB8:1001:1::/64 [0/0]
+     via FastEthernet0/1, directly connected
+L   2001:DB8:1001:1::1/128 [0/0]
+     via FastEthernet0/1, receive
+C   2001:DB8:1001:2::/64 [0/0]
+     via FastEthernet0/0, directly connected
+L   2001:DB8:1001:2::1/128 [0/0]
+     via FastEthernet0/0, receive
+O   2001:DB8:1001:3::/64 [110/2]
+     via FE80::E2B:95FF:FE17:901, FastEthernet0/0
+OE2 2001:DB8:1001:30::/64 [110/20]
+     via FE80::E2B:95FF:FE17:901, FastEthernet0/0
+OE2 2001:DB8:1001:40::/64 [110/20]
+     via FE80::E2B:95FF:FE17:901, FastEthernet0/0
+OE2 2001:DB8:1001:50::/64 [110/20]
+     via FE80::E2B:95FF:FE17:901, FastEthernet0/0
 L   FF00::/8 [0/0]
      via Null0, receive

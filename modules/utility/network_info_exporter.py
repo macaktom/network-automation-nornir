@@ -2,15 +2,15 @@ from pathlib import Path
 from colorama import Fore
 from nornir.core import Nornir
 from nornir.core.exceptions import NornirSubTaskError, NornirExecutionError
-from nornir.core.task import Task, MultiResult, AggregatedResult
+from nornir.core.task import Task, AggregatedResult
 from nornir_napalm.plugins.tasks import napalm_get
-from nornir_netmiko import netmiko_send_command, netmiko_send_config
-from nornir_utils.plugins.functions import print_result
+from nornir_netmiko import netmiko_send_command
 from openpyxl import Workbook
-from scripts.utility.excel_exporter import ExcelExporter
-from scripts.utility.network_info_collector import NetworkInfoCollector
-from scripts.utility.network_info_parser import NetworkInfoParser
-from scripts.utility.text_file_exporter import FileExporter
+
+from modules.utility.excel_exporter import ExcelExporter
+from modules.utility.network_info_collector import NetworkInfoCollector
+from modules.utility.network_info_parser import NetworkInfoParser
+from modules.utility.text_file_exporter import FileExporter
 
 
 class NetworkInfoExporter:
@@ -61,7 +61,7 @@ class NetworkInfoExporter:
 
     def export_interfaces_packet_counters(self, nornir_devices: Nornir) -> None:
         """
-         Export statistik týkající se přijímání a vysílání paketů pro jednotlivá rozhraní síťových zařízení. Statistiky jsou exportovány do .xslx souboru.
+         Export statistik týkající se přijatých a vysílaných paketů pro jednotlivá rozhraní síťových zařízení. Statistiky jsou exportovány do .xslx souboru.
          Tx_broadcast a tx_multicast nejsou exportovány vůbec (NAPALM momentálně nepodporuje tyto statistiky - \n
          U vývojáři nedefinovaných regexů vychází vždy daná statistika -1 (platí pro tx_broadcast, tx_multicast a několik paket counterů u Juniper Olive).
 

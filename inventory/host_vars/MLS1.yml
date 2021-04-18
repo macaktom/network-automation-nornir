@@ -1,0 +1,150 @@
+---
+vlans_config:
+  - number: 30
+    name: VLAN30
+  - number: 40
+    name: VLAN40
+  - number: 50
+    name: VLAN50
+switching_interfaces: # konfigurace switchportů
+  GigabitEthernet0/2:
+    description: connected to PC2 on port eth0
+    mode: access
+    vlan: 30
+  GigabitEthernet0/3:
+    description: connected to PC3 on port eth0
+    mode: access
+    vlan: 40
+  GigabitEthernet1/0:
+    description: connected to Server1 on port ens4
+    mode: access
+    vlan: 50
+interfaces_ipv4: # konfigurace routing portů + SVI - IPv4
+  GigabitEthernet0/1:
+    description: connected to R3 on port f0/1
+    net: 192.168.4.2
+    mask: 255.255.255.0
+    routed_physical_port: true
+    duplex: full
+  Vlan30:
+    description: VLAN30 SVI
+    net: 192.168.30.1
+    mask: 255.255.255.0
+  Vlan40:
+    description: VLAN40 SVI
+    net: 192.168.40.1
+    mask: 255.255.255.0
+  Vlan50:
+    description: VLAN50 SVI
+    net: 192.168.50.1
+    mask: 255.255.255.0
+eigrp_config: # EIGRP konfigurace
+  AS_number: 1
+  passive_interfaces: []
+  networks:
+      - ip: 192.168.4.0
+        wildcard: 0.0.0.255
+      - ip: 192.168.30.0
+        wildcard: 0.0.0.255
+      - ip: 192.168.40.0
+        wildcard: 0.0.0.255
+      - ip: 192.168.50.0
+        wildcard: 0.0.0.255
+packet_filter_config: # Named ACL konfigurace standard + extended
+  VLAN30in:
+      type: extended
+      rules:
+          - deny ip 192.168.30.0 0.0.0.255 192.168.40.0 0.0.0.255
+          - permit ip any any
+      routed_interfaces:
+          - name: Vlan30
+            acl_direction: in
+  VLAN40in:
+    type: extended
+    rules:
+      - deny ip 192.168.40.0 0.0.0.255 192.168.30.0 0.0.0.255
+      - permit ip any any
+    routed_interfaces:
+      - name: Vlan40
+        acl_direction: in
+interfaces_ipv6: # konfigurace routing portů + VLAN - IPv6
+  GigabitEthernet0/1:
+      description: connected to R3 on port f0/1
+      networks:
+          - net: "2001:db8:1001:4::2"
+            prefix_length: /64
+            eui_format_auto: false
+      routed_physical_port: true
+      duplex: full
+      speed: auto
+  Vlan30:
+      description: VLAN30 SVI
+      networks:
+          - net: "2001:db8:1001:30::1"
+            prefix_length: /64
+            eui_format_auto: false
+  Vlan40:
+      description: VLAN40 SVI
+      networks:
+          - net: "2001:db8:1001:40::1"
+            prefix_length: /64
+            eui_format_auto: false
+  Vlan50:
+      description: VLAN50 SVI
+      networks:
+          - net: "2001:db8:1001:50::1"
+            prefix_length: /64
+            eui_format_auto: false
+eigrp_ipv6_config: # EIGRP konfigurace + redistribuce - IPv6
+  AS_number: 1
+  router_id: 4.4.4.4
+  routed_interfaces: [ Vlan30, Vlan40, Vlan50, GigabitEthernet0/1 ]
+packet_filter_ipv6_config: # Named ACL konfigurace - IPv6, lze pouze u ROUTED (no switchport) rozhraní
+  VLAN30-in:
+      rules:
+          - deny ipv6 2001:db8:1001:30::/64 2001:db8:1001:40::/64
+          - permit ipv6 any any
+      routed_interfaces:
+          - name: Vlan30
+            acl_direction: in
+  VLAN40-in:
+    rules:
+      - deny ipv6 2001:db8:1001:40::/64 2001:db8:1001:30::/64
+      - permit ipv6 any any
+    routed_interfaces:
+      - name: Vlan40
+        acl_direction: in
+restore_config:
+  running_config_date: 2021-04-07
+delete_config:
+  interfaces:
+      virtual: [Vlan30,Vlan40,Vlan50] # úplné vymázání virtuálních síťových rozhraní
+      physical: [GigabitEthernet0/1, GigabitEthernet0/2, GigabitEthernet0/3, GigabitEthernet1/0] # resetování nastavení fyzických rozhraní do výchozího stavu
+  eigrp_config:
+      AS_numbers: [1]
+  packet_filter_config:
+      Vlan30in:
+          type: extended
+          routed_interfaces:
+              - name: Vlan30
+                acl_direction: in
+      Vlan40in:
+        type: extended
+        routed_interfaces:
+              - name: Vlan40
+                acl_direction: in
+  eigrp_ipv6_config:
+      AS:
+          - number: 1
+            routed_interfaces: [ Vlan30,Vlan40,Vlan50, GigabitEthernet0/1 ]
+  packet_filter_ipv6_config:
+      Vlan30-in:
+          routed_interfaces:
+              - name: Vlan30
+                acl_direction: out
+      Vlan40-in:
+         routed_interfaces:
+              - name: Vlan40
+                acl_direction: out
+  vlans_config:
+      numbers: [30, 40, 50]

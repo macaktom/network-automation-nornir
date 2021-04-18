@@ -1,0 +1,59 @@
+---
+interfaces_ipv4:
+  em1:
+    description: '"connected to R1 on port f0/0"'
+    units:
+        - number: 0
+          net: 192.168.2.2
+          prefix_length: /24
+  em2:
+    description: '"connected to R3 on port f0/0"'
+    units:
+        - number: 0
+          net: 192.168.3.1
+          prefix_length: /24
+ospf_config:
+  router_id: 2.2.2.2
+  interfaces:
+      em1.0:
+          passive: false
+          area_number: 0
+      em2.0:
+          passive: false
+          area_number: 0
+interfaces_ipv6:
+  em1:
+      description: '"connected to R1 on port f0/0"'
+      units:
+          - number: 0
+            net: "2001:db8:1001:2::2"
+            prefix_length: /64
+  em2:
+      description: '"connected to R3 on port f0/0"'
+      units:
+          - number: 0
+            net: "2001:db8:1001:3::1"
+            prefix_length: /64
+ospfv3_config:
+  router_id: 2.2.2.2
+  interfaces:
+      em1.0:
+          passive: false
+          area_number: 0
+      em2.0:
+          passive: false
+          area_number: 0
+restore_config:
+  running_config_date: 2021-04-07
+delete_config:
+  interfaces:
+      em1:
+          delete_whole_interface: true
+          delete_units: []
+      em2:
+          delete_whole_interface: false
+          delete_units: [0]
+  ospf_config:
+      router_id: 2.2.2.2
+  ospfv3_config:
+      router_id: 2.2.2.2

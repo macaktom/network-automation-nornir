@@ -76,9 +76,9 @@ class EIGRPConfiguration:
         if task.host["vendor"] == "cisco" and not task.host["dev_type"] == "switch":
             data = task.run(task=load_yaml, file=f'inventory/host_vars/{task.host.name}.yml', name="Load host data",
                             severity_level=logging.DEBUG)
-            eigrp_key = "eigrp_ipv6_config"
+            eigrp_key = 'eigrp_ipv6_config'
 
-            if eigrp_key in data[0].result[eigrp_key]:
+            if eigrp_key in data[0].result:
                 task.host[eigrp_key] = data[0].result[eigrp_key]
 
                 r = task.run(task=template_file,

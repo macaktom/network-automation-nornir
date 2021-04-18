@@ -4,9 +4,9 @@ from colorama import Fore
 from nornir.core.exceptions import NornirSubTaskError
 from nornir.core.task import MultiResult, Task
 from nornir_napalm.plugins.tasks import napalm_get
-from nornir_netmiko import netmiko_send_command, netmiko_send_config
+from nornir_netmiko import netmiko_send_command
 from nornir_utils.plugins.functions import print_result, print_title
-from scripts.utility.network_info_parser import NetworkInfoParser
+from modules.utility.network_info_parser import NetworkInfoParser
 
 
 class NetworkUtilityViewer:

@@ -1,0 +1,28 @@
+IPv6 Routing Table - default - 11 entries
+Codes: C - Connected, L - Local, S - Static, U - Per-user Static route
+       B - BGP, R - RIP, I1 - ISIS L1, I2 - ISIS L2
+       IA - ISIS interarea, IS - ISIS summary, D - EIGRP, EX - EIGRP external
+       ND - ND Default, NDp - ND Prefix, DCE - Destination, NDr - Redirect
+       RL - RPL, a - Application
+EX  2001:DB8:1001:1::/64 [170/3072]
+     via FE80::C802:9AFF:FEEB:6, GigabitEthernet0/1
+EX  2001:DB8:1001:2::/64 [170/3072]
+     via FE80::C802:9AFF:FEEB:6, GigabitEthernet0/1
+C   2001:DB8:1001:4::/64 [0/0]
+     via GigabitEthernet0/1, directly connected
+L   2001:DB8:1001:4::2/128 [0/0]
+     via GigabitEthernet0/1, receive
+C   2001:DB8:1001:30::/64 [0/0]
+     via Vlan30, directly connected
+L   2001:DB8:1001:30::1/128 [0/0]
+     via Vlan30, receive
+C   2001:DB8:1001:40::/64 [0/0]
+     via Vlan40, directly connected
+L   2001:DB8:1001:40::1/128 [0/0]
+     via Vlan40, receive
+C   2001:DB8:1001:50::/64 [0/0]
+     via Vlan50, directly connected
+L   2001:DB8:1001:50::1/128 [0/0]
+     via Vlan50, receive
+L   FF00::/8 [0/0]
+     via Null0, receive

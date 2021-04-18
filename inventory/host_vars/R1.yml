@@ -1,219 +1,69 @@
 ---
-interfaces_ipv4:
+interfaces_ipv4: # nastavení IPv4 rozhraní, router_physical_port: true - pokud to není Loopback
   FastEthernet0/0:
-      description: popis
-      net: 192.168.70.1
+      description: connected to R2 on port em1
+      net: 192.168.2.1
       mask: 255.255.255.0
       routed_physical_port: true
       duplex: full
       speed: auto
-static_routing_config:
-    networks:
-        - dest_ip: 192.168.38.0
-          dest_mask: 255.255.255.0
-          next_hop: 192.168.10.2
-        - dest_ip: 192.168.45.0
-          dest_mask: 255.255.255.0
-          next_hop: 192.168.10.2
-    default:
-        next_hop: 192.168.10.2
+  FastEthernet0/1:
+      description: connected to SW1 on port e0
+      net: 192.168.1.1
+      mask: 255.255.255.0
+      routed_physical_port: true
+      duplex: full
+      speed: auto
 ospf_config: # OSPFv2 konfigurace + redistribuce
     process: 1
-    router_id: 7.7.7.7
-    passive_interfaces: [ FastEthernet0/0, FastEthernet0/1 ]
+    router_id: 1.1.1.1
+    passive_interfaces: [ FastEthernet0/1 ]
     networks:
-        - ip: 192.168.83.0
+        - ip: 192.168.1.0
           wildcard: 0.0.0.255
           area_number: 0
-        - ip: 192.168.52.0
-          wildcard: 0.0.0.3
-          area_number: 0
-    redistribute:
-        static: true
-        default: true
-        eigrp:
-            AS_numbers: [ 1, 2, 3 ]
-eigrp_config: # EIGRP konfigurace + redistribuce
-    AS_number: 4
-    passive_interfaces: [ FastEthernet0/0, FastEthernet0/1 ]
-    networks:
-        - ip: 192.168.10.0
+        - ip: 192.168.2.0
           wildcard: 0.0.0.255
-        - ip: 192.168.50.0
-          wildcard: 0.0.0.3
-    redistribute:
-        static: true
-        ospf:
-            processes: [1, 2, 3, 4]
-packet_filter_config: # Named ACL konfigurace standard + extended
-    ADMIN-ACL:
-        type: extended
-        rules:
-            - deny ip 192.168.10.0 0.0.0.255 192.168.20.0 0.0.0.255
-            - deny ip 192.168.30.0 0.0.0.255 192.168.20.0 0.0.0.255
-            - deny ip 192.168.50.0 0.0.0.255 192.168.20.0 0.0.0.255
-            - permit ip any any
-        interfaces:
-            - name: FastEthernet0/0
-              acl_direction: in
-    Student-ACL:
-        type: standard
-        rules:
-            - permit 172.30.0.0 0.0.255.255
-            - deny 192.168.1.53
-        interfaces:
-            - name: FastEthernet0/1
-              acl_direction: out
-nat_overload_config: # source NAT typu PAT
-    access_list_number: 1
-    source_network:
-        ip: 192.168.0.0
-        wild_card: 0.0.0.255
-    interface_types:
-        inside:
-            name: FastEthernet0/0
-        outside:
-            name: FastEthernet0/1
+          area_number: 0
 interfaces_ipv6: # Základní nastavení rozhraní - IPv6
-    Loopback0:
-        description: description of virtual interface
-        networks:
-            - net: "2001:db8::1"
-              prefix_length: /128
-              eui_format_auto: false
     FastEthernet0/0:
-        description: connected to switch_mgmt Ethernet10
+        description: connected to R2 on port em1
         networks:
-            - net: "2001:bb9:aabb:1234:1111:2222:3333:4444"
+            - net: "2001:db8:1001:2::1"
               prefix_length: /64
               eui_format_auto: false
-            - net: "2001:bb9:aabb:1234::"
-              prefix_length: /64
-              eui_format_auto: true  # povolení IEEE EUI-64 metody kalkulace IPv6 adresy
         routed_physical_port: true
         duplex: full
         speed: auto
     FastEthernet0/1:
-        description: connected to router1 FastEthernet0/1
+        description: connected to SW1 on port e0
         networks:
-            - net: "2001:718:1::1"
+            - net: "2001:db8:1001:1::1"
               prefix_length: /64
               eui_format_auto: false
         routed_physical_port: true
         duplex: full
         speed: auto
-static_routing_ipv6_config: # Statický routing - IPv6
-    networks:
-        - dest_ip: "2001:db8::"
-          prefix_length: /32
-          next_hop: "2001:db8:0:ee44::1"
-        - dest_ip: "2001:db9::"
-          prefix_length: /32
-          next_hop: FastEthernet0/1
-    default:
-        next_hop: "2001:db8:0:EE44::1"
 ospfv3_config: # OSPFv3 konfigurace + redistribuce
     process: 1
     router_id: 1.1.1.1
-    passive_interfaces: [ FastEthernet0/0 ]
+    passive_interfaces: [ FastEthernet0/1 ]
     interfaces:
-      - name: Loopback0
-        area_number: 0
       - name: FastEthernet0/0
         area_number: 0
       - name: FastEthernet0/1
         area_number: 0
-    redistribute:
-        static: true
-        default: true
-        eigrp:
-            AS_numbers: [ 1, 2 ]
-eigrp_ipv6_config: # EIGRP konfigurace + redistribuce - IPv6
-    AS_number: 1
-    router_id: 1.1.1.1
-    passive_interfaces: [ FastEthernet0/0 ]
-    interfaces: [ Loopback0, FastEthernet0/0, FastEthernet0/1 ]
-    redistribute:
-        static: true
-        ospf:
-            processes: [1, 2]
-packet_filter_ipv6_config: # Named ACL konfigurace - IPv6
-    ACLName:
-        rules:
-            - deny tcp host 2001:db8:e0bb::2 any eq telnet
-            - permit ipv6 any any
-        interfaces:
-            - name: Loopback0
-              acl_direction: in
-            - name: FastEthernet0/1
-              acl_direction: out
-    ExampleACL:
-        rules:
-            - permit icmp 2001:db8:e0bb::/64 2001:db8::/64
-            - deny udp any any
-        interfaces:
-            - name: FastEthernet0/0
-              acl_direction: in
 restore_config:
-    running_config_date: 2020-12-20
+    running_config_date: 2021-04-07
 delete_config:
     interfaces: # routované porty
-        virtual: [Loopback0] # úplné vymázání virtuálních síťových rozhraní
         physical: [FastEthernet0/0, FastEthernet0/1] # resetování nastavení fyzického rozhraní do výchozího stavu
-    static_routing_config: true
     ospf_config:
         processes: [1]
-    eigrp_config:
-        AS_numbers: [4]
-    packet_filter_config:
-        ADMIN-ACL:
-            type: extended
-            interfaces:
-                - name: FastEthernet0/0
-                  acl_direction: in
-        Student-ACL:
-            type: standard
-            interfaces:
-                - name: FastEthernet0/1
-                  acl_direction: out
-    static_routing_ipv6_config:
-        networks:
-            - dest_ip: "2001:db8::"
-              prefix_length: /32
-              next_hop: "2001:db8:0:ee44::1"
-            - dest_ip: "2001:db9::"
-              prefix_length: /32
-              next_hop: FastEthernet0/1
-        default:
-          next_hop: "2001:db8:0:ee44::1"
-    eigrp_ipv6_config:
-        AS:
-            - number: 1
-              interfaces: [FastEthernet0/1]
-    packet_filter_ipv6_config:
-        ACLName:
-            interfaces:
-                - name: Loopback0
-                  acl_direction: in
-                - name: FastEthernet0/1
-                  acl_direction: out
-        ExampleACL:
-            interfaces:
-                - name: FastEthernet0/0
-                  acl_direction: in
-    nat_overload_config:
-        access_list_number: 1
-        interface_types:
-            inside:
-                interface: FastEthernet0/0
-            outside:
-                interface: FastEthernet0/1
     ospfv3_config:
         processes:
             - number: 1
               interfaces:
-                - name: Loopback0
-                  area_number: 0
                 - name: FastEthernet0/0
                   area_number: 0
                 - name: FastEthernet0/1

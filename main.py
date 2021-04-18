@@ -29,31 +29,13 @@ def setup_inventory() -> Nornir:
     Returns:
         Nornir - nornir objekt, který obsahuje zparsované informace o hostech, skupinách. Dále zajišťuje multithreading funkcionalitu.
     """
-    creds_handler = CredentialHandler()
-    nr = InitNornir(
-        config_file="config.yml")  # Nornir objekt, který přeskočí zařízení, které nezvládly požadovaný (sub)task. více o chybě v nornir.log
+    nr = InitNornir(config_file="config.yml")  # Nornir objekt, který přeskočí zařízení, které nezvládly požadovaný (sub)task. více o chybě v nornir.log
 
     # Nornir objekt, který zastavení všechny následující tasky, v případě, že došlo k chybě u tasku předchozího.
     # nr = InitNornir(config_file="config.yml", core={"raise_on_error": True})  # Nornir objekt, který přeskočí hosty, které nezvládli požadovaný (sub)task - více o chybě v nornir.log
+    creds_handler = CredentialHandler()
     creds_handler.insert_creds(nr)
     return nr
-
-
-def configure_linux_servers(nornir_devices: Nornir, task_func: callable, task_name: str, enable: bool = True) -> None:
-    """
-    Wrapper funkce, která slouží pro konfiguraci serverů založených na Linuxu. Funkce obaluje specifikovaný nornir úkol (task_func), který se týká konfigurace Linux serverů.
-
-    Args:
-        nornir_devices (Nornir): Nornir objekt, umožňující volat paralelně nornir úkoly (tasky) a agregovat výsledky z jednotlivých tasků pro daná zařízení. Obsahuje zparsovaný inventář.
-        task_func (callable): Funkce, která bude paralelně vykonávaná nornirem.
-        task_name (str): Název nornir úkolu
-        enable (bool): Argument, kterým lze specifikovat, jestli je nutný pro daný nornir úkol práv superuživatele (rootu). Defaultně je nastaveno na True (root práva).
-
-    Returns:
-        None
-    """
-    result = nornir_devices.run(task=task_func, name=task_name, enable=enable)
-    print_result(result)
 
 
 def configure_network_devices(nornir_devices: Nornir, task_func: callable, task_name: str, dry_run: bool) -> None:
@@ -73,23 +55,6 @@ def configure_network_devices(nornir_devices: Nornir, task_func: callable, task_
     print_result(result)
 
 
-def send_command(nornir_devices: Nornir, command_string: str, task_name: str, enable=False) -> None:
-    """
-    Funkce, která slouží pro vykonání příkazu síťovými prvky pomocí knihovny Netmiko.
-
-    Args:
-        nornir_devices (Nornir): Nornir objekt, umožňující volat paralelně nornir úkoly (tasky) a agregovat výsledky z jednotlivých tasků pro daná zařízení. Obsahuje zparsovaný inventář.
-        command_string (str): Příkaz, který bude proveden.
-        task_name (str): Název nornir úkolu
-        enable (bool): Argument, kterým lze specifikovat, jestli je nutné pro vykonání příkazu vstoupit do privilegovaného režimu. Defaultně je nastaveno False (neprivilegovaný režim).
-
-    Returns:
-        None
-    """
-    result = nornir_devices.run(task=netmiko_send_command, command_string=command_string, name=task_name, enable=enable)
-    print_result(result)
-
-
 def main() -> None:
     """
     Hlavní funkce skriptu, která se zavolá po spuštění skriptu main.py
@@ -97,54 +62,66 @@ def main() -> None:
     Returns:
         None
     """
+    # Parsování inventáře
     nornir_obj = setup_inventory()
-    routers = nornir_obj.filter(F(dev_type="router"))  # vyfiltrování routerů (dev_type="router")
+
+    # Filtrování Nornir objektů
+    routers = nornir_obj.filter(F(dev_type="router"))
     juniper_devices = nornir_obj.filter(F(groups__contains="juniper"))
     l3_switches = nornir_obj.filter(F(dev_type="L3_switch"))
     cisco_routers = nornir_obj.filter(F(groups__contains="cisco") & F(dev_type="router"))
     l3_cisco = nornir_obj.filter(F(groups__contains="cisco") & F(dev_type="router") | F(dev_type="L3_switch"))
     l3_devices = nornir_obj.filter(F(dev_type="router") | F(dev_type="L3_switch"))
     ubuntu_servers = nornir_obj.filter(F(dev_type="ubuntu_server") | F(groups__contains="linux"))
+    mls1 = nornir_obj.filter(F(name__contains="MLS1"))
+    mls1_r3 = nornir_obj.filter(F(name__contains="MLS1") | F(name__contains="R3"))
+
     viewer = NetworkUtilityViewer()
     exporter = NetworkInfoExporter(NetworkInfoCollector())
+
+    # Inicializace Configuration objektů
     ospf_config = OSPFConfiguration()
     eigrp_config = EIGRPConfiguration()
     static_routing_config = StaticRoutingConfiguration()
     interfaces_configuration = InterfacesConfiguration()
     packet_filter = PacketFilterConfiguration()
+    linux_config = LinuxConfiguration()
     nat_config = NATConfiguration()
     delete_config = DeleteConfiguration()
-    linux_config = LinuxConfiguration()
+    static_routing_config = StaticRoutingConfiguration()
 
-    l3_devices.run(task=viewer.show_device_facts, json_out=False)
-    # l3_devices.run(task=viewer.show_interfaces_packet_counters, json_out=False)
-    # l3_devices.run(task=viewer.show_hardware_details)
-    # l3_devices.run(task=viewer.show_ipv6_routes)
-    # l3_devices.run(task=viewer.show_ospf_neighbors, ipv6=False)
-    # configure_network_devices(l3_devices, interfaces_configuration.configure_ipv4_interfaces, "IPv4 interfaces config", dry_run=True)
-    # configure_network_devices(l3_devices, interfaces_configuration.configure_ipv6_interfaces, "IPv6 interfaces config", dry_run=False)
-    # configure_network_devices(l3_switches, interfaces_configuration.configure_switching_interfaces, "Switching interfaces config", dry_run=False)
-    # configure_network_devices(l3_devices, static_routing_config.configure_static_routing_ipv4, "Static routing config",dry_run=False)
-    # configure_network_devices(l3_devices, ospf_config.configure_ospf, "OSPFv2 config", dry_run=False)
-    # configure_network_devices(l3_cisco, eigrp_config.configure_eigrp_ipv4, "EIGRP config", dry_run=False)
-    # configure_network_devices(l3_devices, packet_filter.configure_ipv4_packet_filters, "IPv4 packet filter config",dry_run=False)
-    # configure_network_devices(l3_cisco, nat_config.configure_source_nat_overload, "NAT Overload config", dry_run=False)
-    # configure_network_devices(routers, ospf_config.configure_ospfv3, "OSPFv3 config", dry_run=False)
-    # configure_network_devices(l3_cisco, eigrp_config.configure_eigrp_ipv6, "EIGRP IPV6 config", dry_run=False)
-    # configure_network_devices(l3_devices, static_routing_config.configure_static_routing_ipv6,"IPv6 Static Routing config", dry_run=False)
-    # configure_network_devices(l3_devices, packet_filter.configure_ipv6_packet_filters, "IPv6 packet filter config",dry_run=False)
+    # Příklady konfigurace síťových zařízení
+    configure_network_devices(l3_devices, interfaces_configuration.configure_ipv4_interfaces, "IPv4 interfaces config",dry_run=False)
+    configure_network_devices(l3_devices, interfaces_configuration.configure_ipv6_interfaces, "IPv6 interfaces config",dry_run=False)
+    configure_network_devices(l3_switches, interfaces_configuration.configure_switching_interfaces,"Switching interfaces config", dry_run=False)
+    configure_network_devices(routers, ospf_config.configure_ospf, "OSPFv2 config", dry_run=False)
+    configure_network_devices(routers, ospf_config.configure_ospfv3, "OSPFv3 config", dry_run=False)
+    configure_network_devices(mls1_r3, eigrp_config.configure_eigrp_ipv4, "EIGRP config", dry_run=False)
+    configure_network_devices(mls1_r3, eigrp_config.configure_eigrp_ipv6, "EIGRP IPV6 config", dry_run=False)
+    configure_network_devices(mls1, packet_filter.configure_ipv4_packet_filters, "IPv4 packet filter config",dry_run=False)
+    configure_network_devices(mls1, packet_filter.configure_ipv6_packet_filters, "IPv6 packet filter config",dry_run=False)
+
+    # Mazání konfigurace
     # configure_network_devices(l3_devices, delete_config.delete_configuration, "Delete Configuration", dry_run=False)
 
-    # l3_devices.run(task=exporter.export_device_configuration)
-    # l3_devices.run(task=exporter.export_packet_filter_info)
-    # l3_devices.run(task=exporter.export_ipv4_routes)
-    # l3_devices.run(task=exporter.export_ipv6_routes)
-    # exporter.export_device_facts(l3_devices)
-    # exporter.export_interfaces_packet_counters(l3_devices)
+    # Sběr a výpis dat
+    l3_switches.run(task=viewer.show_vlans, json_out=False)
+    l3_switches.run(task=viewer.show_vlans, json_out=True)
+    l3_devices.run(task=viewer.show_ospf_neighbors, ipv6=True)
 
-    # configure_linux_servers(ubuntu_servers, linux_config.send_commands, task_name="Running commands", enable=True)
-    # configure_linux_servers(ubuntu_servers, linux_config.configure_vsftpd, "VSFTPD Configuration", enable=True)
-    # TODO komentare a dokumentace k yamlum
+    # Export dat
+    l3_devices.run(task=exporter.export_device_configuration)
+    l3_devices.run(task=exporter.export_packet_filter_info)
+    l3_devices.run(task=exporter.export_ipv4_routes)
+    l3_devices.run(task=exporter.export_ipv6_routes)
+
+    # Tvorba Excel reportů
+    exporter.export_device_facts(l3_devices)
+    exporter.export_interfaces_packet_counters(l3_devices)
+
+    # Konfigurace Ubuntu serveru
+    ubuntu_servers.run(task=linux_config.send_commands, enable=True)
+    ubuntu_servers.run(task=linux_config.configure_vsftpd, enable=True)
 
 
 if __name__ == "__main__":

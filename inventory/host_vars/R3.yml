@@ -1,168 +1,108 @@
 ---
-interfaces_ipv4:
-  lo0:
-    description: '"popis z neco z neco"'
-    units:
-        - number: 0
-          net: 2.2.2.2
-          prefix_length: /32
-  em1:
-    description: '"popis z neco z neco"'
-    units:
-        - number: 0
-          description: '"popis em1.0"'
-          net: 192.168.20.1
-          prefix_length: /24
+interfaces_ipv4: # nastavení IPv4 rozhraní, router_physical_port: true - pokud to není Loopback
+  FastEthernet0/0:
+      description: connected to R2 on port em2
+      net: 192.168.3.2
+      mask: 255.255.255.0
+      routed_physical_port: true
+      duplex: full
+      speed: auto
+  FastEthernet0/1:
+      description: connected to MLS1 on port g0/1
+      net: 192.168.4.1
+      mask: 255.255.255.0
+      routed_physical_port: true
+      duplex: full
+      speed: auto
+ospf_config: # OSPFv2 konfigurace + redistribuce
+    process: 1
+    router_id: 3.3.3.3
+    networks:
+        - ip: 192.168.3.0
+          wildcard: 0.0.0.255
+          area_number: 0
+    redistribute:
+      static: false
+      default: false
+      eigrp:
+        AS_numbers: [1]
+eigrp_config: # EIGRP konfigurace + redistribuce (static, ospf), nepovinné fieldy: passive_interfaces, redistribute
+  AS_number: 1
+  passive_interfaces: []
+  networks:
+    - ip: 192.168.4.0
+      wildcard: 0.0.0.255
+  redistribute:
+    ospf:
+      processes:
         - number: 1
-          net: 192.168.30.1
-          prefix_length: /24
-  em2:
-    description: '"popis z neco z neco"'
-    units:
-        - number: 0
-          net: 192.168.40.1
-          prefix_length: /24
-static_routing_config:
-  networks:
-      - dest_ip: 192.168.50.0
-        prefix_length: /24
-        next_hop: 192.168.20.2
-      - dest_ip: 192.168.60.0
-        prefix_length: /30
-        next_hop: 192.168.30.2
-  default:
-      next_hop: 192.168.20.2
-ospf_config:
-  router_id: 2.2.2.2
-  interfaces:
-      em0.0:
-          passive: true
-          area_number: 0
-      em1.0:
-          passive: false
-          area_number: 0
-  redistribute_static:
-      policy_name: static-into-ospf
-      term_name: static
-packet_filter_config:
-  ADMIN-FILTER:
-      term_name: T1
-      rules:
-          - from source-address 172.27.31.0/24
-          - from destination-address 172.27.0.0/24
-          - from destination-port 3389
-          - then discard
-      interfaces:
-          - name: em2
-            unit_number: 0
-            filter_direction: output
-  Student-FILTER:
-      term_name: T2
-      rules:
-          - from source-address 182.27.31.0/24
-          - from destination-address 173.27.0.0/24
-          - from protocol tcp
-          - then discard
-      interfaces:
-          - name: em1
-            unit_number: 1
-            filter_direction: input
-interfaces_ipv6:
-  lo0:
-      description: '"popis z neco z neco"'
-      units:
-          - number: 0
-            net: "2020::1"
-            prefix_length: /128
-  em1:
-      description: '"popis z neco z neco"'
-      units:
-          - number: 0
-            description: '"popis em1.0"'
-            net: "2001:bb9:aabb:1234:1111:4444:3333:2222"
-            prefix_length: /64
-          - number: 1
-            description: '"popis em1.1"'
-            net: "2001:bb9:aabb:1234:4444:2222:3333:4444"
-            prefix_length: /64
-  em2:
-      description: '"popis z neco z neco"'
-      units:
-          - number: 0
-            net: "2001:bb9:aabb:1234:3333:2222:4444:5555"
-            prefix_length: /64
-static_routing_ipv6_config:
-  networks:
-      - dest_ip: "2001:db8::"
-        prefix_length: /64
-        next_hop: "2001:bb9:aabb:1234:3333:2222:4444:5555"
-      - dest_ip: "2001:db9::"
-        prefix_length: /64
-        next_hop: "2001:bb9:aabb:1234:4444:2222:3333:4444"
-  default:
-      next_hop: "2001:bb9:aabb:1234:3333:2222:4444:5555"
-ospfv3_config:
-  router_id: 9.9.9.9
-  interfaces:
-      em0.0:
-          passive: true
-          area_number: 0
-      em1.0:
-          passive: false
-          area_number: 0
-  redistribute_static:
-      policy_name: static-into-ospfv3
-      term_name: static6
-packet_filter_ipv6_config:
-  ADMIN-Test:
-      term_name: T1
-      rules:
-          - from source-address 2001:db8::0/64
-          - from destination-address 2001:db9::0/64
-          - then discard
-      interfaces:
-          - name: em2
-            unit_number: 0
-            filter_direction: input
-  Student-Test:
-      term_name: T2
-      rules:
-          - from source-address 2001:db4::0/64
-          - from destination-address 2001:db5::0/64
-          - then discard
-      interfaces:
-          - name: em1
-            unit_number: 1
-            filter_direction: output
+          bandwidth: 1000000
+          delay: 1
+          reliability: 255
+          load: 1
+          mtu: 1500
+interfaces_ipv6: # Základní nastavení rozhraní - IPv6
+    FastEthernet0/0:
+        description: connected to R2 on port em2
+        networks:
+            - net: "2001:db8:1001:3::2"
+              prefix_length: /64
+              eui_format_auto: false
+        routed_physical_port: true
+        duplex: full
+        speed: auto
+    FastEthernet0/1:
+        description: connected to MLS1 on port g0/1
+        networks:
+            - net: "2001:db8:1001:4::1"
+              prefix_length: /64
+              eui_format_auto: false
+        routed_physical_port: true
+        duplex: full
+        speed: auto
+ospfv3_config: # OSPFv3 konfigurace + redistribuce
+    process: 1
+    router_id: 3.3.3.3
+    interfaces:
+      - name: FastEthernet0/0
+        area_number: 0
+    redistribute:
+      static: false
+      default: false
+      eigrp:
+        AS_numbers: [1]
 restore_config:
-  running_config_date: 2020-12-27
+    running_config_date: 2021-04-07
+eigrp_ipv6_config: # EIGRP IPv6 konfigurace
+  AS_number: 1
+  router_id: 3.3.3.3
+  passive_interfaces: []
+  interfaces: [ FastEthernet0/1 ]
+  redistribute:
+    ospf:
+      processes:
+        - number: 1
+          bandwidth: 1000000
+          delay: 1
+          reliability: 255
+          load: 1
+          mtu: 1500
 delete_config:
-  interfaces:
-      lo0:
-          delete_whole_interface: true
-          delete_units: [0]
-      em1:
-          delete_whole_interface: true
-          delete_units: []
-      em2:
-          delete_whole_interface: false
-          delete_units: [0]
-  static_routing_config: true
-  ospf_config:
-      policy_statement: static-into-ospf
-      router_id: 9.9.9.9
-  packet_filter_config:
-      ADMIN-FILTER:
-          interfaces:
-              - name: em2
-                unit_number: 0
-                filter_direction: output
-  static_routing_ipv6_config: true
-  ospfv3_config:
-      policy_statement: static-into-ospfv3
-  packet_filter_ipv6_config:
-      Student-Test:
-          interfaces:
-              - name: em1
-                unit_number: 1
-                filter_direction: output
+    interfaces: # routované porty
+        physical: [FastEthernet0/0, FastEthernet0/1] # resetování nastavení fyzického rozhraní do výchozího stavu
+    eigrp_config:
+      AS_numbers: [ 1 ]
+    eigrp_ipv6_config:
+      AS:
+        - number: 1
+          interfaces: [ FastEthernet0/1 ]
+    ospf_config:
+        processes: [1]
+    ospfv3_config:
+        processes:
+            - number: 1
+              interfaces:
+                - name: FastEthernet0/0
+                  area_number: 0
+                - name: FastEthernet0/1
+                  area_number: 0

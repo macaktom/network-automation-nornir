@@ -79,9 +79,5 @@ if __name__ == '__main__':
     restore_conf = RestoreConfiguration()
     nr = restore_conf.setup_inventory()
     all_devices = nr.filter(F(dev_type="router") | F(dev_type="L3_switch") | F(dev_type="switch"))
-    juniper_devices = nr.filter(F(groups__contains="junos_group"))
-    #res = all_devices.run(restore_conf.restore_running_configuration, name="Restore backed up configuration",
-                          #dry_run=True)
-    res = juniper_devices.run(restore_conf.restore_running_configuration, name="Restore backed up configuration",
-                    dry_run=False)
+    res = all_devices.run(restore_conf.restore_running_configuration, name="Restore backed up configuration",dry_run=True)
     print_result(res)

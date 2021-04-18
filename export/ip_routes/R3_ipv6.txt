@@ -1,31 +1,27 @@
-inet6.0: 9 destinations, 11 routes (9 active, 0 holddown, 0 hidden)
-+ = Active Route, - = Last Active, * = Both
-
-2001:bb9:aabb:1234::/64
-                   *[Direct/0] 06:16:36
-                    > via em1.0
-                    [Direct/0] 06:16:35
-                    > via em2.0
-2001:bb9:aabb:1234:1111:4444:3333:2222/128
-                   *[Local/0] 06:16:36
-                      Local via em1.0
-2001:bb9:aabb:1234:3333:2222:4444:5555/128
-                   *[Local/0] 06:16:35
-                      Local via em2.0
-2020::1/128        *[Direct/0] 06:16:35
-                    > via lo0.0
-fe80::/64          *[Direct/0] 06:16:36
-                    > via em1.0
-                    [Direct/0] 06:16:35
-                    > via em2.0
-fe80::e2b:950f:fce0:9600/128
-                   *[Direct/0] 06:16:35
-                    > via lo0.0
-fe80::e2b:95ff:fee0:9601/128
-                   *[Local/0] 06:16:36
-                      Local via em1.0
-fe80::e2b:95ff:fee0:9602/128
-                   *[Local/0] 06:16:35
-                      Local via em2.0
-ff02::5/128        *[OSPF3/10] 06:16:40, metric 1
-                      MultiRecv
+IPv6 Routing Table - default - 10 entries
+Codes: C - Connected, L - Local, S - Static, U - Per-user Static route
+       B - BGP, R - RIP, H - NHRP, I1 - ISIS L1
+       I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP
+       EX - EIGRP external, ND - ND Default, NDp - ND Prefix, DCE - Destination
+       NDr - Redirect, O - OSPF Intra, OI - OSPF Inter, OE1 - OSPF ext 1
+       OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1, ON2 - OSPF NSSA ext 2, l - LISP
+O   2001:DB8:1001:1::/64 [110/3]
+     via FE80::E2B:95FF:FE17:902, FastEthernet0/0
+O   2001:DB8:1001:2::/64 [110/2]
+     via FE80::E2B:95FF:FE17:902, FastEthernet0/0
+C   2001:DB8:1001:3::/64 [0/0]
+     via FastEthernet0/0, directly connected
+L   2001:DB8:1001:3::2/128 [0/0]
+     via FastEthernet0/0, receive
+C   2001:DB8:1001:4::/64 [0/0]
+     via FastEthernet0/1, directly connected
+L   2001:DB8:1001:4::1/128 [0/0]
+     via FastEthernet0/1, receive
+D   2001:DB8:1001:30::/64 [90/28416]
+     via FE80::E2B:95FF:FE01:4C01, FastEthernet0/1
+D   2001:DB8:1001:40::/64 [90/28416]
+     via FE80::E2B:95FF:FE01:4C01, FastEthernet0/1
+D   2001:DB8:1001:50::/64 [90/28416]
+     via FE80::E2B:95FF:FE01:4C01, FastEthernet0/1
+L   FF00::/8 [0/0]
+     via Null0, receive

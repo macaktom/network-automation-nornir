@@ -1,0 +1,39 @@
+inet6.0: 12 destinations, 13 routes (12 active, 0 holddown, 0 hidden)
++ = Active Route, - = Last Active, * = Both
+
+2001:db8:1001:1::/64
+                   *[OSPF3/10] 05:34:54, metric 2
+                    > to fe80::c801:9aff:fe01:8 via em1.0
+2001:db8:1001:2::/64
+                   *[Direct/0] 05:35:06
+                    > via em1.0
+2001:db8:1001:2::2/128
+                   *[Local/0] 05:35:06
+                      Local via em1.0
+2001:db8:1001:3::/64
+                   *[Direct/0] 05:35:06
+                    > via em2.0
+2001:db8:1001:3::1/128
+                   *[Local/0] 05:35:06
+                      Local via em2.0
+2001:db8:1001:30::/64
+                   *[OSPF3/150] 00:07:35, metric 20, tag 0
+                    > to fe80::c802:9aff:feeb:8 via em2.0
+2001:db8:1001:40::/64
+                   *[OSPF3/150] 00:07:35, metric 20, tag 0
+                    > to fe80::c802:9aff:feeb:8 via em2.0
+2001:db8:1001:50::/64
+                   *[OSPF3/150] 00:07:35, metric 20, tag 0
+                    > to fe80::c802:9aff:feeb:8 via em2.0
+fe80::/64          *[Direct/0] 05:35:06
+                    > via em1.0
+                    [Direct/0] 05:35:06
+                    > via em2.0
+fe80::e2b:95ff:fe17:901/128
+                   *[Local/0] 05:35:06
+                      Local via em1.0
+fe80::e2b:95ff:fe17:902/128
+                   *[Local/0] 05:35:06
+                      Local via em2.0
+ff02::5/128        *[OSPF3/10] 05:35:11, metric 1
+                      MultiRecv

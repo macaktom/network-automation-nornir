@@ -9,12 +9,14 @@ ipv6 router eigrp {{ host.eigrp_ipv6_config.AS_number }}
 {% endfor %}
 {% endif %}
 {% if host.eigrp_ipv6_config.redistribute is defined %}
+{% if host.eigrp_ipv6_config.redistribute.static is defined %}
 {% if host.eigrp_ipv6_config.redistribute.static %}
  redistribute static
 {% endif %}
+{% endif %}
 {% if host.eigrp_ipv6_config.redistribute.ospf is defined %}
 {% for process in host.eigrp_ipv6_config.redistribute.ospf.processes %}
- redistribute ospf {{ process }}
+ redistribute ospf {{ process.number }} metric {{ process.bandwidth }} {{ process.delay }} {{ process.reliability }} {{ process.load }} {{ process.mtu }}
 {% endfor %}
 {% endif %}
 {% endif %}

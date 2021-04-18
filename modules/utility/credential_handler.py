@@ -1,7 +1,6 @@
 from copy import deepcopy
 from pathlib import Path
 from typing import List, Tuple, Dict
-
 from ansible.parsing.vault import VaultLib
 from ansible.cli import CLI
 from ansible.parsing.dataloader import DataLoader
@@ -13,7 +12,6 @@ class CredentialHandler:
     """
     Pomocná třída, která rozšiřuje defaultní parsování YAML inventáře.
     Stará se o dešifrování citlivých údajů (username, password, secret - zašifrované pomocí Ansible Vault) a jejich parsování.
-    Momentálně provedena implementace pro skupiny (groups).
 
     Attributes:
          credentials (Dict[str, Dict[str, str]]): dynamicky zparsované údaje ze zašifrovaného souboru (vaultu).
@@ -65,7 +63,7 @@ class CredentialHandler:
 
     def _decrypt_vault(self, encrypted_file: str, vault_password_file: str) -> Dict:
         """
-        Metoda, která slouží dešifrování zašifrováno souboru (Ansible Vault souboru).
+        Metoda, která slouží k dešifrování zašifrováno souboru (Ansible Vault souboru).
 
         Args:
             encrypted_file (str): cesta k zašifrovanému souboru.
