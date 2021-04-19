@@ -128,7 +128,7 @@ class DBHandler:
                 }
             ]
             is_saved = db_conn.write_points(json_body)
-        save_message = f"[{fetch_time_utc}] {host}: Measurement of {measurement} was successfuly saved." if is_saved and fields_dict else f"{Fore.RED}[{fetch_time_utc}] {host}: Measurement of {measurement} was not successfuly saved."
+        save_message = f"{Fore.GREEN}[{fetch_time_utc}] {host}: Measurement of {measurement} was successfuly saved." if is_saved and fields_dict else f"{Fore.RED}[{fetch_time_utc}] {host}: Measurement of {measurement} was not successfuly saved."
         print(save_message)
 
     def write_monitored_data(self, db_conn: InfluxDBClient) -> None:
@@ -180,7 +180,7 @@ if __name__ == '__main__':
     db_writer = DBHandler()
 
     # Zápis dat do databáze - nekonečná smyčka, nutno zakomentovat pokud chcete zobrazit stav DB
-    #db_writer.write_monitored_data(db_nornir_conn)
+    db_writer.write_monitored_data(db_nornir_conn)
 
     #Smazat všechna měření jednotlivých databází
     #db_writer.drop_db_measurements(db_nornir_conn, ['hw_details', 'device_facts'])
