@@ -182,7 +182,7 @@ if __name__ == '__main__':
     #Smazat všechna měření jednotlivých databází
     #db_writer.drop_db_measurements(db_nornir_conn, ['hw_details', 'device_facts'])
     #db_writer.drop_db_measurements(db_ansible_conn, ['hw_details', 'device_facts'])
-    #db_writer.drop_db_measurements(db_telegraf_conn, ['cpu', 'mem', 'system'])
+    #db_writer.drop_db_measurements(db_telegraf_conn, ['cpu', 'system'])
 
     #Stav jednotlivých databází
     #print_title("Ansible DB info")
