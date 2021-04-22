@@ -95,8 +95,6 @@ class DBHandler:
         fields_dict = {}
         if napalm_key == "environment" and host_dict:
             fields_dict['cpu_usage'] = host_dict['cpu'][0]['%usage']
-            fields_dict['memory_used'] = host_dict['memory']['used_ram']
-            fields_dict['memory_available'] = host_dict['memory']['available_ram']
         elif napalm_key == "facts" and host_dict:
             fields_dict['uptime'] = host_dict['uptime']
         return fields_dict
@@ -134,7 +132,6 @@ class DBHandler:
     def write_monitored_data(self, db_conn: InfluxDBClient) -> None:
         """
         Metoda, která slouží k pravidélnemu zápisu dat do InfluxDB. Zápis je prováděň v nekonečné smyččce.
-        Ziskávání dat pomocí NAPALM getterů je prováděno +- každých 20s.
 
         Args:
             db_conn (InfluxDBClient): connection objekt, který slouží jako klient pro připojení k InfluxDB. Dále obsahuje operace pro práci s InfluxDB.
